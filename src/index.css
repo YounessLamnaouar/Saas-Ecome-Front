@@ -1,0 +1,65 @@
+
+@import "tailwindcss";
+/* Minimal styles so app mounts without errors. Replace or extend with Tailwind setup if needed. */
+:root { --bg: #ffffff; --fg: #111827; }
+html, body, #root { height: 100%; }
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+  background: var(--bg);
+  color: var(--fg);
+}
+/* ---------------------------------------------------------------------
+ * shadcn/ui theme tokens (Tailwind v4, CSS-first config).
+ * Colors are tuned to the storefront's existing palette (gray-900 primary,
+ * white surfaces, gray-200 borders) instead of shadcn's default zinc/blue,
+ * so admin components look like part of the same product.
+ * ------------------------------------------------------------------- */
+:root {
+  --radius: 0.625rem;
+  --background: #ffffff;
+  --foreground: #111827;      /* gray-900 */
+  --card: #ffffff;
+  --card-foreground: #111827;
+  --popover: #ffffff;
+  --popover-foreground: #111827;
+  --primary: #111827;         /* gray-900 — matches every CTA button in the store */
+  --primary-foreground: #ffffff;
+  --secondary: #f3f4f6;       /* gray-100 */
+  --secondary-foreground: #111827;
+  --muted: #f9fafb;           /* gray-50 */
+  --muted-foreground: #6b7280;/* gray-500 */
+  --accent: #f3f4f6;
+  --accent-foreground: #111827;
+  --destructive: #dc2626;     /* red-600 */
+  --destructive-foreground: #ffffff;
+  --border: #e5e7eb;          /* gray-200 */
+  --input: #e5e7eb;
+  --ring: #111827;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+}

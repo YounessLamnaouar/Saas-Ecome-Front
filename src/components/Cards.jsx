@@ -35,43 +35,45 @@ export default function Cards() {
             Array.from({ length: PRODUCTS_PER_PAGE }).map((_, i) => <Skeleton key={i} className="h-64 rounded-2xl" />)}
 
           {!isLoading && currentProducts.map((product, i) => (
-            <div key={product.id} className="group bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-2xl transition-all duration-500 cursor-pointer border border-gray-100" data-aos="zoom-in" data-aos-delay={i * 100}>
-              <Link to={`/product/${product.id}`} className="relative h-56 overflow-hidden bg-gray-50 block">
+            <div key={product.id} className="group bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-2xl transition-all duration-500 cursor-pointer border border-gray-100 flex flex-col justify-between" data-aos="zoom-in" data-aos-delay={i * 100}>
+              <Link to={`/product/${product.id}`} className="relative h-56 overflow-hidden bg-gray-50 block cursor-pointer">
                 <img src={product.image} alt={product.name} className="w-full h-full object-contain transition-transform duration-700 group-hover:scale-110 p-4" />
                 <div className="absolute top-2 right-2 flex flex-col gap-2 opacity-0 group-hover:opacity-100 pointer-coarse:opacity-100 transition-all duration-300 transform translate-x-2 group-hover:translate-x-0 pointer-coarse:translate-x-0">
-                  <LikeButton product={product} className="bg-white rounded-full p-2 shadow-md hover:scale-110 transition-transform duration-200" />
+                  <LikeButton product={product} className="bg-white rounded-full p-2 shadow-md hover:scale-110 transition-transform duration-200 cursor-pointer" />
                   <button
                     onClick={(e) => { e.preventDefault(); addToCart(product, 1); }}
-                    className="bg-white rounded-full p-2 shadow-md hover:scale-110 transition-transform duration-200"
+                    className="bg-white rounded-full p-2 shadow-md hover:scale-110 transition-transform duration-200 cursor-pointer"
                   >
                     <ShoppingCart size={16} className="stroke-gray-700" />
                   </button>
                 </div>
               </Link>
-              <div className="p-2">
-                <p className="text-xs text-gray-500 mb-1 capitalize">
-                  {product.category}
-                </p>
-                <Link to={`/product/${product.id}`}>
-                  <h3 className="font-semibold text-gray-900 mb-1 line-clamp-1 hover:underline">
-                    {product.name}
-                  </h3>
-                </Link>
+              <div className="p-3 flex flex-col flex-1 justify-between">
+                <div>
+                  <p className="text-xs text-gray-500 mb-1 capitalize">
+                    {product.categoryName || product.category}
+                  </p>
+                  <Link to={`/product/${product.id}`}>
+                    <h3 className="font-semibold text-gray-900 mb-1 line-clamp-1 hover:underline cursor-pointer">
+                      {product.name}
+                    </h3>
+                  </Link>
+                </div>
                 <span className="text-gray-900 font-bold">
-                  ${product.price.toFixed(2)}
+                  ${Number(product.price).toFixed(2)}
                 </span>
               </div>
             </div>
           ))}
         </div>
         <div className="flex justify-center items-center gap-4 mt-12" data-aos="fade-up" data-aos-delay="600">
-          <button onClick={prevPage} className="px-4 py-2 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition-all duration-300">
+          <button onClick={prevPage} className="px-4 py-2 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition-all duration-300 cursor-pointer">
             Previous
           </button>
           <span className="text-gray-600 font-medium">
             Page {currentPage} of {totalPages}
           </span>
-          <button onClick={nextPage} className="px-4 py-2 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition-all duration-300">
+          <button onClick={nextPage} className="px-4 py-2 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition-all duration-300 cursor-pointer">
             Next
           </button>
         </div>

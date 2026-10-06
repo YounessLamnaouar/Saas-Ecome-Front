@@ -1,19 +1,40 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useCart } from "../context/CartContext";
+import { createOrder } from "@/services/ordersService";
+import { useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
 
-// TODO: replace with your real WhatsApp Business number (country code, no + and no spaces)
+// Store contact constants
 const STORE_WHATSAPP = "212694039188";
-// TODO: replace with your real store email
 const STORE_EMAIL = "youneslam12@gmail.com";
 
 export default function Checkout() {
   const { cart, cartTotal, clearCart } = useCart();
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
   const [form, setForm] = useState({ name: "", phone: "", address: "", city: "", notes: "" });
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
+  };
+
+  const processStockDeduction = async () => {
+    try {
+      const orderPayload = {
+        items: cart.map((item) => ({
+          product_id: Number(item.id),
+          quantity: Number(item.qty),
+        })),
+        customer: form,
+      };
+      await createOrder(orderPayload);
+      queryClient.invalidateQueries({ queryKey: ["products"] });
+      queryClient.invalidateQueries({ queryKey: ["product"] });
+    } catch (err) {
+      console.warn("Stock update warning:", err);
+    }
   };
 
   const buildOrderSummary = () => {
@@ -33,9 +54,12 @@ export default function Checkout() {
       .join("\n");
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!form.name || !form.phone || !form.address || !form.city) return;
+
+    setIsSubmitting(true);
+    await processStockDeduction();
 
     const order = {
       id: Date.now(),
@@ -46,12 +70,20 @@ export default function Checkout() {
       createdAt: new Date().toISOString(),
     };
 
-    // Until the backend exists, keep a local order history in the browser
     const savedOrders = JSON.parse(localStorage.getItem("orders") || "[]");
     localStorage.setItem("orders", JSON.stringify([...savedOrders, order]));
 
+    toast.success("Order placed successfully! Inventory updated.");
     clearCart();
+    setIsSubmitting(false);
     navigate("/order-confirmation", { state: { order } });
+  };
+
+  const handleWhatsAppOrder = async (e) => {
+    if (!form.name || !form.phone || !form.address || !form.city) return;
+    await processStockDeduction();
+    toast.success("Stock updated. Redirecting to WhatsApp...");
+    clearCart();
   };
 
   const summary = buildOrderSummary();
@@ -83,8 +115,12 @@ export default function Checkout() {
               Payment method: <span className="font-semibold text-gray-900">Cash on Delivery</span>
             </div>
 
-            <button type="submit" className="bg-gray-900 text-white px-6 py-3 rounded-lg font-semibold hover:bg-gray-800 transition-all mt-2">
-              Place Order
+            <button
+              type="submit"
+              disabled={isSubmitting}
+              className="bg-gray-900 text-white px-6 py-3 rounded-lg font-semibold hover:bg-gray-800 transition-all mt-2 cursor-pointer disabled:opacity-50"
+            >
+              {isSubmitting ? "Processing..." : "Place Order"}
             </button>
 
             <div className="flex flex-col sm:flex-row gap-3 mt-2">
@@ -92,13 +128,15 @@ export default function Checkout() {
                 href={whatsappLink}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex-1 text-center bg-green-500 text-white px-6 py-3 rounded-lg font-semibold hover:bg-green-600 transition-all"
+                onClick={handleWhatsAppOrder}
+                className="flex-1 text-center bg-green-500 text-white px-6 py-3 rounded-lg font-semibold hover:bg-green-600 transition-all cursor-pointer"
               >
                 Send order via WhatsApp
               </a>
               <a
                 href={mailtoLink}
-                className="flex-1 text-center border border-gray-300 text-gray-900 px-6 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-all"
+                onClick={processStockDeduction}
+                className="flex-1 text-center border border-gray-300 text-gray-900 px-6 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-all cursor-pointer"
               >
                 Send order via Email
               </a>

@@ -1,79 +1,124 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
+import { toast } from "sonner";
+import { useUserAuth } from "./UserAuthContext";
 
 const CartContext = createContext();
 
 export function CartProvider({ children }) {
-  // ila kant lcart flocale storage khodha ohta f const cart ila makant tahaja khod table khawya
+  const { user } = useUserAuth();
+  const userId = user?.id || "guest";
+
   const [cart, setCart] = useState(() => {
-    const saved = localStorage.getItem("cart");
+    const saved = localStorage.getItem(`cart_${userId}`) || localStorage.getItem("cart");
     return saved ? JSON.parse(saved) : [];
   });
 
-  // stock dyal li drna lihom 9lb 
   const [likedProducts, setLikedProducts] = useState(() => {
-    const saved = localStorage.getItem("likedProducts");
+    const saved = localStorage.getItem(`liked_${userId}`) || localStorage.getItem("likedProducts");
     return saved ? JSON.parse(saved) : [];
   });
- 
-  // finma ytra chi changement fl cart hto flocale storage
-  useEffect(() => {
-    localStorage.setItem("cart", JSON.stringify(cart));
-    localStorage.setItem("likedProducts", JSON.stringify(likedProducts));
-  }, [cart, likedProducts]);
 
-  // ajouter product L liked products
+  // Reload cart & liked products whenever user logs in or switches account
+  useEffect(() => {
+    const savedCart = localStorage.getItem(`cart_${userId}`);
+    const savedLiked = localStorage.getItem(`liked_${userId}`);
+    if (savedCart) setCart(JSON.parse(savedCart));
+    if (savedLiked) setLikedProducts(JSON.parse(savedLiked));
+  }, [userId]);
+
+  // Sync to local storage
+  useEffect(() => {
+    localStorage.setItem(`cart_${userId}`, JSON.stringify(cart));
+    localStorage.setItem(`liked_${userId}`, JSON.stringify(likedProducts));
+  }, [cart, likedProducts, userId]);
+
+  // Liked products operations
   const addToLikedProducts = (product) => {
     setLikedProducts((prev) => {
       const existing = prev.find((item) => item.id === product.id);
       if (!existing) {
+        toast.success(`Added "${product.name || product.title}" to wishlist!`);
         return [...prev, product];
       }
       return prev;
     });
   };
 
-  // remove product from liked products
   const removeFromLikedProducts = (id) => {
-    setLikedProducts((prev) => prev.filter((item) => item.id !== id));
-  };
-
-  // check if product is liked
-  const isLiked = (id) => {
-    return likedProducts.some((item) => item.id === id);
-  };
-
-  // check if product is in cart
-  const isInCart = (id) => {
-    return cart.some((item) => item.id === id);
-  };
-
-  // ajouter product L cart ila kan deja kayn nfss smiya onfs loun kadir lih increment wla makanch katzido m3a other products
-  const addToCart = (product, qty = 1) => {
-    setCart((prev) => {
-      const existing = prev.find((item) => item.id === product.id && item.color === product.color);
-      if (existing) {
-        return prev.map((item) =>
-          item.id === product.id && item.color === product.color
-            ? { ...item, qty: item.qty + qty }
-            : item
-        );
-      }
-      return [...prev, { ...product, qty }];
+    setLikedProducts((prev) => {
+      const item = prev.find((p) => p.id === id);
+      if (item) toast.info(`Removed "${item.name || item.title}" from wishlist.`);
+      return prev.filter((item) => item.id !== id);
     });
   };
 
-  // delete from cart
+  const isLiked = (id) => likedProducts.some((item) => item.id === id);
+  const isInCart = (id) => cart.some((item) => item.id === id);
+
+  // Cart operations with Stock Limit logic
+  const addToCart = (product, qty = 1) => {
+    const maxStock = typeof product.stock === "number" ? product.stock : 999;
+    if (maxStock <= 0) {
+      toast.error(`"${product.name || product.title}" is out of stock.`);
+      return;
+    }
+
+    setCart((prev) => {
+      const existing = prev.find((item) => item.id === product.id && item.color === product.color);
+      const currentQty = existing ? existing.qty : 0;
+      const targetQty = currentQty + qty;
+
+      if (targetQty > maxStock) {
+        if (currentQty >= maxStock) {
+          toast.error(`Cannot add more. Maximum available stock for "${product.name || product.title}" is ${maxStock}.`);
+          return prev;
+        }
+        const allowed = maxStock - currentQty;
+        toast.info(`Added ${allowed} item(s) to cart (max stock reached: ${maxStock}).`);
+        return prev.map((item) =>
+          item.id === product.id && item.color === product.color
+            ? { ...item, qty: maxStock, stock: maxStock }
+            : item
+        );
+      }
+
+      toast.success(`Added "${product.name || product.title}" to cart!`);
+      if (existing) {
+        return prev.map((item) =>
+          item.id === product.id && item.color === product.color
+            ? { ...item, qty: targetQty, stock: maxStock }
+            : item
+        );
+      }
+      return [...prev, { ...product, qty, stock: maxStock }];
+    });
+  };
+
   const removeFromCart = (id) => {
-    setCart((prev) => prev.filter((item) => item.id !== id));
+    setCart((prev) => {
+      const item = prev.find((p) => p.id === id);
+      if (item) toast.info(`Removed "${item.name || item.title}" from cart.`);
+      return prev.filter((item) => item.id !== id);
+    });
   };
 
-  // modifier la quantite dyal product fl cart ila kan 1 mat9drch tzid tn9ss
-  const updateQty = (id, qty) => {
-    if (qty < 1) return;
-    setCart((prev) => prev.map((item) => (item.id === id ? { ...item, qty } : item)));
+  const updateQty = (id, newQty) => {
+    if (newQty < 1) return;
+    setCart((prev) =>
+      prev.map((item) => {
+        if (item.id === id) {
+          const maxStock = typeof item.stock === "number" ? item.stock : 999;
+          if (newQty > maxStock) {
+            toast.error(`Cannot exceed maximum available stock (${maxStock}) for "${item.name || item.title}".`);
+            return { ...item, qty: maxStock };
+          }
+          return { ...item, qty: newQty };
+        }
+        return item;
+      })
+    );
   };
 
-  // clear cart
   const clearCart = () => setCart([]);
 
   const cartCount = cart.reduce((sum, item) => sum + item.qty, 0);
@@ -81,7 +126,20 @@ export function CartProvider({ children }) {
 
   return (
     <CartContext.Provider
-      value={{ cart, addToCart, removeFromCart, updateQty, clearCart, cartCount, cartTotal, likedProducts, addToLikedProducts, removeFromLikedProducts, isLiked, isInCart }}
+      value={{
+        cart,
+        addToCart,
+        removeFromCart,
+        updateQty,
+        clearCart,
+        cartCount,
+        cartTotal,
+        likedProducts,
+        addToLikedProducts,
+        removeFromLikedProducts,
+        isLiked,
+        isInCart,
+      }}
     >
       {children}
     </CartContext.Provider>

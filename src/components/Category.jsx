@@ -36,7 +36,7 @@ export default function Category() {
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
-              className={`flex flex-col items-center gap-2 px-4 py-3 rounded-full transition-all duration-300 ${activeTab === tab.id ? "bg-gray-900 text-white shadow-lg scale-105" : "bg-white text-gray-700 hover:bg-gray-100 shadow-md"}`}
+              className={`flex flex-col items-center gap-2 px-4 py-3 rounded-full transition-all duration-300 cursor-pointer ${activeTab === tab.id ? "bg-gray-900 text-white shadow-lg scale-105" : "bg-white text-gray-700 hover:bg-gray-100 shadow-md"}`}
             >
               <div className="w-12 h-12 overflow-hidden rounded-full">
                 <img
@@ -61,24 +61,24 @@ export default function Category() {
               data-aos="zoom-in"
               data-aos-delay={idx * 100}
             >
-              <div className="relative h-64 overflow-hidden">
+              <div className="relative h-64 overflow-hidden bg-gray-50">
                 <img
                   src={product.image}
                   alt={product.name}
-                  className="w-full h-full object-contain transition-transform duration-700 group-hover:scale-100 p-4"
+                  className="w-full h-full object-contain transition-transform duration-700 group-hover:scale-105 p-4"
                 />
                 <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                <span className="absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-white text-gray-900 px-4 py-2 rounded-full text-sm font-semibold opacity-0 group-hover:opacity-100 transition-all duration-300">
+                <span className="absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-white text-gray-900 px-4 py-2 rounded-full text-sm font-semibold opacity-0 group-hover:opacity-100 transition-all duration-300 shadow-md">
                   Quick view
                 </span>
-                <LikeButton product={product} className="absolute top-3 right-3 z-10 bg-white rounded-full p-2 shadow-md hover:scale-110 transition-transform" />
+                <LikeButton product={product} className="absolute top-3 right-3 z-10 bg-white rounded-full p-2 shadow-md hover:scale-110 transition-transform cursor-pointer" />
               </div>
               <div className="p-4">
-                <h3 className="font-semibold text-gray-900 mb-1">
+                <h3 className="font-semibold text-gray-900 mb-1 line-clamp-1">
                   {product.name}
                 </h3>
                 <p className="text-gray-600 font-medium">
-                  ${product.price.toFixed(2)}
+                  ${Number(product.price).toFixed(2)}
                 </p>
               </div>
             </Link>

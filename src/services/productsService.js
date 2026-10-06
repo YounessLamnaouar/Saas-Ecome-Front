@@ -5,9 +5,9 @@ import { normalizeProduct, denormalizeProduct } from "@/services/adapters/fakeap
  * Product data-access layer connected directly to the Laravel REST API.
  */
 
-export async function listProducts({ page = 1, perPage = 12, category, search, sortBy, sortDir } = {}) {
+export async function listProducts({ page = 1, perPage = 12, category, collection, search, sortBy, sortDir } = {}) {
   const { data, meta } = await apiClient.get("/products", {
-    params: { page, per_page: perPage, category, search, sort_by: sortBy, sort_dir: sortDir },
+    params: { page, per_page: perPage, category, collection, search, sort_by: sortBy, sort_dir: sortDir },
   });
   const products = (data || []).map(normalizeProduct);
   return { products, meta: meta || { page, per_page: perPage, total: products.length, total_pages: 1 } };

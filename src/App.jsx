@@ -1,5 +1,6 @@
 import React, { useEffect, lazy, Suspense } from "react";
 import { Routes, Route } from "react-router-dom";
+import { Toaster } from "sonner";
 import AOS from "aos";
 import "aos/dist/aos.css";
 import Footer from "./components/Footer";
@@ -40,6 +41,7 @@ export default function App() {
 
   return (
     <div>
+      <Toaster position="top-right" richColors />
       <Routes>
         <Route
           path="/"

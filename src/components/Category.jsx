@@ -4,6 +4,7 @@ import LikeButton from "./LikeButton";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useCategories } from "@/hooks/useCategories";
 import { useProducts } from "@/hooks/useProducts";
+import { Package } from "lucide-react";
 
 export default function Category() {
   const { data: categories } = useCategories();
@@ -21,7 +22,7 @@ export default function Category() {
       <div className="container mx-auto px-4 md:px-8 lg:px-16">
         <div className="text-center mb-12" data-aos="fade-down">
           <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-3">
-            Shop by category
+            Shop by Category
           </h2>
           <p className="text-gray-600 max-w-2xl mx-auto">
             Browse our collection by category and find what suits you best.
@@ -36,16 +37,24 @@ export default function Category() {
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
-              className={`flex flex-col items-center gap-2 px-4 py-3 rounded-full transition-all duration-300 cursor-pointer ${activeTab === tab.id ? "bg-gray-900 text-white shadow-lg scale-105" : "bg-white text-gray-700 hover:bg-gray-100 shadow-md"}`}
+              className={`flex items-center gap-3 px-5 py-2.5 rounded-full transition-all duration-300 cursor-pointer ${
+                activeTab === tab.id
+                  ? "bg-gray-900 text-white shadow-lg scale-105"
+                  : "bg-white text-gray-700 hover:bg-gray-100 shadow-sm border border-gray-200"
+              }`}
             >
-              <div className="w-12 h-12 overflow-hidden rounded-full">
-                <img
-                  src={tab.image}
-                  alt={tab.name}
-                  className="w-full h-full object-cover"
-                />
+              <div className="w-9 h-9 overflow-hidden rounded-full border border-gray-200 shrink-0 bg-gray-100 flex items-center justify-center">
+                {tab.image ? (
+                  <img
+                    src={tab.image}
+                    alt={tab.name}
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  <Package size={16} className="text-gray-400" />
+                )}
               </div>
-              <span className="text-sm font-medium">{tab.name}</span>
+              <span className="text-sm font-semibold">{tab.name}</span>
             </button>
           ))}
         </div>
@@ -57,7 +66,7 @@ export default function Category() {
             <Link
               to={`/product/${product.id}`}
               key={product.id}
-              className="group bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-2xl transition-all duration-500 cursor-pointer block"
+              className="group bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-2xl transition-all duration-500 cursor-pointer block border border-gray-100"
               data-aos="zoom-in"
               data-aos-delay={idx * 100}
             >
@@ -69,7 +78,7 @@ export default function Category() {
                 />
                 <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                 <span className="absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-white text-gray-900 px-4 py-2 rounded-full text-sm font-semibold opacity-0 group-hover:opacity-100 transition-all duration-300 shadow-md">
-                  Quick view
+                  Quick View
                 </span>
                 <LikeButton product={product} className="absolute top-3 right-3 z-10 bg-white rounded-full p-2 shadow-md hover:scale-110 transition-transform cursor-pointer" />
               </div>

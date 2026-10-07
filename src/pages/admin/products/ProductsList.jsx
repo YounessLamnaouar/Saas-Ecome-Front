@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { useProducts, useDeleteProduct } from "@/hooks/useProducts";
 import { useCategories } from "@/hooks/useCategories";
+import { toast } from "sonner";
 
 function StockBadge({ stock }) {
   if (stock === 0) return <Badge variant="destructive">Out of stock</Badge>;
@@ -33,6 +34,13 @@ export default function ProductsList() {
   const products = data?.products || [];
   const meta = data?.meta;
 
+  const handleDelete = (id, name) => {
+    deleteProduct.mutate(id, {
+      onSuccess: () => toast.info(`Product "${name}" deleted.`),
+      onError: () => toast.error("Failed to delete product."),
+    });
+  };
+
   return (
     <div className="space-y-5">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
@@ -47,14 +55,14 @@ export default function ProductsList() {
             />
           </div>
           <Select value={category} onValueChange={(v) => { setCategory(v); setPage(1); }}>
-            <SelectTrigger className="sm:w-48"><SelectValue placeholder="All categories" /></SelectTrigger>
+            <SelectTrigger className="sm:w-48 cursor-pointer"><SelectValue placeholder="All categories" /></SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">All categories</SelectItem>
-              {(categories || []).map((c) => <SelectItem key={c.slug} value={c.slug}>{c.name}</SelectItem>)}
+              <SelectItem value="all" className="cursor-pointer">All categories</SelectItem>
+              {(categories || []).map((c) => <SelectItem key={c.slug} value={c.slug} className="cursor-pointer">{c.name}</SelectItem>)}
             </SelectContent>
           </Select>
         </div>
-        <Button asChild>
+        <Button asChild className="cursor-pointer">
           <Link to="/admin/products/new"><Plus size={16} /> Add product</Link>
         </Button>
       </div>
@@ -84,39 +92,39 @@ export default function ProductsList() {
               <TableRow key={p.id}>
                 <TableCell>
                   <div className="flex items-center gap-3">
-                    <img src={p.image} alt={p.name} className="h-10 w-10 rounded-lg object-cover bg-gray-100" />
+                    <img src={p.image} alt={p.name} className="h-10 w-10 rounded-lg object-cover bg-gray-100 border border-gray-200" />
                     <div>
                       <p className="font-medium text-gray-900 line-clamp-1">{p.name}</p>
                       <p className="text-xs text-gray-400">{p.brand || p.sku}</p>
                     </div>
                   </div>
                 </TableCell>
-                <TableCell><Badge variant="outline" className="capitalize">{p.categoryName}</Badge></TableCell>
-                <TableCell className="font-medium text-gray-900">${p.price.toFixed(2)}</TableCell>
+                <TableCell><Badge variant="outline" className="capitalize">{p.categoryName || p.category}</Badge></TableCell>
+                <TableCell className="font-medium text-gray-900">${Number(p.price).toFixed(2)}</TableCell>
                 <TableCell><StockBadge stock={p.stock} /></TableCell>
                 <TableCell>
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
-                      <Button variant="ghost" size="icon"><MoreHorizontal size={16} /></Button>
+                      <Button variant="ghost" size="icon" className="cursor-pointer"><MoreHorizontal size={16} /></Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
-                      <DropdownMenuItem asChild>
+                      <DropdownMenuItem asChild className="cursor-pointer">
                         <Link to={`/admin/products/${p.id}/edit`}><Pencil size={14} className="mr-2" /> Edit</Link>
                       </DropdownMenuItem>
                       <AlertDialog>
                         <AlertDialogTrigger asChild>
-                          <DropdownMenuItem onSelect={(e) => e.preventDefault()} className="text-red-600">
+                          <DropdownMenuItem onSelect={(e) => e.preventDefault()} className="text-red-600 cursor-pointer">
                             <Trash2 size={14} className="mr-2" /> Delete
                           </DropdownMenuItem>
                         </AlertDialogTrigger>
                         <AlertDialogContent>
                           <AlertDialogHeader>
                             <AlertDialogTitle>Delete "{p.name}"?</AlertDialogTitle>
-                            <AlertDialogDescription>This can't be undone.</AlertDialogDescription>
+                            <AlertDialogDescription>This action cannot be undone.</AlertDialogDescription>
                           </AlertDialogHeader>
                           <AlertDialogFooter>
-                            <AlertDialogCancel>Cancel</AlertDialogCancel>
-                            <AlertDialogAction onClick={() => deleteProduct.mutate(p.id)}>Delete</AlertDialogAction>
+                            <AlertDialogCancel className="cursor-pointer">Cancel</AlertDialogCancel>
+                            <AlertDialogAction onClick={() => handleDelete(p.id, p.name)} className="cursor-pointer bg-red-600 hover:bg-red-700">Delete</AlertDialogAction>
                           </AlertDialogFooter>
                         </AlertDialogContent>
                       </AlertDialog>
@@ -129,14 +137,14 @@ export default function ProductsList() {
         </Table>
       </div>
 
-      {meta && meta.total_pages > 1 && (
-        <div className="flex items-center justify-between text-sm text-gray-500">
-          <p>Page {meta.page} of {meta.total_pages} · {meta.total} products</p>
+      {meta && (meta.total_pages > 1 || meta.last_page > 1) && (
+        <div className="flex items-center justify-between text-sm text-gray-500 pt-2">
+          <p>Page {meta.page || meta.current_page} of {meta.total_pages || meta.last_page} · {meta.total} products</p>
           <div className="flex gap-2">
-            <Button variant="outline" size="sm" disabled={page <= 1 || isFetching} onClick={() => setPage((p) => p - 1)}>
+            <Button variant="outline" size="sm" disabled={page <= 1 || isFetching} onClick={() => setPage((p) => p - 1)} className="cursor-pointer">
               <ChevronLeft size={14} /> Prev
             </Button>
-            <Button variant="outline" size="sm" disabled={page >= meta.total_pages || isFetching} onClick={() => setPage((p) => p + 1)}>
+            <Button variant="outline" size="sm" disabled={page >= (meta.total_pages || meta.last_page) || isFetching} onClick={() => setPage((p) => p + 1)} className="cursor-pointer">
               Next <ChevronRight size={14} />
             </Button>
           </div>

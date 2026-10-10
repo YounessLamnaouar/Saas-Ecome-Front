@@ -12,6 +12,7 @@ import Cart from "./pages/Cart";
 import LikedProducts from "./pages/LikedProducts";
 import Checkout from "./pages/Checkout";
 import OrderConfirmation from "./pages/OrderConfirmation";
+import Contact from "./pages/Contact";
 import Navbar from "./components/Navbar";
 import Collection from "./components/Collection";
 import AdminLayout from "./layout/AdminLayout";
@@ -55,6 +56,8 @@ export default function App() {
         />
         <Route path="/shop" element={<PageLayout><Shop /></PageLayout>} />
         <Route path="/collection" element={<PageLayout><Collection /></PageLayout>} />
+        <Route path="/contact" element={<PageLayout><Contact /></PageLayout>} />
+        <Route path="/contact-info" element={<PageLayout><Contact /></PageLayout>} />
         <Route path="/product/:id" element={<PageLayout><ProductDetail /></PageLayout>} />
         <Route path="/cart" element={<PageLayout><Cart /></PageLayout>} />
         <Route path="/liked" element={<PageLayout><LikedProducts /></PageLayout>} />

@@ -133,9 +133,9 @@ export default function Footer() {
                   </button>
                 </li>
                 <li>
-                  <a href="#contact-info" className="hover:text-white transition-colors cursor-pointer">
+                  <Link to="/contact" className="hover:text-white transition-colors cursor-pointer">
                     Contact Us
-                  </a>
+                  </Link>
                 </li>
                 <li>
                   <button onClick={() => setSizeGuideOpen(true)} className="hover:text-white transition-colors cursor-pointer text-left">

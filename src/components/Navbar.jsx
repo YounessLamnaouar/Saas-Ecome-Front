@@ -22,6 +22,7 @@ export default function Navbar({ transparent = true, bg = "bg-gray-900" }) {
     { name: "Home", path: "/" },
     { name: "Shop", path: "/shop" },
     { name: "Collection", path: "/collection" },
+    { name: "Contact", path: "/contact" },
   ];
 
   const handleSearchSubmit = (e) => {

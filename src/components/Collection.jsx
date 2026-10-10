@@ -93,7 +93,7 @@ export default function Collection() {
                       <h3 className="text-2xl font-bold capitalize text-gray-900 group-hover:text-amber-700 transition-colors">
                         {col.name}
                       </h3>
-                      <p className="text-sm text-gray-600 mt-1 line-clamp-2 max-w-[200px]">
+                      <p className="text-sm text-gray-600 mt-1 line-clamp-2 max-w-50">
                         {col.description || "Curated product collection"}
                       </p>
                       <div className="mt-6 flex items-center gap-2 text-xs font-bold text-gray-900">
@@ -102,11 +102,14 @@ export default function Collection() {
                       </div>
                     </div>
 
+                    <div className="absolute pointer-events-none bottom-0 right-0 w-36 h-25 flex justify-center items-center p-4">
                     <img
                       src={imageSrc}
                       alt={col.name}
-                      className="absolute -right-4 -bottom-6 w-44 h-44 object-contain opacity-90 transition-all duration-500 group-hover:scale-110"
+                      className="object-contain rounded-2xl opacity-90 transition-all duration-500 group-hover:scale-110"
                     />
+                    </div>
+
                   </div>
                 );
               })}

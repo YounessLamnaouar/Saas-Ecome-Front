@@ -133,13 +133,7 @@ export default function Checkout() {
               >
                 Send order via WhatsApp
               </a>
-              <a
-                href={mailtoLink}
-                onClick={processStockDeduction}
-                className="flex-1 text-center border border-gray-300 text-gray-900 px-6 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-all cursor-pointer"
-              >
-                Send order via Email
-              </a>
+              
             </div>
           </form>
 

@@ -1,3 +1,4 @@
+import { translate } from '@/lib/translations';
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { toast } from "sonner";
 import { useUserAuth } from "./UserAuthContext";
@@ -8,36 +9,35 @@ export function CartProvider({ children }) {
   const { user } = useUserAuth();
   const userId = user?.id || "guest";
 
-  const [cart, setCart] = useState(() => {
-    const saved = localStorage.getItem(`cart_${userId}`) || localStorage.getItem("cart");
-    return saved ? JSON.parse(saved) : [];
-  });
-
-  const [likedProducts, setLikedProducts] = useState(() => {
-    const saved = localStorage.getItem(`liked_${userId}`) || localStorage.getItem("likedProducts");
-    return saved ? JSON.parse(saved) : [];
-  });
-
-  // Reload cart & liked products whenever user logs in or switches account
+  const read = (key) => { try { const value = JSON.parse(localStorage.getItem(key) || (key === 'cart_guest' ? localStorage.getItem('cart') : null) || '[]'); return Array.isArray(value) ? value : []; } catch { return []; } };
+  const [state, setState] = useState(() => ({ owner: userId, cart: read(`cart_${userId}`), liked: read(`liked_${userId}`) }));
+  const { cart, liked: likedProducts } = state;
+  const setCart = (update) => setState(prev => ({ ...prev, cart: typeof update === 'function' ? update(prev.cart) : update }));
+  const setLikedProducts = (update) => setState(prev => ({ ...prev, liked: typeof update === 'function' ? update(prev.liked) : update }));
   useEffect(() => {
-    const savedCart = localStorage.getItem(`cart_${userId}`);
-    const savedLiked = localStorage.getItem(`liked_${userId}`);
-    if (savedCart) setCart(JSON.parse(savedCart));
-    if (savedLiked) setLikedProducts(JSON.parse(savedLiked));
-  }, [userId]);
-
-  // Sync to local storage
-  useEffect(() => {
-    localStorage.setItem(`cart_${userId}`, JSON.stringify(cart));
-    localStorage.setItem(`liked_${userId}`, JSON.stringify(likedProducts));
-  }, [cart, likedProducts, userId]);
+    if (state.owner !== userId) {
+      let next = read(`cart_${userId}`);
+      if (userId !== 'guest' && state.owner === 'guest') {
+        for (const item of state.cart) {
+          const existing = next.find(p => p.id === item.id && p.color === item.color);
+          if (existing) existing.qty = Math.min(existing.qty + item.qty, item.stock ?? 999);
+          else next.push(item);
+        }
+        localStorage.setItem('cart_guest', '[]');
+      }
+      setState({ owner: userId, cart: next, liked: read(`liked_${userId}`) });
+      return;
+    }
+    localStorage.setItem(`cart_${state.owner}`, JSON.stringify(cart));
+    localStorage.setItem(`liked_${state.owner}`, JSON.stringify(likedProducts));
+  }, [userId, state]);
 
   // Liked products operations
   const addToLikedProducts = (product) => {
     setLikedProducts((prev) => {
       const existing = prev.find((item) => item.id === product.id);
       if (!existing) {
-        toast.success(`Added "${product.name || product.title}" to wishlist!`);
+        toast.success(translate(`Added "${product.name || product.title}" to wishlist!`));
         return [...prev, product];
       }
       return prev;
@@ -47,7 +47,7 @@ export function CartProvider({ children }) {
   const removeFromLikedProducts = (id) => {
     setLikedProducts((prev) => {
       const item = prev.find((p) => p.id === id);
-      if (item) toast.info(`Removed "${item.name || item.title}" from wishlist.`);
+      if (item) toast.info(translate(`Removed "${item.name || item.title}" from wishlist.`));
       return prev.filter((item) => item.id !== id);
     });
   };
@@ -59,7 +59,7 @@ export function CartProvider({ children }) {
   const addToCart = (product, qty = 1) => {
     const maxStock = typeof product.stock === "number" ? product.stock : 999;
     if (maxStock <= 0) {
-      toast.error(`"${product.name || product.title}" is out of stock.`);
+      toast.error(translate(`"${product.name || product.title}" is out of stock.`));
       return;
     }
 
@@ -70,11 +70,11 @@ export function CartProvider({ children }) {
 
       if (targetQty > maxStock) {
         if (currentQty >= maxStock) {
-          toast.error(`Cannot add more. Maximum available stock for "${product.name || product.title}" is ${maxStock}.`);
+          toast.error(translate(`Cannot add more. Maximum available stock for "${product.name || product.title}" is ${maxStock}.`));
           return prev;
         }
         const allowed = maxStock - currentQty;
-        toast.info(`Added ${allowed} item(s) to cart (max stock reached: ${maxStock}).`);
+        toast.info(translate(`Added ${allowed} item(s) to cart (max stock reached: ${maxStock}).`));
         return prev.map((item) =>
           item.id === product.id && item.color === product.color
             ? { ...item, qty: maxStock, stock: maxStock }
@@ -82,7 +82,7 @@ export function CartProvider({ children }) {
         );
       }
 
-      toast.success(`Added "${product.name || product.title}" to cart!`);
+      toast.success(translate(`Added "${product.name || product.title}" to cart!`));
       if (existing) {
         return prev.map((item) =>
           item.id === product.id && item.color === product.color
@@ -97,7 +97,7 @@ export function CartProvider({ children }) {
   const removeFromCart = (id) => {
     setCart((prev) => {
       const item = prev.find((p) => p.id === id);
-      if (item) toast.info(`Removed "${item.name || item.title}" from cart.`);
+      if (item) toast.info(translate(`Removed "${item.name || item.title}" from cart.`));
       return prev.filter((item) => item.id !== id);
     });
   };
@@ -109,7 +109,7 @@ export function CartProvider({ children }) {
         if (item.id === id) {
           const maxStock = typeof item.stock === "number" ? item.stock : 999;
           if (newQty > maxStock) {
-            toast.error(`Cannot exceed maximum available stock (${maxStock}) for "${item.name || item.title}".`);
+            toast.error(translate(`Cannot exceed maximum available stock (${maxStock}) for "${item.name || item.title}".`));
             return { ...item, qty: maxStock };
           }
           return { ...item, qty: newQty };

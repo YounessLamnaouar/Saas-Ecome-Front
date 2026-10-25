@@ -1,3 +1,4 @@
+import { T } from '@/context/Preferences';
 
 import React, { useEffect, useState } from "react";
 import ProductCarousel from "./ProductCarousel";
@@ -41,9 +42,7 @@ export default function Hero() {
             data-aos="fade-up"
             data-aos-duration="1500"
           >
-            <span className="text-[4rem] md:text-[12rem] lg:text-[17rem] font-black text-black/20 select-none whitespace-nowrap animate-pulse">
-              FASHION
-            </span>
+            <span className="text-[4rem] md:text-[12rem] lg:text-[17rem] font-black text-black/20 select-none whitespace-nowrap animate-pulse"> <T>FASHION</T> </span>
           </div>
 
           <div className="relative z-10" data-aos="zoom-in" data-aos-duration="1200" data-aos-delay="300">

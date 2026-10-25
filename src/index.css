@@ -72,3 +72,29 @@ body {
   --radius-xl: calc(var(--radius) + 4px);
 }
 
+
+@custom-variant dark (&:where(.dark, .dark *));
+.dark {
+  --bg: #111827; --fg: #f3f4f6;
+  --background: #111827; --foreground: #f3f4f6;
+  --card: #1f2937; --card-foreground: #f3f4f6;
+  --popover: #1f2937; --popover-foreground: #f3f4f6;
+  --primary: #f3f4f6; --primary-foreground: #111827;
+  --secondary: #374151; --secondary-foreground: #f3f4f6;
+  --muted: #1f2937; --muted-foreground: #9ca3af;
+  --accent: #374151; --accent-foreground: #f3f4f6;
+  --border: #374151; --input: #4b5563; --ring: #d1d5db;
+}
+.dark .bg-white { background-color: var(--card); }
+.dark .bg-gray-50, .dark .bg-gray-100 { background-color: var(--background); }
+.dark .bg-gray-200 { background-color: #374151; }
+.dark .text-gray-900, .dark .text-gray-800, .dark .text-black { color: #f3f4f6; }
+.dark .text-gray-700, .dark .text-gray-600, .dark .text-gray-500 { color: #d1d5db; }
+.dark .border-gray-100, .dark .border-gray-200, .dark .border-gray-300 { border-color: var(--border); }
+.dark .hover\:bg-gray-50:hover, .dark .hover\:bg-gray-100:hover { background-color: #374151; }
+.dark input, .dark textarea, .dark select { color-scheme: dark; }
+.dark input::placeholder, .dark textarea::placeholder { color: #9ca3af; }
+
+.dark .bg-white\/95 { background-color: rgb(31 41 55 / .95); }
+.dark .hover\:text-gray-900:hover { color: #f3f4f6; }
+.dark .recharts-tooltip-cursor { fill: #374151; }

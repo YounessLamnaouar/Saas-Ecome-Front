@@ -1,3 +1,4 @@
+import { T } from '@/context/Preferences';
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useCollections } from "@/hooks/useCollections";
@@ -31,8 +32,7 @@ export default function Collection() {
     return (
       <section className="py-16 bg-gray-50 min-h-screen">
         <div className="container mx-auto px-4 md:px-8 lg:px-16">
-          <h2 className="text-2xl md:text-4xl font-bold text-gray-900 mb-10">
-            Shop by <span className="text-gray-600">Collection</span>
+          <h2 className="text-2xl md:text-4xl font-bold text-gray-900 mb-10"> <T>Shop by</T> <span className="text-gray-600"> <T>Collection</T> </span>
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {Array.from({ length: 6 }).map((_, i) => (
@@ -53,20 +53,18 @@ export default function Collection() {
       <div className="container mx-auto px-4 md:px-8 lg:px-16">
         <div className="flex flex-col md:flex-row md:items-center justify-between mb-10 gap-4">
           <div>
-            <h2 className="text-2xl md:text-4xl font-bold text-gray-900">
-              Shop by <span className="text-gray-600">Collection</span>
+            <h2 className="text-2xl md:text-4xl font-bold text-gray-900"> <T>Shop by</T> <span className="text-gray-600"> <T>Collection</T> </span>
             </h2>
-            <p className="text-gray-500 text-sm mt-1">Discover curated fashion trends and handpicked seasonal styles.</p>
+            <p className="text-gray-500 text-sm mt-1"> <T>Discover curated fashion trends and handpicked seasonal styles.</T> </p>
           </div>
           {items.length > 0 && (
             <span className="text-xs font-semibold px-3 py-1.5 rounded-full bg-white border border-gray-200 text-gray-700 shadow-sm w-fit">
-              {items.length} Collections Total
-            </span>
+              {items.length} <T>Collections Total</T> </span>
           )}
         </div>
 
         {items.length === 0 ? (
-          <p className="text-gray-500 py-16 text-center">No collections available right now.</p>
+          <p className="text-gray-500 py-16 text-center"> <T>No collections available right now.</T> </p>
         ) : (
           <>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -85,8 +83,7 @@ export default function Collection() {
                   >
                     {col.is_featured && (
                       <span className="absolute top-4 right-4 z-10 bg-amber-600 text-white font-bold text-[10px] uppercase px-2.5 py-1 rounded-full flex items-center gap-1 shadow-sm">
-                        <Sparkles size={10} /> Featured
-                      </span>
+                        <Sparkles size={10} /> <T>Featured</T> </span>
                     )}
 
                     <div className="z-10 relative">
@@ -97,7 +94,7 @@ export default function Collection() {
                         {col.description || "Curated product collection"}
                       </p>
                       <div className="mt-6 flex items-center gap-2 text-xs font-bold text-gray-900">
-                        <span>{count} Products</span>
+                        <span>{count} <T>Products</T> </span>
                         <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform text-amber-600" />
                       </div>
                     </div>
@@ -123,17 +120,14 @@ export default function Collection() {
                   onClick={() => setPage((p) => p - 1)}
                   className="px-4 py-2 rounded-lg bg-white border border-gray-200 shadow-sm text-sm font-medium disabled:opacity-40 cursor-pointer flex items-center gap-1 hover:bg-gray-100 transition-colors"
                 >
-                  <ChevronLeft size={16} /> Previous
-                </button>
-                <span className="text-sm text-gray-600 font-semibold">
-                  Page {page} of {totalPages}
+                  <ChevronLeft size={16} /> <T>Previous</T> </button>
+                <span className="text-sm text-gray-600 font-semibold"> <T>Page</T> {page} <T>of</T> {totalPages}
                 </span>
                 <button
                   disabled={page >= totalPages}
                   onClick={() => setPage((p) => p + 1)}
                   className="px-4 py-2 rounded-lg bg-white border border-gray-200 shadow-sm text-sm font-medium disabled:opacity-40 cursor-pointer flex items-center gap-1 hover:bg-gray-100 transition-colors"
-                >
-                  Next <ChevronRight size={16} />
+                > <T>Next</T> <ChevronRight size={16} />
                 </button>
               </div>
             )}

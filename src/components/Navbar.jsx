@@ -1,3 +1,5 @@
+import { T, usePreferences as useTranslationPreferences } from '@/context/Preferences';
+import { PreferenceControls } from "../context/Preferences";
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
@@ -5,9 +7,11 @@ import { useCart } from "../context/CartContext";
 import { useUserAuth } from "../context/UserAuthContext";
 import { Heart, Menu, Search, ShoppingBag, X, User, LogOut, Package, Truck } from "lucide-react";
 import UserAuthModal from "./UserAuthModal";
-import LanguageSwitcher from "./LanguageSwitcher";
+
 
 export default function Navbar({ transparent = true, bg = "bg-gray-900" }) {
+ const { t: tr } = useTranslationPreferences();
+
   const { t, i18n } = useTranslation();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
@@ -47,10 +51,8 @@ export default function Navbar({ transparent = true, bg = "bg-gray-900" }) {
 
       <nav className={`relative z-50 ${transparent ? "" : bg}`}>
         <div className="container mx-auto px-4 md:px-8 lg:px-16 py-6">
-          <div className="flex items-center justify-between">
-            <Link to="/" className="text-white text-2xl font-bold tracking-tight">
-              FASHION
-              <span className="text-xs align-top ms-0.5">@</span>
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <Link to="/" className="text-white text-2xl font-bold tracking-tight"> <T>FASHION</T> <span className="text-xs align-top ms-0.5">@</span>
             </Link>
 
             <div className="hidden md:flex items-center justify-center flex-1">
@@ -75,9 +77,9 @@ export default function Navbar({ transparent = true, bg = "bg-gray-900" }) {
               </div>
             </div>
 
-            <div className="flex items-center gap-3 sm:gap-4 text-white">
+            <div className="flex max-w-full flex-wrap items-center gap-2 sm:gap-4 text-white">
               {/* Language Switcher */}
-              <LanguageSwitcher variant="storefront" className="hidden sm:flex" />
+              <PreferenceControls />
 
               <div className="relative flex items-center">
                 {isSearchOpen && (
@@ -99,7 +101,7 @@ export default function Navbar({ transparent = true, bg = "bg-gray-900" }) {
                   type="button"
                   onClick={() => setIsSearchOpen(!isSearchOpen)}
                   className="hover:opacity-70 transition-opacity cursor-pointer p-1"
-                  aria-label="Search"
+                  aria-label={tr("Search")}
                 >
                   {isSearchOpen ? <X size={20} /> : <Search size={20} />}
                 </button>
@@ -184,7 +186,7 @@ export default function Navbar({ transparent = true, bg = "bg-gray-900" }) {
               <button
                 onClick={() => setIsMenuOpen(!isMenuOpen)}
                 className="md:hidden hover:opacity-70 transition-opacity cursor-pointer p-1"
-                aria-label="Open menu"
+                aria-label={tr("Open menu")}
               >
                 {isMenuOpen ? <X size={20} /> : <Menu size={20} />}
               </button>
@@ -195,7 +197,7 @@ export default function Navbar({ transparent = true, bg = "bg-gray-900" }) {
           {isMenuOpen && (
             <div className="md:hidden mt-4 pt-4 border-t border-white/20">
               <div className="flex flex-col gap-3 text-white text-start">
-                <LanguageSwitcher variant="storefront" className="self-start mb-2" />
+                
                 {navLinks.map((link) => (
                   <Link
                     key={link.path}

@@ -1,11 +1,12 @@
+import { T } from '@/context/Preferences';
 import React from "react";
 import { Check, Clock, PackageCheck, Truck, ShieldCheck } from "lucide-react";
 
 const STEPS = [
-  { key: "en_attente", label: "En attente", desc: "Commande reçue", icon: Clock },
-  { key: "confirmee", label: "Confirmée", desc: "Préparation du colis", icon: ShieldCheck },
-  { key: "en_cours_de_livraison", label: "En livraison", desc: "Colis en route", icon: Truck },
-  { key: "livre", label: "Livrée", desc: "Colis remis au client", icon: PackageCheck },
+  { key: "en_attente", label: "Pending", desc: "Order received", icon: Clock },
+  { key: "confirmee", label: "Confirmed", desc: "Preparing your package", icon: ShieldCheck },
+  { key: "en_cours_de_livraison", label: "Out for delivery", desc: "Package on its way", icon: Truck },
+  { key: "livre", label: "Delivered", desc: "Package delivered", icon: PackageCheck },
 ];
 
 const STATUS_RANKS = {
@@ -66,9 +67,9 @@ export default function OrderStatusStepper({ currentStatus, histories = [] }) {
                     isCurrent ? "text-amber-700" : isCompleted ? "text-gray-900" : "text-gray-400"
                   }`}
                 >
-                  {step.label}
+                  <T>{step.label}</T>
                 </p>
-                <p className="text-xs text-gray-500 hidden sm:block">{step.desc}</p>
+                <p className="text-xs text-gray-500 hidden sm:block"><T>{step.desc}</T></p>
                 {timestamp && (
                   <p className="text-[11px] text-gray-400 mt-1">
                     {new Date(timestamp).toLocaleDateString(undefined, {

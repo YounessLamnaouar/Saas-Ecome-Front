@@ -40,6 +40,10 @@ i18n
     },
   });
 
+// Keep legacy preference storage synchronized with the shared language engine.
+localStorage.setItem("language", i18n.resolvedLanguage || "en");
+i18n.on("languageChanged", lng => localStorage.setItem("language", lng));
+
 // Apply document attributes on load & change
 applyLanguageSettings(i18n.language);
 i18n.on("languageChanged", (lng) => {

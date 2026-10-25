@@ -1,3 +1,5 @@
+import { translate } from '@/lib/translations';
+import { T } from '@/context/Preferences';
 import React, { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import { useCart } from "../context/CartContext";
@@ -41,10 +43,8 @@ export default function ProductDetail() {
   if (!product) {
     return (
       <section className="py-24 text-center min-h-screen">
-        <p className="text-gray-600 text-lg mb-4">Product not found.</p>
-        <Link to="/shop" className="text-gray-900 font-semibold underline cursor-pointer">
-          Back to Shop
-        </Link>
+        <p className="text-gray-600 text-lg mb-4"> <T>Product not found.</T> </p>
+        <Link to="/shop" className="text-gray-900 font-semibold underline cursor-pointer"> <T>Back to Shop</T> </Link>
       </section>
     );
   }
@@ -54,7 +54,7 @@ export default function ProductDetail() {
 
   const handleIncrement = () => {
     if (qty >= maxStock) {
-      toast.error(`Only ${maxStock} items available in stock.`);
+      toast.error(translate(`Only ${maxStock} items available in stock.`));
       return;
     }
     setQty((q) => q + 1);
@@ -67,9 +67,7 @@ export default function ProductDetail() {
           <div className="bg-gray-50 rounded-2xl flex items-center justify-center h-96 md:h-[500px] relative">
             <img src={product.image} alt={product.name} className="max-h-full max-w-full object-contain p-8" />
             {isOutOfStock && (
-              <span className="absolute top-4 left-4 bg-red-600 text-white font-bold text-xs px-3 py-1.5 rounded-md">
-                Out of Stock
-              </span>
+              <span className="absolute top-4 left-4 bg-red-600 text-white font-bold text-xs px-3 py-1.5 rounded-md"> <T>Out of Stock</T> </span>
             )}
           </div>
           <div>
@@ -93,7 +91,7 @@ export default function ProductDetail() {
 
             {product.colors && product.colors.length > 0 && (
               <div className="mb-6">
-                <p className="text-sm font-semibold text-gray-900 mb-2">Color</p>
+                <p className="text-sm font-semibold text-gray-900 mb-2"> <T>Color</T> </p>
                 <div className="flex gap-3">
                   {product.colors.map((color) => (
                     <button
@@ -107,7 +105,7 @@ export default function ProductDetail() {
             )}
 
             <div className="mb-6">
-              <p className="text-sm font-semibold text-gray-900 mb-2">Quantity</p>
+              <p className="text-sm font-semibold text-gray-900 mb-2"> <T>Quantity</T> </p>
               <div className="flex items-center gap-3">
                 <button
                   disabled={qty <= 1}
@@ -125,7 +123,7 @@ export default function ProductDetail() {
                   +
                 </button>
                 <span className={`text-sm ml-2 font-medium ${isOutOfStock ? "text-red-600" : "text-gray-500"}`}>
-                  {isOutOfStock ? "Out of stock" : `${maxStock} available in stock`}
+                  <T>{isOutOfStock ? "Out of stock" : `${maxStock} available in stock`}</T>
                 </span>
               </div>
             </div>
@@ -137,7 +135,7 @@ export default function ProductDetail() {
                 className="flex-1 bg-gray-900 text-white px-6 py-3 rounded-lg flex items-center justify-center gap-2 font-semibold hover:bg-gray-800 transition-all cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed"
               >
                 <ShoppingCart size={18} />
-                {isOutOfStock ? "Out of Stock" : "Add to Cart"}
+                <T>{isOutOfStock ? "Out of Stock" : "Add to Cart"}</T>
               </button>
               <LikeButton product={product} size={20} className="p-3 border rounded-lg hover:bg-gray-100 transition-all cursor-pointer" />
             </div>
@@ -146,7 +144,7 @@ export default function ProductDetail() {
 
         {related.length > 0 && (
           <div>
-            <h2 className="text-2xl font-bold text-gray-900 mb-6">You may also like</h2>
+            <h2 className="text-2xl font-bold text-gray-900 mb-6"> <T>You may also like</T> </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
               {related.map((p) => (
                 <ProductCard key={p.id} product={p} />

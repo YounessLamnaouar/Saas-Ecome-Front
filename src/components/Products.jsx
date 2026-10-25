@@ -1,3 +1,4 @@
+import { T, usePreferences as useTranslationPreferences } from '@/context/Preferences';
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { useCart } from "../context/CartContext";
@@ -8,6 +9,8 @@ import { useProducts } from "@/hooks/useProducts";
 import { useTranslation } from "react-i18next";
 
 export default function Products() {
+ const { t: tr } = useTranslationPreferences();
+
   const { t } = useTranslation();
   const [currentIndex, setCurrentIndex] = useState(1);
   const { addToCart } = useCart();
@@ -29,14 +32,14 @@ export default function Products() {
           <div className="flex items-center gap-4">
             <button
               onClick={prevSlide}
-              aria-label="Previous"
+              aria-label={tr("Previous")}
               className="p-2 rounded-full bg-gray-100 hover:bg-gray-200 transition-all duration-300 cursor-pointer"
             >
               <ChevronLeft className="w-5 h-5 rtl:rotate-180" />
             </button>
             <button
               onClick={nextSlide}
-              aria-label="Next"
+              aria-label={tr("Next")}
               className="p-2 rounded-full bg-gray-100 hover:bg-gray-200 transition-all duration-300 cursor-pointer"
             >
               <ChevronRight className="w-5 h-5 rtl:rotate-180" />

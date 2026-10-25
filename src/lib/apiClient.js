@@ -51,7 +51,7 @@ async function request(path, { params, signal } = {}) {
   try {
     response = await fetch(url, {
       signal,
-      headers: { Accept: "application/json", ...authHeaders(path) },
+      headers: { Accept: "application/json", "Accept-Language": localStorage.getItem("lang") || "en", ...authHeaders(path) },
     });
   } catch (cause) {
     throw new ApiError(`Network error reaching ${url}`, { status: 0, payload: cause });
@@ -72,7 +72,7 @@ async function mutate(method, path, body) {
     method,
     headers: {
       "Content-Type": "application/json",
-      Accept: "application/json",
+      Accept: "application/json", "Accept-Language": localStorage.getItem("lang") || "en",
       ...authHeaders(path),
     },
     body: body ? JSON.stringify(body) : undefined,

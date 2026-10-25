@@ -1,3 +1,4 @@
+import { PreferenceControls, T, usePreferences as useTranslationPreferences } from '@/context/Preferences';
 import React, { useState } from "react";
 import { Link, NavLink, useLocation } from "react-router-dom";
 import {
@@ -20,6 +21,8 @@ const NAV_ITEMS = [
 ];
 
 function AdminLoginForm({ onLoginSuccess }) {
+ const { t: tr } = useTranslationPreferences();
+
   const [email, setEmail] = useState("admin@saas-ecome.test");
   const [password, setPassword] = useState("password");
   const [loading, setLoading] = useState(false);
@@ -46,10 +49,8 @@ function AdminLoginForm({ onLoginSuccess }) {
           <div className="mx-auto w-12 h-12 rounded-full bg-gray-900 text-white flex items-center justify-center mb-2">
             <Lock size={20} />
           </div>
-          <CardTitle className="text-2xl font-bold text-gray-900">Admin Sign In</CardTitle>
-          <CardDescription>
-            Enter your admin credentials to access the management dashboard.
-          </CardDescription>
+          <CardTitle className="text-2xl font-bold text-gray-900"> <T>Admin Sign In</T> </CardTitle>
+          <CardDescription> <T>Enter your admin credentials to access the management dashboard.</T> </CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
@@ -60,18 +61,18 @@ function AdminLoginForm({ onLoginSuccess }) {
               </div>
             )}
             <div className="space-y-1.5">
-              <Label htmlFor="email">Admin Email</Label>
+              <Label htmlFor="email"> <T>Admin Email</T> </Label>
               <Input
                 id="email"
                 type="email"
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="admin@saas-ecome.test"
+                placeholder={tr("admin@saas-ecome.test")}
               />
             </div>
             <div className="space-y-1.5">
-              <Label htmlFor="password">Password</Label>
+              <Label htmlFor="password"> <T>Password</T> </Label>
               <Input
                 id="password"
                 type="password"
@@ -85,8 +86,7 @@ function AdminLoginForm({ onLoginSuccess }) {
             </Button>
             <div className="text-center pt-2">
               <Link to="/" className="text-xs text-gray-500 hover:text-gray-900 flex items-center justify-center gap-1">
-                <Store size={14} /> Back to Storefront
-              </Link>
+                <Store size={14} /> <T>Back to Storefront</T> </Link>
             </div>
           </form>
         </CardContent>
@@ -96,6 +96,8 @@ function AdminLoginForm({ onLoginSuccess }) {
 }
 
 function SidebarLinks({ onNavigate }) {
+ const { t: tr } = useTranslationPreferences();
+
   return (
     <nav className="flex flex-col gap-1 px-3">
       {NAV_ITEMS.map(({ to, label, icon: Icon, end }) => (
@@ -112,7 +114,7 @@ function SidebarLinks({ onNavigate }) {
           }
         >
           <Icon size={18} />
-          {label}
+          {tr(label)}
         </NavLink>
       ))}
     </nav>
@@ -120,6 +122,8 @@ function SidebarLinks({ onNavigate }) {
 }
 
 export default function AdminLayout({ children }) {
+ const { t: tr } = useTranslationPreferences();
+
   const [token, setToken] = useState(() => getToken());
   const [mobileOpen, setMobileOpen] = useState(false);
   const location = useLocation();
@@ -140,9 +144,8 @@ export default function AdminLayout({ children }) {
     <div className="min-h-screen bg-gray-50">
       {/* Desktop sidebar */}
       <aside className="hidden lg:flex fixed inset-y-0 left-0 w-64 flex-col bg-gray-900 py-6">
-        <Link to="/" className="px-6 text-white text-2xl font-bold tracking-tight mb-8">
-          FASHION<span className="text-xs align-top ml-0.5">@</span>
-          <span className="block text-xs font-medium tracking-wide text-gray-400 mt-1">Admin panel</span>
+        <Link to="/" className="px-6 text-white text-2xl font-bold tracking-tight mb-8"> <T>FASHION</T> <span className="text-xs align-top ml-0.5">@</span>
+          <span className="block text-xs font-medium tracking-wide text-gray-400 mt-1"> <T>Admin panel</T> </span>
         </Link>
         <SidebarLinks />
         <div className="mt-auto px-3 space-y-1">
@@ -150,24 +153,19 @@ export default function AdminLayout({ children }) {
             to="/"
             className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-gray-300 hover:bg-gray-800 hover:text-white transition-colors"
           >
-            <Store size={18} />
-            Back to store
-          </Link>
+            <Store size={18} /> <T>Back to store</T> </Link>
           <button
             onClick={handleLogout}
             className="w-full flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-red-400 hover:bg-gray-800 hover:text-red-300 transition-colors text-left"
           >
-            <LogOut size={18} />
-            Sign out
-          </button>
+            <LogOut size={18} /> <T>Sign out</T> </button>
         </div>
       </aside>
 
       {/* Mobile sidebar */}
       <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
         <SheetContent side="left" className="bg-gray-900 border-none">
-          <Link to="/" className="text-white text-xl font-bold tracking-tight mb-8 block">
-            FASHION<span className="text-xs align-top ml-0.5">@</span>
+          <Link to="/" className="text-white text-xl font-bold tracking-tight mb-8 block"> <T>FASHION</T> <span className="text-xs align-top ml-0.5">@</span>
           </Link>
           <SidebarLinks onNavigate={() => setMobileOpen(false)} />
           <div className="mt-6 space-y-1">
@@ -176,31 +174,27 @@ export default function AdminLayout({ children }) {
               onClick={() => setMobileOpen(false)}
               className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-gray-300 hover:bg-gray-800 hover:text-white"
             >
-              <Store size={18} />
-              Back to store
-            </Link>
+              <Store size={18} /> <T>Back to store</T> </Link>
             <button
               onClick={() => { setMobileOpen(false); handleLogout(); }}
               className="w-full flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-red-400 hover:bg-gray-800 hover:text-red-300 text-left"
             >
-              <LogOut size={18} />
-              Sign out
-            </button>
+              <LogOut size={18} /> <T>Sign out</T> </button>
           </div>
         </SheetContent>
       </Sheet>
 
       <div className="lg:pl-64">
+        <div className="flex justify-end px-4 py-2"><PreferenceControls /></div>
         <header className="sticky top-0 z-30 flex items-center justify-between border-b border-gray-200 bg-white px-4 py-4 lg:px-8">
           <div className="flex items-center gap-4">
-            <button className="lg:hidden text-gray-700" onClick={() => setMobileOpen(true)} aria-label="Open menu">
+            <button className="lg:hidden text-gray-700" onClick={() => setMobileOpen(true)} aria-label={tr("Open menu")}>
               <Menu size={22} />
             </button>
-            <h1 className="text-lg font-bold text-gray-900">{currentLabel}</h1>
+            <h1 className="text-lg font-bold text-gray-900">{tr(currentLabel)}</h1>
           </div>
           <button onClick={handleLogout} className="text-xs font-medium text-gray-500 hover:text-red-600 flex items-center gap-1 lg:hidden">
-            <LogOut size={14} /> Sign out
-          </button>
+            <LogOut size={14} /> <T>Sign out</T> </button>
         </header>
         <main className="p-4 lg:p-8">{children}</main>
       </div>

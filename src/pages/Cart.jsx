@@ -1,3 +1,4 @@
+import { T } from '@/context/Preferences';
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useCart } from "../context/CartContext";
@@ -11,13 +12,11 @@ export default function Cart() {
   if (cart.length === 0) {
     return (
       <section className="py-24 text-center min-h-screen bg-gray-50">
-        <p className="text-gray-600 text-lg mb-4">Your cart is empty.</p>
+        <p className="text-gray-600 text-lg mb-4"> <T>Your cart is empty.</T> </p>
         <Link
           to="/shop"
           className="bg-gray-900 text-white px-6 py-3 rounded-lg font-semibold hover:bg-gray-800 transition-all"
-        >
-          Continue Shopping
-        </Link>
+        > <T>Continue Shopping</T> </Link>
       </section>
     );
   }
@@ -25,7 +24,7 @@ export default function Cart() {
   return (
     <section className="py-16 bg-gray-50 min-h-screen">
       <div className="container mx-auto px-4 md:px-8 lg:px-16">
-        <h1 className="text-3xl font-bold text-gray-900 mb-10">Your Cart</h1>
+        <h1 className="text-3xl font-bold text-gray-900 mb-10"> <T>Your Cart</T> </h1>
         <div className="grid lg:grid-cols-3 gap-8">
           <div className="lg:col-span-2 flex flex-col gap-4">
             {cart.map((item) => (
@@ -33,7 +32,7 @@ export default function Cart() {
                 <img src={item.image} alt={item.name} className="w-20 h-20 object-contain bg-gray-50 rounded-lg p-2" />
                 <div className="flex-1">
                   <h3 className="font-semibold text-gray-900">{item.name}</h3>
-                  {item.color && <p className="text-xs text-gray-500 capitalize">Color: {item.color}</p>}
+                  {item.color && <p className="text-xs text-gray-500 capitalize"> <T>Color:</T> {item.color}</p>}
                   <p className="text-gray-900 font-bold mt-1">${item.price.toFixed(2)}</p>
                 </div>
                 <div className="flex items-center gap-2">
@@ -50,25 +49,23 @@ export default function Cart() {
           </div>
 
           <div className="bg-white rounded-xl shadow-sm p-6 h-fit">
-            <h2 className="text-lg font-bold text-gray-900 mb-4">Order Summary</h2>
+            <h2 className="text-lg font-bold text-gray-900 mb-4"> <T>Order Summary</T> </h2>
             <div className="flex justify-between text-gray-600 mb-2">
-              <span>Subtotal</span>
+              <span> <T>Subtotal</T> </span>
               <span>${cartTotal.toFixed(2)}</span>
             </div>
             <div className="flex justify-between text-gray-600 mb-4">
-              <span>Delivery</span>
-              <span>Calculated at delivery</span>
+              <span> <T>Delivery</T> </span>
+              <span> <T>Calculated at delivery</T> </span>
             </div>
             <div className="flex justify-between text-gray-900 font-bold text-lg border-t pt-4 mb-6">
-              <span>Total</span>
+              <span> <T>Total</T> </span>
               <span>${cartTotal.toFixed(2)}</span>
             </div>
             <button
               onClick={() => navigate("/checkout")}
               className="w-full bg-gray-900 text-white px-6 py-3 rounded-lg font-semibold hover:bg-gray-800 transition-all"
-            >
-              Proceed to Checkout
-            </button>
+            > <T>Proceed to Checkout</T> </button>
           </div>
         </div>
       </div>

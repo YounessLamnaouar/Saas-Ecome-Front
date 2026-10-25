@@ -1,3 +1,4 @@
+import { T } from '@/context/Preferences';
 import React, { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import ProductCard from "../components/ProductCard";
@@ -46,9 +47,9 @@ export default function Shop() {
       <div className="container mx-auto px-4 md:px-8 lg:px-16">
         <div className="mb-10">
           <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-2 capitalize">
-            {pageTitle}
+            <T>{pageTitle}</T>
           </h1>
-          <p className="text-gray-600">{meta ? `${meta.total} products found` : "Loading…"}</p>
+          <p className="text-gray-600"><T>{meta ? `${meta.total} products found` : "Loading…"}</T></p>
         </div>
 
         <div className="flex flex-col md:flex-row justify-between gap-4 mb-10">
@@ -56,9 +57,7 @@ export default function Shop() {
             <button
               onClick={() => setActiveCategory("all")}
               className={`px-4 py-2 rounded-full text-sm font-medium transition-all cursor-pointer ${activeCategory === "all" ? "bg-gray-900 text-white" : "bg-white text-gray-700 hover:bg-gray-100 shadow-sm"}`}
-            >
-              All
-            </button>
+            > <T>All</T> </button>
             {(categories || []).map((cat) => (
               <button
                 key={cat.id}
@@ -75,10 +74,10 @@ export default function Shop() {
             onChange={(e) => setSort(e.target.value)}
             className="bg-white border border-gray-200 rounded-lg px-4 py-2 text-sm text-gray-700 shadow-sm focus:outline-none cursor-pointer"
           >
-            <option value="default">Sort by</option>
-            <option value="price-asc">Price: Low to High</option>
-            <option value="price-desc">Price: High to Low</option>
-            <option value="name">Name: A-Z</option>
+            <option value="default"> <T>Sort by</T> </option>
+            <option value="price-asc"> <T>Price: Low to High</T> </option>
+            <option value="price-desc"> <T>Price: High to Low</T> </option>
+            <option value="name"> <T>Name: A-Z</T> </option>
           </select>
         </div>
 
@@ -88,7 +87,7 @@ export default function Shop() {
           </div>
         ) : products.length === 0 ? (
           <div className="text-center py-20">
-            <p className="text-gray-500 text-lg">No products found matching your selection.</p>
+            <p className="text-gray-500 text-lg"> <T>No products found matching your selection.</T> </p>
           </div>
         ) : (
           <>
@@ -104,17 +103,13 @@ export default function Shop() {
                   disabled={page <= 1}
                   onClick={() => setPage((p) => p - 1)}
                   className="px-4 py-2 rounded-lg bg-white border border-gray-200 shadow-sm text-sm font-medium disabled:opacity-40 cursor-pointer"
-                >
-                  Previous
-                </button>
-                <span className="text-sm text-gray-500">Page {meta.page} of {meta.total_pages}</span>
+                > <T>Previous</T> </button>
+                <span className="text-sm text-gray-500"> <T>Page</T> {meta.page} <T>of</T> {meta.total_pages}</span>
                 <button
                   disabled={page >= meta.total_pages}
                   onClick={() => setPage((p) => p + 1)}
                   className="px-4 py-2 rounded-lg bg-white border border-gray-200 shadow-sm text-sm font-medium disabled:opacity-40 cursor-pointer"
-                >
-                  Next
-                </button>
+                > <T>Next</T> </button>
               </div>
             )}
           </>

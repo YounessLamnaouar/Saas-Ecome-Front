@@ -1,3 +1,5 @@
+import { translate } from '@/lib/translations';
+import { T, usePreferences as useTranslationPreferences } from '@/context/Preferences';
 import React, { useState } from "react";
 import { Plus, Pencil, Trash2, Package, Link as LinkIcon, Upload, ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -21,6 +23,8 @@ const EMPTY = { name: "", slug: "", description: "", image: "" };
 const ITEMS_PER_PAGE = 6;
 
 function CategoryFormDialog({ open, onOpenChange, initial, onSubmit, saving }) {
+ const { t: tr } = useTranslationPreferences();
+
   const [form, setForm] = useState(initial || EMPTY);
   const [imageMode, setImageMode] = useState("url");
   const [uploading, setUploading] = useState(false);
@@ -35,9 +39,9 @@ function CategoryFormDialog({ open, onOpenChange, initial, onSubmit, saving }) {
     try {
       const dataUrl = await compressImage(file, 600, 600, 0.85);
       setForm((f) => ({ ...f, image: dataUrl }));
-      toast.success("Image uploaded & optimized successfully!");
+      toast.success(translate("Image uploaded & optimized successfully!"));
     } catch (err) {
-      toast.error(err.message || "Failed to process image.");
+      toast.error(translate(err.message || "Failed to process image."));
     } finally {
       setUploading(false);
     }
@@ -47,48 +51,46 @@ function CategoryFormDialog({ open, onOpenChange, initial, onSubmit, saving }) {
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-md">
         <DialogHeader>
-          <DialogTitle>{initial ? "Edit Category" : "New Category"}</DialogTitle>
+          <DialogTitle><T>{initial ? "Edit Category" : "New Category"}</T></DialogTitle>
         </DialogHeader>
         <form
           className="space-y-4"
           onSubmit={(e) => { e.preventDefault(); onSubmit(form); }}
         >
           <div className="space-y-1.5">
-            <Label htmlFor="cat-name">Category Name</Label>
-            <Input id="cat-name" required value={form.name} onChange={set("name")} placeholder="e.g. Sportswear" />
+            <Label htmlFor="cat-name"> <T>Category Name</T> </Label>
+            <Input id="cat-name" required value={form.name} onChange={set("name")} placeholder={tr("e.g. Sportswear")} />
           </div>
           <div className="space-y-1.5">
-            <Label htmlFor="cat-slug">Slug</Label>
-            <Input id="cat-slug" value={form.slug} onChange={set("slug")} placeholder="e.g. sportswear" disabled={Boolean(initial)} />
+            <Label htmlFor="cat-slug"> <T>Slug</T> </Label>
+            <Input id="cat-slug" value={form.slug} onChange={set("slug")} placeholder={tr("e.g. sportswear")} disabled={Boolean(initial)} />
           </div>
           <div className="space-y-1.5">
-            <Label htmlFor="cat-desc">Description</Label>
-            <Textarea id="cat-desc" value={form.description} onChange={set("description")} rows={3} placeholder="Brief category description..." />
+            <Label htmlFor="cat-desc"> <T>Description</T> </Label>
+            <Textarea id="cat-desc" value={form.description} onChange={set("description")} rows={3} placeholder={tr("Brief category description...")} />
           </div>
 
           <div className="space-y-2 border border-gray-100 rounded-xl p-3 bg-gray-50">
             <div className="flex items-center justify-between">
-              <Label className="font-semibold text-gray-900 text-xs">Category Image</Label>
+              <Label className="font-semibold text-gray-900 text-xs"> <T>Category Image</T> </Label>
               <div className="flex gap-1 bg-gray-200 p-0.5 rounded-lg text-[10px]">
                 <button
                   type="button"
                   onClick={() => setImageMode("url")}
                   className={`px-2 py-0.5 rounded transition-all cursor-pointer ${imageMode === "url" ? "bg-white font-bold text-gray-900 shadow-sm" : "text-gray-600"}`}
                 >
-                  <LinkIcon size={10} className="inline mr-1" /> URL
-                </button>
+                  <LinkIcon size={10} className="inline mr-1" /> <T>URL</T> </button>
                 <button
                   type="button"
                   onClick={() => setImageMode("file")}
                   className={`px-2 py-0.5 rounded transition-all cursor-pointer ${imageMode === "file" ? "bg-white font-bold text-gray-900 shadow-sm" : "text-gray-600"}`}
                 >
-                  <Upload size={10} className="inline mr-1" /> File
-                </button>
+                  <Upload size={10} className="inline mr-1" /> <T>File</T> </button>
               </div>
             </div>
 
             {imageMode === "url" ? (
-              <Input id="cat-image" value={form.image} onChange={set("image")} placeholder="https://..." />
+              <Input id="cat-image" value={form.image} onChange={set("image")} placeholder={tr("https://...")} />
             ) : (
               <Input type="file" accept="image/*" onChange={handleFileUpload} className="cursor-pointer bg-white text-xs" disabled={uploading} />
             )}
@@ -96,14 +98,14 @@ function CategoryFormDialog({ open, onOpenChange, initial, onSubmit, saving }) {
             {form.image && (
               <div className="flex items-center gap-2 pt-1">
                 <img src={form.image} alt="Preview" className="h-10 w-10 object-cover rounded border border-gray-200" />
-                <span className="text-[10px] text-gray-500">Image selected</span>
+                <span className="text-[10px] text-gray-500"> <T>Image selected</T> </span>
               </div>
             )}
           </div>
 
           <DialogFooter>
             <Button type="submit" disabled={saving || uploading} className="cursor-pointer">
-              {initial ? "Save Changes" : "Create Category"}
+              <T>{initial ? "Save Changes" : "Create Category"}</T>
             </Button>
           </DialogFooter>
         </form>
@@ -129,10 +131,10 @@ export default function CategoriesList() {
   const handleCreate = (form) => {
     createCategory.mutate(form, {
       onSuccess: () => {
-        toast.success(`Category "${form.name}" created!`);
+        toast.success(translate(`Category "${form.name}" created!`));
         setCreateOpen(false);
       },
-      onError: (err) => toast.error(err.message || "Failed to create category."),
+      onError: (err) => toast.error(translate(err.message || "Failed to create category.")),
     });
   };
 
@@ -141,28 +143,27 @@ export default function CategoriesList() {
       { slug: editing.slug, patch: { ...editing, ...form } },
       {
         onSuccess: () => {
-          toast.success(`Category "${form.name}" updated!`);
+          toast.success(translate(`Category "${form.name}" updated!`));
           setEditing(null);
         },
-        onError: (err) => toast.error(err.message || "Failed to update category."),
+        onError: (err) => toast.error(translate(err.message || "Failed to update category.")),
       }
     );
   };
 
   const handleDelete = (slug, name) => {
     deleteCategory.mutate(slug, {
-      onSuccess: () => toast.info(`Category "${name}" deleted.`),
-      onError: () => toast.error("Failed to delete category."),
+      onSuccess: () => toast.info(translate(`Category "${name}" deleted.`)),
+      onError: () => toast.error(translate("Failed to delete category.")),
     });
   };
 
   return (
     <div className="space-y-5">
       <div className="flex items-center justify-between">
-        <p className="text-sm text-gray-500">{list.length} categories total</p>
+        <p className="text-sm text-gray-500">{list.length} <T>categories total</T> </p>
         <Button onClick={() => setCreateOpen(true)} className="cursor-pointer gap-1">
-          <Plus size={16} /> Add category
-        </Button>
+          <Plus size={16} /> <T>Add category</T> </Button>
       </div>
 
       {isLoading ? (
@@ -201,12 +202,12 @@ export default function CategoriesList() {
                         </AlertDialogTrigger>
                         <AlertDialogContent>
                           <AlertDialogHeader>
-                            <AlertTitle>Delete "{c.name}"?</AlertTitle>
-                            <AlertDialogDescription>Products in this category will keep their category value until reassigned.</AlertDialogDescription>
+                            <AlertTitle> <T>Delete "</T> {c.name}"?</AlertTitle>
+                            <AlertDialogDescription> <T>Products in this category will keep their category value until reassigned.</T> </AlertDialogDescription>
                           </AlertDialogHeader>
                           <AlertFooter>
-                            <AlertDialogCancel className="cursor-pointer">Cancel</AlertDialogCancel>
-                            <AlertDialogAction onClick={() => handleDelete(c.slug, c.name)} className="cursor-pointer bg-red-600 hover:bg-red-700">Delete</AlertDialogAction>
+                            <AlertDialogCancel className="cursor-pointer"> <T>Cancel</T> </AlertDialogCancel>
+                            <AlertDialogAction onClick={() => handleDelete(c.slug, c.name)} className="cursor-pointer bg-red-600 hover:bg-red-700"> <T>Delete</T> </AlertDialogAction>
                           </AlertFooter>
                         </AlertDialogContent>
                       </AlertDialog>
@@ -214,8 +215,7 @@ export default function CategoriesList() {
                   </div>
                   <p className="text-sm text-gray-500 line-clamp-2 mb-3">{c.description || "No description provided."}</p>
                   <div className="flex items-center gap-1.5 text-xs text-gray-500 font-medium">
-                    <Package size={12} /> {c.productsCount} products
-                  </div>
+                    <Package size={12} /> {c.productsCount} <T>products</T> </div>
                 </CardContent>
               </Card>
             ))}
@@ -223,13 +223,11 @@ export default function CategoriesList() {
 
           {totalPages > 1 && (
             <div className="flex items-center justify-between text-sm text-gray-500 pt-2">
-              <p>Page {page} of {totalPages} · {list.length} categories</p>
+              <p> <T>Page</T> {page} <T>of</T> {totalPages} · {list.length} <T>categories</T> </p>
               <div className="flex gap-2">
                 <Button variant="outline" size="sm" disabled={page <= 1} onClick={() => setPage((p) => p - 1)} className="cursor-pointer">
-                  <ChevronLeft size={14} /> Prev
-                </Button>
-                <Button variant="outline" size="sm" disabled={page >= totalPages} onClick={() => setPage((p) => p + 1)} className="cursor-pointer">
-                  Next <ChevronRight size={14} />
+                  <ChevronLeft size={14} /> <T>Prev</T> </Button>
+                <Button variant="outline" size="sm" disabled={page >= totalPages} onClick={() => setPage((p) => p + 1)} className="cursor-pointer"> <T>Next</T> <ChevronRight size={14} />
                 </Button>
               </div>
             </div>

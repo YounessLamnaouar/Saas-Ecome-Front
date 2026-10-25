@@ -1,10 +1,11 @@
+import { T } from '@/context/Preferences';
 import React from "react";
 import { Badge } from "@/components/ui/badge";
 import { Clock, CheckCircle2, Truck, PackageCheck } from "lucide-react";
 
 export const ORDER_STATUS_MAP = {
   en_attente: {
-    label: "En attente",
+    label: "Pending",
     labelEn: "Pending",
     variant: "warning",
     icon: Clock,
@@ -12,7 +13,7 @@ export const ORDER_STATUS_MAP = {
     dotClass: "bg-amber-500",
   },
   confirmee: {
-    label: "Confirmée",
+    label: "Confirmed",
     labelEn: "Confirmed",
     variant: "secondary",
     icon: CheckCircle2,
@@ -20,7 +21,7 @@ export const ORDER_STATUS_MAP = {
     dotClass: "bg-blue-500",
   },
   en_cours_de_livraison: {
-    label: "En cours de livraison",
+    label: "Out for delivery",
     labelEn: "Out for delivery",
     variant: "default",
     icon: Truck,
@@ -28,7 +29,7 @@ export const ORDER_STATUS_MAP = {
     dotClass: "bg-purple-500",
   },
   livre: {
-    label: "Livrée",
+    label: "Delivered",
     labelEn: "Delivered",
     variant: "success",
     icon: PackageCheck,
@@ -54,7 +55,7 @@ export default function OrderStatusBadge({ status, showIcon = false, className =
     >
       {showIcon && <Icon size={12} className="shrink-0" />}
       <span className={`w-1.5 h-1.5 rounded-full ${config.dotClass}`} />
-      <span>{config.label}</span>
+      <span><T>{config.label}</T></span>
     </span>
   );
 }

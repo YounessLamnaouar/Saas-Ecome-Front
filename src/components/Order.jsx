@@ -1,3 +1,4 @@
+import { T } from '@/context/Preferences';
 import React from "react";
 import { Link } from "react-router-dom";
 import { Clock, Dot, Gift, Star, Tag, Truck, Zap } from "lucide-react";

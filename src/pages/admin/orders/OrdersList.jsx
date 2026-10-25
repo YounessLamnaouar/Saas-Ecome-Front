@@ -1,3 +1,5 @@
+import { translate } from '@/lib/translations';
+import { T, usePreferences as useTranslationPreferences } from '@/context/Preferences';
 import React, { useState } from "react";
 import { Search, Eye, ChevronLeft, ChevronRight, Clock, ShieldCheck, Truck, PackageCheck, AlertCircle, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -19,10 +21,10 @@ import { toast } from "sonner";
 
 const STATUS_OPTIONS = [
   { value: "all", label: "All Statuses" },
-  { value: "en_attente", label: "En attente (Pending)" },
-  { value: "confirmee", label: "Confirmée (Confirmed)" },
-  { value: "en_cours_de_livraison", label: "En livraison (Out for delivery)" },
-  { value: "livre", label: "Livrée (Delivered)" },
+  { value: "en_attente", label: "Pending" },
+  { value: "confirmee", label: "Confirmed" },
+  { value: "en_cours_de_livraison", label: "Out for delivery" },
+  { value: "livre", label: "Delivered" },
 ];
 
 const ORDER_RANKS = {
@@ -33,6 +35,8 @@ const ORDER_RANKS = {
 };
 
 export default function OrdersList() {
+ const { t: tr } = useTranslationPreferences();
+
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState("");
   const [status, setStatus] = useState("all");
@@ -53,21 +57,21 @@ export default function OrdersList() {
   const handleStatusChange = async (orderId, newStatus) => {
     try {
       const updated = await updateStatus.mutateAsync({ id: orderId, status: newStatus });
-      toast.success(`Order status updated to "${newStatus}".`);
+      toast.success(translate(`Order status updated to "${newStatus}".`));
       if (selectedOrder && selectedOrder.id === orderId) {
         setSelectedOrder(updated);
       }
     } catch (err) {
-      toast.error(err.payload?.message || err.message || "Failed to update order status.");
+      toast.error(translate(err.payload?.message || err.message || "Failed to update order status."));
     }
   };
 
   const getAvailableNextStatuses = (currentStatus) => {
     const currentRank = ORDER_RANKS[currentStatus] || 1;
     return [
-      { value: "confirmee", label: "Confirmée", rank: 2 },
-      { value: "en_cours_de_livraison", label: "En cours de livraison", rank: 3 },
-      { value: "livre", label: "Livrée", rank: 4 },
+      { value: "confirmee", label: "Confirmed", rank: 2 },
+      { value: "en_cours_de_livraison", label: "Out for delivery", rank: 3 },
+      { value: "livre", label: "Delivered", rank: 4 },
     ].filter((s) => s.rank > currentRank);
   };
 
@@ -75,10 +79,8 @@ export default function OrdersList() {
     <div className="space-y-5">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h2 className="text-xl font-bold text-gray-900">Orders Management</h2>
-          <p className="text-xs text-gray-500 mt-0.5">
-            Track and process customer orders and deliveries.
-          </p>
+          <h2 className="text-xl font-bold text-gray-900"> <T>Orders Management</T> </h2>
+          <p className="text-xs text-gray-500 mt-0.5"> <T>Track and process customer orders and deliveries.</T> </p>
         </div>
       </div>
 
@@ -93,7 +95,7 @@ export default function OrdersList() {
                 setSearch(e.target.value);
                 setPage(1);
               }}
-              placeholder="Search by code, customer name, phone..."
+              placeholder={tr("Search by code, customer name, phone...")}
               className="pl-9"
             />
           </div>
@@ -107,12 +109,12 @@ export default function OrdersList() {
               }}
             >
               <SelectTrigger className="cursor-pointer">
-                <SelectValue placeholder="Filter by status" />
+                <SelectValue placeholder={tr("Filter by status")} />
               </SelectTrigger>
               <SelectContent>
                 {STATUS_OPTIONS.map((opt) => (
                   <SelectItem key={opt.value} value={opt.value} className="cursor-pointer">
-                    {opt.label}
+                    <T>{opt.label}</T>
                   </SelectItem>
                 ))}
               </SelectContent>
@@ -127,28 +129,24 @@ export default function OrdersList() {
           <Table>
             <TableHeader className="bg-gray-50">
               <TableRow>
-                <TableHead className="font-semibold text-gray-700">Order Code</TableHead>
-                <TableHead className="font-semibold text-gray-700">Date</TableHead>
-                <TableHead className="font-semibold text-gray-700">Customer</TableHead>
-                <TableHead className="font-semibold text-gray-700">City</TableHead>
-                <TableHead className="font-semibold text-gray-700">Total</TableHead>
-                <TableHead className="font-semibold text-gray-700">Status</TableHead>
-                <TableHead className="font-semibold text-gray-700 text-right">Actions</TableHead>
+                <TableHead className="font-semibold text-gray-700"> <T>Order Code</T> </TableHead>
+                <TableHead className="font-semibold text-gray-700"> <T>Date</T> </TableHead>
+                <TableHead className="font-semibold text-gray-700"> <T>Customer</T> </TableHead>
+                <TableHead className="font-semibold text-gray-700"> <T>City</T> </TableHead>
+                <TableHead className="font-semibold text-gray-700"> <T>Total</T> </TableHead>
+                <TableHead className="font-semibold text-gray-700"> <T>Status</T> </TableHead>
+                <TableHead className="font-semibold text-gray-700 text-right"> <T>Actions</T> </TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {isLoading ? (
                 <TableRow>
                   <TableCell colSpan={7} className="text-center py-12 text-gray-400">
-                    <Loader2 size={24} className="animate-spin mx-auto mb-2" />
-                    Loading orders...
-                  </TableCell>
+                    <Loader2 size={24} className="animate-spin mx-auto mb-2" /> <T>Loading orders...</T> </TableCell>
                 </TableRow>
               ) : orders.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={7} className="text-center py-12 text-gray-500 text-sm">
-                    No orders found matching the filter criteria.
-                  </TableCell>
+                  <TableCell colSpan={7} className="text-center py-12 text-gray-500 text-sm"> <T>No orders found matching the filter criteria.</T> </TableCell>
                 </TableRow>
               ) : (
                 orders.map((order) => (
@@ -181,8 +179,7 @@ export default function OrdersList() {
                         onClick={() => setSelectedOrder(order)}
                         className="h-8 px-2.5 text-xs cursor-pointer inline-flex items-center gap-1"
                       >
-                        <Eye size={13} /> View
-                      </Button>
+                        <Eye size={13} /> <T>View</T> </Button>
                     </TableCell>
                   </TableRow>
                 ))
@@ -194,9 +191,7 @@ export default function OrdersList() {
         {/* Pagination footer */}
         {meta && meta.last_page > 1 && (
           <div className="flex items-center justify-between px-4 py-3 border-t border-gray-100 text-xs text-gray-500 bg-gray-50/50">
-            <span>
-              Showing page {meta.current_page} of {meta.last_page} ({meta.total} total)
-            </span>
+            <span> <T>Showing page</T> {meta.current_page} <T>of</T> {meta.last_page} ({meta.total} <T>total)</T> </span>
             <div className="flex gap-2">
               <Button
                 variant="outline"
@@ -205,16 +200,14 @@ export default function OrdersList() {
                 onClick={() => setPage((p) => p - 1)}
                 className="h-8 cursor-pointer"
               >
-                <ChevronLeft size={14} className="mr-1" /> Previous
-              </Button>
+                <ChevronLeft size={14} className="mr-1" /> <T>Previous</T> </Button>
               <Button
                 variant="outline"
                 size="sm"
                 disabled={page >= meta.last_page}
                 onClick={() => setPage((p) => p + 1)}
                 className="h-8 cursor-pointer"
-              >
-                Next <ChevronRight size={14} className="ml-1" />
+              > <T>Next</T> <ChevronRight size={14} className="ml-1" />
               </Button>
             </div>
           </div>
@@ -230,8 +223,7 @@ export default function OrdersList() {
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pr-6">
                   <div>
                     <DialogTitle className="font-mono text-xl">{selectedOrder.code}</DialogTitle>
-                    <DialogDescription>
-                      Placed on{" "}
+                    <DialogDescription> <T>Placed on</T> <T>{" "}</T>
                       {selectedOrder.created_at
                         ? new Date(selectedOrder.created_at).toLocaleString()
                         : "—"}
@@ -245,10 +237,8 @@ export default function OrdersList() {
               <div className="bg-gray-50 border border-gray-200 rounded-xl p-4">
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                   <div>
-                    <p className="text-xs font-bold text-gray-900">Change Order Status</p>
-                    <p className="text-[11px] text-gray-500">
-                      Transitions are forward-only according to store policy.
-                    </p>
+                    <p className="text-xs font-bold text-gray-900"> <T>Change Order Status</T> </p>
+                    <p className="text-[11px] text-gray-500"> <T>Transitions are forward-only according to store policy.</T> </p>
                   </div>
                   {getAvailableNextStatuses(selectedOrder.status).length > 0 ? (
                     <Select
@@ -256,20 +246,18 @@ export default function OrdersList() {
                       disabled={updateStatus.isPending}
                     >
                       <SelectTrigger className="w-48 h-8 text-xs bg-white cursor-pointer">
-                        <SelectValue placeholder="Advance status to..." />
+                        <SelectValue placeholder={tr("Advance status to...")} />
                       </SelectTrigger>
                       <SelectContent>
                         {getAvailableNextStatuses(selectedOrder.status).map((opt) => (
                           <SelectItem key={opt.value} value={opt.value} className="cursor-pointer text-xs">
-                            {opt.label}
+                            <T>{opt.label}</T>
                           </SelectItem>
                         ))}
                       </SelectContent>
                     </Select>
                   ) : (
-                    <span className="text-xs font-semibold text-green-700 bg-green-50 border border-green-200 px-3 py-1 rounded-lg">
-                      Order fully completed (Livrée)
-                    </span>
+                    <span className="text-xs font-semibold text-green-700 bg-green-50 border border-green-200 px-3 py-1 rounded-lg"> <T>Order fully completed (Livrée)</T> </span>
                   )}
                 </div>
               </div>
@@ -283,32 +271,32 @@ export default function OrdersList() {
               {/* Customer info & delivery details */}
               <div className="grid sm:grid-cols-2 gap-4">
                 <div className="bg-gray-50 p-4 rounded-xl border border-gray-100 text-xs space-y-1">
-                  <p className="font-bold text-gray-900 text-sm mb-2">Delivery Information</p>
-                  <p><span className="text-gray-400">Name:</span> {selectedOrder.customer?.name}</p>
-                  <p><span className="text-gray-400">Phone:</span> {selectedOrder.customer?.phone}</p>
-                  <p><span className="text-gray-400">Address:</span> {selectedOrder.customer?.address}</p>
-                  <p><span className="text-gray-400">City:</span> {selectedOrder.customer?.city}</p>
+                  <p className="font-bold text-gray-900 text-sm mb-2"> <T>Delivery Information</T> </p>
+                  <p><span className="text-gray-400"> <T>Name:</T> </span> {selectedOrder.customer?.name}</p>
+                  <p><span className="text-gray-400"> <T>Phone:</T> </span> {selectedOrder.customer?.phone}</p>
+                  <p><span className="text-gray-400"> <T>Address:</T> </span> {selectedOrder.customer?.address}</p>
+                  <p><span className="text-gray-400"> <T>City:</T> </span> {selectedOrder.customer?.city}</p>
                   {selectedOrder.customer?.notes && (
                     <p className="pt-1 text-gray-500 italic">
-                      <span className="not-italic text-gray-400">Notes:</span> {selectedOrder.customer.notes}
+                      <span className="not-italic text-gray-400"> <T>Notes:</T> </span> {selectedOrder.customer.notes}
                     </p>
                   )}
                 </div>
 
                 <div className="bg-gray-50 p-4 rounded-xl border border-gray-100 text-xs space-y-2">
-                  <p className="font-bold text-gray-900 text-sm mb-2">Order Summary</p>
+                  <p className="font-bold text-gray-900 text-sm mb-2"> <T>Order Summary</T> </p>
                   <div className="flex justify-between">
-                    <span className="text-gray-500">Payment:</span>
-                    <span className="font-semibold text-gray-900">Cash on Delivery</span>
+                    <span className="text-gray-500"> <T>Payment:</T> </span>
+                    <span className="font-semibold text-gray-900"> <T>Cash on Delivery</T> </span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-gray-500">Registered Customer:</span>
+                    <span className="text-gray-500"> <T>Registered Customer:</T> </span>
                     <span className="font-semibold text-gray-900">
                       {selectedOrder.user ? selectedOrder.user.name : "Guest Order"}
                     </span>
                   </div>
                   <div className="flex justify-between border-t border-gray-200 pt-2 text-sm">
-                    <span className="font-bold text-gray-900">Total:</span>
+                    <span className="font-bold text-gray-900"> <T>Total:</T> </span>
                     <span className="font-bold text-gray-900">
                       ${Number(selectedOrder.total).toFixed(2)}
                     </span>
@@ -318,17 +306,16 @@ export default function OrdersList() {
 
               {/* Items List */}
               <div>
-                <p className="text-xs font-bold text-gray-900 mb-2">
-                  Items Snapshot ({(selectedOrder.items || []).length})
+                <p className="text-xs font-bold text-gray-900 mb-2"> <T>Items Snapshot (</T> {(selectedOrder.items || []).length})
                 </p>
                 <div className="border border-gray-200 rounded-xl overflow-hidden">
                   <Table>
                     <TableHeader className="bg-gray-50">
                       <TableRow>
-                        <TableHead className="text-xs">Product</TableHead>
-                        <TableHead className="text-xs text-right">Unit Price</TableHead>
-                        <TableHead className="text-xs text-right">Qty</TableHead>
-                        <TableHead className="text-xs text-right">Subtotal</TableHead>
+                        <TableHead className="text-xs"> <T>Product</T> </TableHead>
+                        <TableHead className="text-xs text-right"> <T>Unit Price</T> </TableHead>
+                        <TableHead className="text-xs text-right"> <T>Qty</T> </TableHead>
+                        <TableHead className="text-xs text-right"> <T>Subtotal</T> </TableHead>
                       </TableRow>
                     </TableHeader>
                     <TableBody>
@@ -357,7 +344,7 @@ export default function OrdersList() {
               {/* Status History Timeline */}
               {selectedOrder.history && selectedOrder.history.length > 0 && (
                 <div>
-                  <p className="text-xs font-bold text-gray-900 mb-2">Audit History</p>
+                  <p className="text-xs font-bold text-gray-900 mb-2"> <T>Audit History</T> </p>
                   <div className="space-y-2">
                     {selectedOrder.history.map((h, i) => (
                       <div
@@ -367,7 +354,7 @@ export default function OrdersList() {
                         <div className="flex items-center gap-2">
                           <OrderStatusBadge status={h.status} />
                           {h.changed_by && (
-                            <span className="text-gray-500 text-[11px]">by {h.changed_by}</span>
+                            <span className="text-gray-500 text-[11px]"> <T>by</T> {h.changed_by}</span>
                           )}
                         </div>
                         <span className="text-gray-400 font-mono text-[11px]">

@@ -1,3 +1,4 @@
+import { T } from '@/context/Preferences';
 import React from "react";
 import { Package, Tags, Sparkles, AlertTriangle, Star, Wallet, ShoppingBag } from "lucide-react";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from "recharts";
@@ -12,9 +13,9 @@ function KpiCard({ icon: Icon, label, value, hint }) {
     <Card>
       <CardContent className="p-5 flex items-start justify-between">
         <div>
-          <p className="text-sm text-gray-500 mb-1">{label}</p>
+          <p className="text-sm text-gray-500 mb-1"><T>{label}</T></p>
           <p className="text-2xl font-bold text-gray-900">{value}</p>
-          {hint && <p className="text-xs text-gray-400 mt-1">{hint}</p>}
+          {hint && <p className="text-xs text-gray-400 mt-1"><T>{hint}</T></p>}
         </div>
         <div className="h-10 w-10 rounded-xl bg-gray-900 text-white flex items-center justify-center shrink-0">
           <Icon size={18} />
@@ -38,7 +39,7 @@ export default function Dashboard() {
   }
 
   if (isError || !data) {
-    return <p className="text-gray-500">Couldn't load dashboard stats. Check VITE_API_BASE_URL and try again.</p>;
+    return <p className="text-gray-500"> <T>Couldn't load dashboard stats. Check VITE_API_BASE_URL and try again.</T> </p>;
   }
 
   return (
@@ -61,7 +62,7 @@ export default function Dashboard() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
         <Card className="lg:col-span-2">
           <CardHeader>
-            <CardTitle>Products per category</CardTitle>
+            <CardTitle> <T>Products per category</T> </CardTitle>
           </CardHeader>
           <CardContent className="h-72">
             <ResponsiveContainer width="100%" height="100%">
@@ -69,8 +70,8 @@ export default function Dashboard() {
                 <CartesianGrid vertical={false} stroke="#f3f4f6" />
                 <XAxis dataKey="name" tick={{ fontSize: 12, fill: "#6b7280" }} interval={0} angle={-20} textAnchor="end" height={50} />
                 <YAxis tick={{ fontSize: 12, fill: "#6b7280" }} />
-                <Tooltip cursor={{ fill: "#f9fafb" }} contentStyle={{ borderRadius: 8, borderColor: "#e5e7eb", fontSize: 13 }} />
-                <Bar dataKey="count" fill="#111827" radius={[6, 6, 0, 0]} />
+                <Tooltip cursor={{ fill: "#f9fafb" }} contentStyle={{ background: "var(--card)", color: "var(--foreground)", borderRadius: 8, borderColor: "#e5e7eb", fontSize: 13 }} />
+                <Bar dataKey="count" fill="var(--foreground)" radius={[6, 6, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
           </CardContent>
@@ -78,10 +79,10 @@ export default function Dashboard() {
 
         <Card>
           <CardHeader>
-            <CardTitle>Top collections</CardTitle>
+            <CardTitle> <T>Top collections</T> </CardTitle>
           </CardHeader>
           <CardContent className="flex flex-wrap gap-2">
-            {data.topTags.length === 0 && <p className="text-sm text-gray-400">No tags found in the sample.</p>}
+            {data.topTags.length === 0 && <p className="text-sm text-gray-400"> <T>No tags found in the sample.</T> </p>}
             {data.topTags.map(({ tag, count }) => (
               <Badge key={tag} variant="secondary" className="capitalize">
                 {tag} · {count}

@@ -1,3 +1,4 @@
+import { translate } from '@/lib/translations';
 import React, { createContext, useContext, useState } from "react";
 import { apiClient } from "@/lib/apiClient";
 import { toast } from "sonner";
@@ -10,7 +11,7 @@ const TOKEN_KEY = "customer_token";
 export function UserAuthProvider({ children }) {
   const [user, setUser] = useState(() => {
     const saved = localStorage.getItem(USER_KEY);
-    return saved ? JSON.parse(saved) : null;
+    try { return saved && localStorage.getItem(TOKEN_KEY) ? JSON.parse(saved) : null; } catch { return null; }
   });
 
   const [userToken, setUserToken] = useState(() => localStorage.getItem(TOKEN_KEY));
@@ -23,11 +24,11 @@ export function UserAuthProvider({ children }) {
         localStorage.setItem(USER_KEY, JSON.stringify(data.user));
         setUser(data.user);
         setUserToken(data.token);
-        toast.success(`Account created! Welcome, ${data.user.name}`);
+        toast.success(translate(`Account created! Welcome, ${data.user.name}`));
         return data.user;
       }
     } catch (err) {
-      toast.error(err.payload?.message || err.message || "Failed to create account.");
+      toast.error(translate(err.payload?.message || err.message || "Failed to create account."));
       throw err;
     }
   };
@@ -40,11 +41,11 @@ export function UserAuthProvider({ children }) {
         localStorage.setItem(USER_KEY, JSON.stringify(data.user));
         setUser(data.user);
         setUserToken(data.token);
-        toast.success(`Welcome back, ${data.user.name}!`);
+        toast.success(translate(`Welcome back, ${data.user.name}!`));
         return data.user;
       }
     } catch (err) {
-      toast.error(err.payload?.message || err.message || "Invalid credentials.");
+      toast.error(translate(err.payload?.message || err.message || "Invalid credentials."));
       throw err;
     }
   };
@@ -54,7 +55,7 @@ export function UserAuthProvider({ children }) {
     localStorage.removeItem(USER_KEY);
     setUser(null);
     setUserToken(null);
-    toast.info("Logged out successfully.");
+    toast.info(translate("Logged out successfully."));
   };
 
   return (
@@ -62,7 +63,7 @@ export function UserAuthProvider({ children }) {
       value={{
         user,
         userToken,
-        isLoggedIn: !!user,
+        isLoggedIn: !!user && !!userToken,
         registerCustomer,
         loginCustomer,
         logoutCustomer,

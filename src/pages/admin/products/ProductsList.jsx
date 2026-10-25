@@ -1,3 +1,5 @@
+import { translate } from '@/lib/translations';
+import { T, usePreferences as useTranslationPreferences } from '@/context/Preferences';
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { Plus, Search, Pencil, Trash2, ChevronLeft, ChevronRight, MoreHorizontal } from "lucide-react";
@@ -17,12 +19,14 @@ import { useCategories } from "@/hooks/useCategories";
 import { toast } from "sonner";
 
 function StockBadge({ stock }) {
-  if (stock === 0) return <Badge variant="destructive">Out of stock</Badge>;
-  if (stock <= 20) return <Badge variant="warning">Low · {stock}</Badge>;
-  return <Badge variant="success">{stock} in stock</Badge>;
+  if (stock === 0) return <Badge variant="destructive"> <T>Out of stock</T> </Badge>;
+  if (stock <= 20) return <Badge variant="warning"> <T>Low ·</T> {stock}</Badge>;
+  return <Badge variant="success">{stock} <T>in stock</T> </Badge>;
 }
 
 export default function ProductsList() {
+ const { t: tr } = useTranslationPreferences();
+
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("all");
@@ -36,8 +40,8 @@ export default function ProductsList() {
 
   const handleDelete = (id, name) => {
     deleteProduct.mutate(id, {
-      onSuccess: () => toast.info(`Product "${name}" deleted.`),
-      onError: () => toast.error("Failed to delete product."),
+      onSuccess: () => toast.info(translate(`Product "${name}" deleted.`)),
+      onError: () => toast.error(translate("Failed to delete product.")),
     });
   };
 
@@ -50,20 +54,20 @@ export default function ProductsList() {
             <Input
               value={search}
               onChange={(e) => { setSearch(e.target.value); setPage(1); }}
-              placeholder="Search products..."
+              placeholder={tr("Search products...")}
               className="pl-9"
             />
           </div>
           <Select value={category} onValueChange={(v) => { setCategory(v); setPage(1); }}>
-            <SelectTrigger className="sm:w-48 cursor-pointer"><SelectValue placeholder="All categories" /></SelectTrigger>
+            <SelectTrigger className="sm:w-48 cursor-pointer"><SelectValue placeholder={tr("All categories")} /></SelectTrigger>
             <SelectContent>
-              <SelectItem value="all" className="cursor-pointer">All categories</SelectItem>
+              <SelectItem value="all" className="cursor-pointer"> <T>All categories</T> </SelectItem>
               {(categories || []).map((c) => <SelectItem key={c.slug} value={c.slug} className="cursor-pointer">{c.name}</SelectItem>)}
             </SelectContent>
           </Select>
         </div>
         <Button asChild className="cursor-pointer">
-          <Link to="/admin/products/new"><Plus size={16} /> Add product</Link>
+          <Link to="/admin/products/new"><Plus size={16} /> <T>Add product</T> </Link>
         </Button>
       </div>
 
@@ -71,10 +75,10 @@ export default function ProductsList() {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>Product</TableHead>
-              <TableHead>Category</TableHead>
-              <TableHead>Price</TableHead>
-              <TableHead>Stock</TableHead>
+              <TableHead> <T>Product</T> </TableHead>
+              <TableHead> <T>Category</T> </TableHead>
+              <TableHead> <T>Price</T> </TableHead>
+              <TableHead> <T>Stock</T> </TableHead>
               <TableHead className="w-10" />
             </TableRow>
           </TableHeader>
@@ -85,7 +89,7 @@ export default function ProductsList() {
               ))}
 
             {!isLoading && products.length === 0 && (
-              <TableRow><TableCell colSpan={5} className="text-center py-10 text-gray-400">No products match your filters.</TableCell></TableRow>
+              <TableRow><TableCell colSpan={5} className="text-center py-10 text-gray-400"> <T>No products match your filters.</T> </TableCell></TableRow>
             )}
 
             {!isLoading && products.map((p) => (
@@ -109,22 +113,21 @@ export default function ProductsList() {
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
                       <DropdownMenuItem asChild className="cursor-pointer">
-                        <Link to={`/admin/products/${p.id}/edit`}><Pencil size={14} className="mr-2" /> Edit</Link>
+                        <Link to={`/admin/products/${p.id}/edit`}><Pencil size={14} className="mr-2" /> <T>Edit</T> </Link>
                       </DropdownMenuItem>
                       <AlertDialog>
                         <AlertDialogTrigger asChild>
                           <DropdownMenuItem onSelect={(e) => e.preventDefault()} className="text-red-600 cursor-pointer">
-                            <Trash2 size={14} className="mr-2" /> Delete
-                          </DropdownMenuItem>
+                            <Trash2 size={14} className="mr-2" /> <T>Delete</T> </DropdownMenuItem>
                         </AlertDialogTrigger>
                         <AlertDialogContent>
                           <AlertDialogHeader>
-                            <AlertDialogTitle>Delete "{p.name}"?</AlertDialogTitle>
-                            <AlertDialogDescription>This action cannot be undone.</AlertDialogDescription>
+                            <AlertDialogTitle> <T>Delete "</T> {p.name}"?</AlertDialogTitle>
+                            <AlertDialogDescription> <T>This action cannot be undone.</T> </AlertDialogDescription>
                           </AlertDialogHeader>
                           <AlertDialogFooter>
-                            <AlertDialogCancel className="cursor-pointer">Cancel</AlertDialogCancel>
-                            <AlertDialogAction onClick={() => handleDelete(p.id, p.name)} className="cursor-pointer bg-red-600 hover:bg-red-700">Delete</AlertDialogAction>
+                            <AlertDialogCancel className="cursor-pointer"> <T>Cancel</T> </AlertDialogCancel>
+                            <AlertDialogAction onClick={() => handleDelete(p.id, p.name)} className="cursor-pointer bg-red-600 hover:bg-red-700"> <T>Delete</T> </AlertDialogAction>
                           </AlertDialogFooter>
                         </AlertDialogContent>
                       </AlertDialog>
@@ -139,13 +142,11 @@ export default function ProductsList() {
 
       {meta && (meta.total_pages > 1 || meta.last_page > 1) && (
         <div className="flex items-center justify-between text-sm text-gray-500 pt-2">
-          <p>Page {meta.page || meta.current_page} of {meta.total_pages || meta.last_page} · {meta.total} products</p>
+          <p> <T>Page</T> {meta.page || meta.current_page} <T>of</T> {meta.total_pages || meta.last_page} · {meta.total} <T>products</T> </p>
           <div className="flex gap-2">
             <Button variant="outline" size="sm" disabled={page <= 1 || isFetching} onClick={() => setPage((p) => p - 1)} className="cursor-pointer">
-              <ChevronLeft size={14} /> Prev
-            </Button>
-            <Button variant="outline" size="sm" disabled={page >= (meta.total_pages || meta.last_page) || isFetching} onClick={() => setPage((p) => p + 1)} className="cursor-pointer">
-              Next <ChevronRight size={14} />
+              <ChevronLeft size={14} /> <T>Prev</T> </Button>
+            <Button variant="outline" size="sm" disabled={page >= (meta.total_pages || meta.last_page) || isFetching} onClick={() => setPage((p) => p + 1)} className="cursor-pointer"> <T>Next</T> <ChevronRight size={14} />
             </Button>
           </div>
         </div>

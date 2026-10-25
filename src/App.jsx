@@ -1,5 +1,7 @@
+import { T } from '@/context/Preferences';
+import PasswordReset from "./pages/PasswordReset";
 import React, { useEffect, lazy, Suspense } from "react";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, useLocation } from "react-router-dom";
 import { Toaster } from "sonner";
 import AOS from "aos";
 import "aos/dist/aos.css";
@@ -31,11 +33,13 @@ const Collections = lazy(() => import("./pages/admin/Collections"));
 
 const Admin = ({ children }) => (
   <AdminLayout>
-    <Suspense fallback={<p className="text-gray-400">Loading…</p>}>{children}</Suspense>
+    <Suspense fallback={<p className="text-gray-400"> <T>Loading…</T> </p>}>{children}</Suspense>
   </AdminLayout>
 );
 
 export default function App() {
+  const { pathname } = useLocation();
+  useEffect(() => { window.scrollTo({ top: 0, left: 0, behavior: "instant" }); }, [pathname]);
   useEffect(() => {
     AOS.init({
       duration: 1000,
@@ -49,6 +53,7 @@ export default function App() {
     <div>
       <Toaster position="top-right" richColors />
       <Routes>
+        <Route path="/reset-password" element={<PageLayout><PasswordReset /></PageLayout>} />
         <Route
           path="/"
           element={

@@ -1,3 +1,4 @@
+import { T } from '@/context/Preferences';
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { useCart } from "../context/CartContext";
@@ -23,12 +24,8 @@ export default function Cards() {
     <section className="py-20 bg-white" data-aos="fade-up">
       <div className="container mx-auto px-4 md:px-8 lg:px-16">
         <div className="text-center mb-12" data-aos="fade-down">
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-3">
-            All Products
-          </h2>
-          <p className="text-gray-600 max-w-2xl mx-auto">
-            Discover our complete collection of fashion items
-          </p>
+          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-3"> <T>All Products</T> </h2>
+          <p className="text-gray-600 max-w-2xl mx-auto"> <T>Discover our complete collection of fashion items</T> </p>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
           {isLoading &&
@@ -67,15 +64,10 @@ export default function Cards() {
           ))}
         </div>
         <div className="flex justify-center items-center gap-4 mt-12" data-aos="fade-up" data-aos-delay="600">
-          <button onClick={prevPage} className="px-4 py-2 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition-all duration-300 cursor-pointer">
-            Previous
-          </button>
-          <span className="text-gray-600 font-medium">
-            Page {currentPage} of {totalPages}
+          <button onClick={prevPage} className="px-4 py-2 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition-all duration-300 cursor-pointer"> <T>Previous</T> </button>
+          <span className="text-gray-600 font-medium"> <T>Page</T> {currentPage} <T>of</T> {totalPages}
           </span>
-          <button onClick={nextPage} className="px-4 py-2 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition-all duration-300 cursor-pointer">
-            Next
-          </button>
+          <button onClick={nextPage} className="px-4 py-2 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition-all duration-300 cursor-pointer"> <T>Next</T> </button>
         </div>
       </div>
     </section>

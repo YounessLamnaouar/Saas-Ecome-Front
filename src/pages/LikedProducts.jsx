@@ -1,3 +1,4 @@
+import { T } from '@/context/Preferences';
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { Trash2 } from "lucide-react";
@@ -17,10 +18,8 @@ export default function LikedProducts() {
   if (likedProducts.length === 0) {
     return (
       <section className="py-24 text-center min-h-screen bg-gray-50">
-        <p className="text-gray-600 text-lg mb-4">You have no liked products yet.</p>
-        <Link to="/shop" className="bg-gray-900 text-white px-6 py-3 rounded-lg font-semibold hover:bg-gray-800 transition-all">
-          Continue Shopping
-        </Link>
+        <p className="text-gray-600 text-lg mb-4"> <T>You have no liked products yet.</T> </p>
+        <Link to="/shop" className="bg-gray-900 text-white px-6 py-3 rounded-lg font-semibold hover:bg-gray-800 transition-all"> <T>Continue Shopping</T> </Link>
       </section>
     );
   }
@@ -28,7 +27,7 @@ export default function LikedProducts() {
   return (
     <section className="py-16 bg-gray-50 min-h-screen">
       <div className="container mx-auto px-4 md:px-8 lg:px-16">
-        <h1 className="text-3xl font-bold text-gray-900 mb-6">Liked Products</h1>
+        <h1 className="text-3xl font-bold text-gray-900 mb-6"> <T>Liked Products</T> </h1>
 
         <div className="flex flex-wrap gap-2 mb-10">
           {[{ id: "all", name: "All" }, ...likedCategories].map((cat) => (
@@ -56,9 +55,7 @@ export default function LikedProducts() {
                   <Link
                     to={`/product/${product.id}`}
                     className="flex-1 text-center bg-gray-900 text-white text-xs px-3 py-2 rounded-lg hover:bg-gray-800 transition-all"
-                  >
-                    Buy
-                  </Link>
+                  > <T>Buy</T> </Link>
                   <button
                     onClick={() => removeFromLikedProducts(product.id)}
                     className="p-2 border rounded-lg text-gray-500 hover:text-red-500 hover:bg-gray-100 transition-all"

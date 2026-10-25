@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Link, NavLink, useLocation } from "react-router-dom";
 import {
-  LayoutDashboard, Package, Tags, Sparkles, Store, Menu, LogOut, Lock, AlertCircle, Loader2,
+  LayoutDashboard, Package, Tags, Sparkles, Store, Menu, LogOut, Lock, AlertCircle, Loader2, ShoppingBag,
 } from "lucide-react";
 import { Sheet, SheetContent } from "@/components/ui/sheet";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
@@ -13,6 +13,7 @@ import { getToken, login, logout } from "@/services/authService";
 
 const NAV_ITEMS = [
   { to: "/admin", label: "Dashboard", icon: LayoutDashboard, end: true },
+  { to: "/admin/orders", label: "Orders", icon: ShoppingBag },
   { to: "/admin/products", label: "Products", icon: Package },
   { to: "/admin/categories", label: "Categories", icon: Tags },
   { to: "/admin/collections", label: "Collections", icon: Sparkles },

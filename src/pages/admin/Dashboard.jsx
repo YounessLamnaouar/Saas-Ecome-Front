@@ -1,10 +1,11 @@
 import React from "react";
-import { Package, Tags, Sparkles, AlertTriangle, Star, Wallet } from "lucide-react";
+import { Package, Tags, Sparkles, AlertTriangle, Star, Wallet, ShoppingBag } from "lucide-react";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from "recharts";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Badge } from "@/components/ui/badge";
 import { useDashboardStats } from "@/hooks/useDashboard";
+import { useAdminOrders } from "@/hooks/useOrders";
 
 function KpiCard({ icon: Icon, label, value, hint }) {
   return (
@@ -25,6 +26,8 @@ function KpiCard({ icon: Icon, label, value, hint }) {
 
 export default function Dashboard() {
   const { data, isLoading, isError } = useDashboardStats();
+  const { data: pendingData } = useAdminOrders({ status: "en_attente", perPage: 1 });
+  const pendingCount = pendingData?.meta?.total ?? 0;
 
   if (isLoading) {
     return (
@@ -41,6 +44,7 @@ export default function Dashboard() {
   return (
     <div className="space-y-6">
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <KpiCard icon={ShoppingBag} label="Pending orders" value={pendingCount} hint="awaiting processing" />
         <KpiCard icon={Package} label="Total products" value={data.totalProducts.toLocaleString()} />
         <KpiCard icon={Tags} label="Categories" value={data.totalCategories} />
         <KpiCard icon={Sparkles} label="Collections (tags)" value={data.totalCollections} hint={`from last ${data.sampleSize} products`} />

@@ -138,6 +138,11 @@ export default function Footer() {
                   </Link>
                 </li>
                 <li>
+                  <Link to="/track-order" className="hover:text-white transition-colors cursor-pointer">
+                    Track Order
+                  </Link>
+                </li>
+                <li>
                   <button onClick={() => setSizeGuideOpen(true)} className="hover:text-white transition-colors cursor-pointer text-left">
                     Size Guide
                   </button>

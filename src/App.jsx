@@ -17,8 +17,13 @@ import Navbar from "./components/Navbar";
 import Collection from "./components/Collection";
 import AdminLayout from "./layout/AdminLayout";
 
+import TrackOrder from "./pages/TrackOrder";
+import OrderDetail from "./pages/OrderDetail";
+import MyOrders from "./pages/MyOrders";
+
 // Admin is code-split so storefront visitors never download recharts/admin UI.
 const Dashboard = lazy(() => import("./pages/admin/Dashboard"));
+const OrdersList = lazy(() => import("./pages/admin/orders/OrdersList"));
 const ProductsList = lazy(() => import("./pages/admin/products/ProductsList"));
 const ProductForm = lazy(() => import("./pages/admin/products/ProductForm"));
 const CategoriesList = lazy(() => import("./pages/admin/categories/CategoriesList"));
@@ -63,9 +68,13 @@ export default function App() {
         <Route path="/liked" element={<PageLayout><LikedProducts /></PageLayout>} />
         <Route path="/checkout" element={<PageLayout><Checkout /></PageLayout>} />
         <Route path="/order-confirmation" element={<PageLayout><OrderConfirmation /></PageLayout>} />
+        <Route path="/track-order" element={<PageLayout><TrackOrder /></PageLayout>} />
+        <Route path="/orders/:code" element={<PageLayout><OrderDetail /></PageLayout>} />
+        <Route path="/my-orders" element={<PageLayout><MyOrders /></PageLayout>} />
 
         {/* --- Admin --- */}
         <Route path="/admin" element={<Admin><Dashboard /></Admin>} />
+        <Route path="/admin/orders" element={<Admin><OrdersList /></Admin>} />
         <Route path="/admin/products" element={<Admin><ProductsList /></Admin>} />
         <Route path="/admin/products/new" element={<Admin><ProductForm /></Admin>} />
         <Route path="/admin/products/:id/edit" element={<Admin><ProductForm /></Admin>} />

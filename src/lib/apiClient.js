@@ -31,7 +31,16 @@ function unwrapEnvelope(json) {
   return { data: json, meta: null };
 }
 
-function authHeaders() {
+function authHeaders(path = "") {
+  if (
+    path.startsWith("/orders") ||
+    path.startsWith("/my-orders") ||
+    path === "/auth/me"
+  ) {
+    const token = localStorage.getItem("customer_token");
+    return token ? { Authorization: `Bearer ${token}` } : {};
+  }
+
   const token = localStorage.getItem("admin_token");
   return token ? { Authorization: `Bearer ${token}` } : {};
 }
@@ -42,7 +51,7 @@ async function request(path, { params, signal } = {}) {
   try {
     response = await fetch(url, {
       signal,
-      headers: { Accept: "application/json", ...authHeaders() },
+      headers: { Accept: "application/json", ...authHeaders(path) },
     });
   } catch (cause) {
     throw new ApiError(`Network error reaching ${url}`, { status: 0, payload: cause });
@@ -64,7 +73,7 @@ async function mutate(method, path, body) {
     headers: {
       "Content-Type": "application/json",
       Accept: "application/json",
-      ...authHeaders(),
+      ...authHeaders(path),
     },
     body: body ? JSON.stringify(body) : undefined,
   });
@@ -83,5 +92,6 @@ export const apiClient = {
   get: (path, opts) => request(path, opts),
   post: (path, body) => mutate("POST", path, body),
   put: (path, body) => mutate("PUT", path, body),
+  patch: (path, body) => mutate("PATCH", path, body),
   delete: (path) => mutate("DELETE", path),
 };

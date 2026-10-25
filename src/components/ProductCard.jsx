@@ -3,13 +3,19 @@ import { Link } from "react-router-dom";
 import { ShoppingCart } from "lucide-react";
 import { useCart } from "../context/CartContext";
 import LikeButton from "./LikeButton";
+import { useTranslation } from "react-i18next";
 
 export default function ProductCard({ product, i }) {
+  const { t } = useTranslation();
   const { addToCart } = useCart();
   const isOutOfStock = typeof product.stock === "number" && product.stock <= 0;
 
   return (
-    <div data-aos="zoom-in" data-aos-delay={i * 100} className="group bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-2xl transition-all duration-500 border border-gray-100 cursor-pointer flex flex-col justify-between">
+    <div
+      data-aos="zoom-in"
+      data-aos-delay={i * 100}
+      className="group bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-2xl transition-all duration-500 border border-gray-100 cursor-pointer flex flex-col justify-between text-start"
+    >
       <Link to={`/product/${product.id}`} className="block relative h-56 bg-gray-50 overflow-hidden cursor-pointer">
         <img
           src={product.image}
@@ -17,8 +23,8 @@ export default function ProductCard({ product, i }) {
           className="w-full h-full object-contain p-4 transition-transform duration-700 group-hover:scale-110"
         />
         {isOutOfStock && (
-          <span className="absolute top-3 left-3 bg-red-600 text-white text-[10px] font-bold px-2 py-1 rounded">
-            Out of Stock
+          <span className="absolute top-3 start-3 bg-red-600 text-white text-[10px] font-bold px-2 py-1 rounded">
+            {t("products.outOfStock")}
           </span>
         )}
       </Link>
@@ -46,9 +52,12 @@ export default function ProductCard({ product, i }) {
             }`}
           >
             <ShoppingCart size={14} />
-            {isOutOfStock ? "Out of Stock" : "Add to Cart"}
+            {isOutOfStock ? t("products.outOfStock") : t("products.addToCart")}
           </button>
-          <LikeButton product={product} className="p-2 border rounded-lg hover:bg-gray-100 transition-all cursor-pointer" />
+          <LikeButton
+            product={product}
+            className="p-2 border rounded-lg hover:bg-gray-100 transition-all cursor-pointer"
+          />
         </div>
       </div>
     </div>

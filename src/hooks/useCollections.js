@@ -12,7 +12,10 @@ export function useCreateCollection() {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: collectionsService.createCollection,
-    onSuccess: () => qc.invalidateQueries({ queryKey: ["collections"] }),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["collections"] });
+      qc.invalidateQueries({ queryKey: ["products"] });
+    },
   });
 }
 
@@ -20,7 +23,10 @@ export function useUpdateCollection() {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: ({ slug, patch }) => collectionsService.updateCollection(slug, patch),
-    onSuccess: () => qc.invalidateQueries({ queryKey: ["collections"] }),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["collections"] });
+      qc.invalidateQueries({ queryKey: ["products"] });
+    },
   });
 }
 
@@ -28,6 +34,9 @@ export function useDeleteCollection() {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: collectionsService.deleteCollection,
-    onSuccess: () => qc.invalidateQueries({ queryKey: ["collections"] }),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["collections"] });
+      qc.invalidateQueries({ queryKey: ["products"] });
+    },
   });
 }

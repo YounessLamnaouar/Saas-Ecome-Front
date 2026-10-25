@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { motion, useMotionValue, useTransform } from "motion/react";
+import { useTranslation } from "react-i18next";
 
 const DRAG_BUFFER = 0;
 const VELOCITY_THRESHOLD = 500;
@@ -8,6 +9,7 @@ const GAP = 16;
 const SPRING_OPTIONS = { type: "spring", stiffness: 300, damping: 30 };
 
 function ProductSlide({ product, index, itemWidth, itemHeight, trackItemOffset, x, transition, wasDragged }) {
+  const { t } = useTranslation();
   const range = [-(index + 1) * trackItemOffset, -index * trackItemOffset, -(index - 1) * trackItemOffset];
   const rotateY = useTransform(x, range, [90, 0, -90], { clamp: false });
   const outOfStock = typeof product.stock === "number" && product.stock <= 0;
@@ -22,7 +24,7 @@ function ProductSlide({ product, index, itemWidth, itemHeight, trackItemOffset, 
         to={`/product/${product.id}`}
         draggable={false}
         onClick={(e) => wasDragged.current && e.preventDefault()}
-        className="group absolute inset-0 block"
+        className="group absolute inset-0 block text-start"
       >
         <img
           src={product.image}
@@ -35,12 +37,12 @@ function ProductSlide({ product, index, itemWidth, itemHeight, trackItemOffset, 
         <div className="absolute inset-x-0 bottom-0 h-2/5 bg-gradient-to-t from-black/75 to-transparent" />
 
         {outOfStock && (
-          <span className="absolute top-4 left-4 bg-red-600 text-white text-xs font-bold px-3 py-1.5 rounded-md">
-            Out of Stock
+          <span className="absolute top-4 start-4 bg-red-600 text-white text-xs font-bold px-3 py-1.5 rounded-md">
+            {t("products.outOfStock")}
           </span>
         )}
 
-        <div className="absolute left-6 bottom-6 right-24 text-white">
+        <div className="absolute start-6 bottom-6 end-24 text-white">
           <p className="text-xs md:text-sm uppercase tracking-widest text-white/80">
             {product.categoryName}
           </p>
@@ -138,6 +140,7 @@ export default function ProductCarousel({
 
   return (
     <div
+      dir="ltr"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       className="relative overflow-hidden p-4 rounded-[28px] bg-black/20 backdrop-blur-sm border border-white/20"

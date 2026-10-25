@@ -21,7 +21,10 @@ export function useCreateProduct() {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: productsService.createProduct,
-    onSuccess: () => qc.invalidateQueries({ queryKey: ["products"] }),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["products"] });
+      qc.invalidateQueries({ queryKey: ["collections"] });
+    },
   });
 }
 
@@ -32,6 +35,7 @@ export function useUpdateProduct() {
     onSuccess: (_data, { id }) => {
       qc.invalidateQueries({ queryKey: ["products"] });
       qc.invalidateQueries({ queryKey: ["product", String(id)] });
+      qc.invalidateQueries({ queryKey: ["collections"] });
     },
   });
 }
@@ -40,6 +44,9 @@ export function useDeleteProduct() {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: productsService.deleteProduct,
-    onSuccess: () => qc.invalidateQueries({ queryKey: ["products"] }),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["products"] });
+      qc.invalidateQueries({ queryKey: ["collections"] });
+    },
   });
 }

@@ -37,6 +37,8 @@ export function normalizeProduct(p) {
     stock: p.stock ?? 0,
     availability: p.availability || (p.stock > 0 ? "in_stock" : "out_of_stock"),
     tags: p.tags || [],
+    collections: p.collections || [],
+    collectionIds: (p.collections || []).map((c) => c.id),
     colors: [], // fakeapi has no color variants; storefront hides the picker when empty
     createdAt: p.created_at,
   };
@@ -56,7 +58,13 @@ export function normalizeCategory(c) {
 // Reverse direction: canonical -> the payload the Laravel API will expect
 // on create/update. Kept here so the admin forms never build raw payloads.
 export function denormalizeProduct(product) {
-  return {
+  const collectionIds =
+    product.collectionIds ??
+    (product.collections
+      ? product.collections.map((c) => (typeof c === "object" ? c.id : c))
+      : undefined);
+
+  const payload = {
     title: product.name,
     description: product.description,
     price: product.price,
@@ -67,4 +75,10 @@ export function denormalizeProduct(product) {
     tags: product.tags,
     thumbnail: product.image,
   };
+
+  if (collectionIds !== undefined) {
+    payload.collection_ids = collectionIds;
+  }
+
+  return payload;
 }

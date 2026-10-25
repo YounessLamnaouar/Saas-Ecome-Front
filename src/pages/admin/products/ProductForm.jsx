@@ -9,10 +9,22 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select";
 import { useProduct, useCreateProduct, useUpdateProduct } from "@/hooks/useProducts";
 import { useCategories } from "@/hooks/useCategories";
+import { useCollections } from "@/hooks/useCollections";
 import { compressImage } from "@/lib/imageCompressor";
 import { toast } from "sonner";
 
-const EMPTY_FORM = { name: "", description: "", price: "", stock: "", brand: "", sku: "", category: "", image: "", tags: "" };
+const EMPTY_FORM = {
+  name: "",
+  description: "",
+  price: "",
+  stock: "",
+  brand: "",
+  sku: "",
+  category: "",
+  image: "",
+  tags: "",
+  collectionIds: [],
+};
 
 export default function ProductForm() {
   const { id } = useParams();
@@ -21,6 +33,7 @@ export default function ProductForm() {
 
   const { data: product, isLoading: loadingProduct } = useProduct(isEdit ? id : null);
   const { data: categories } = useCategories();
+  const { data: collections } = useCollections();
   const createProduct = useCreateProduct();
   const updateProduct = useUpdateProduct();
 
@@ -40,11 +53,27 @@ export default function ProductForm() {
         category: product.category || (categories?.[0]?.slug || ""),
         image: product.image || "",
         tags: Array.isArray(product.tags) ? product.tags.join(", ") : "",
+        collectionIds: Array.isArray(product.collectionIds)
+          ? product.collectionIds
+          : Array.isArray(product.collections)
+          ? product.collections.map((c) => c.id)
+          : [],
       });
     }
   }, [product, categories]);
 
   const set = (key) => (e) => setForm((f) => ({ ...f, [key]: e.target.value }));
+
+  const toggleCollection = (colId) => {
+    setForm((f) => {
+      const current = f.collectionIds || [];
+      const exists = current.includes(colId);
+      return {
+        ...f,
+        collectionIds: exists ? current.filter((id) => id !== colId) : [...current, colId],
+      };
+    });
+  };
 
   const handleFileUpload = async (e) => {
     const file = e.target.files?.[0];
@@ -84,6 +113,7 @@ export default function ProductForm() {
       category: form.category || (categories?.[0]?.slug || "women"),
       image: form.image.trim() || "https://picsum.photos/seed/product/400/400",
       tags: form.tags ? form.tags.split(",").map((t) => t.trim()).filter(Boolean) : [],
+      collectionIds: form.collectionIds || [],
     };
 
     try {
@@ -204,8 +234,36 @@ export default function ProductForm() {
               )}
             </div>
 
+            <div className="space-y-2">
+              <Label>Collections</Label>
+              <div className="border border-gray-100 rounded-xl p-3 bg-gray-50 flex flex-wrap gap-2">
+                {!collections || collections.length === 0 ? (
+                  <p className="text-xs text-gray-500">No collections available.</p>
+                ) : (
+                  collections.map((col) => {
+                    const isSelected = form.collectionIds?.includes(col.id);
+                    return (
+                      <button
+                        key={col.id}
+                        type="button"
+                        onClick={() => toggleCollection(col.id)}
+                        className={`px-3 py-1.5 rounded-lg text-xs font-medium border transition-all cursor-pointer flex items-center gap-1.5 ${
+                          isSelected
+                            ? "bg-gray-900 text-white border-gray-900 shadow-sm"
+                            : "bg-white text-gray-700 border-gray-200 hover:border-gray-300"
+                        }`}
+                      >
+                        <span>{col.name}</span>
+                        {isSelected && <span className="text-[10px] font-bold">✓</span>}
+                      </button>
+                    );
+                  })
+                )}
+              </div>
+            </div>
+
             <div className="space-y-1.5">
-              <Label htmlFor="tags">Tags / Collections (comma separated)</Label>
+              <Label htmlFor="tags">Tags (comma separated)</Label>
               <Input id="tags" value={form.tags} onChange={set("tags")} placeholder="featured, sale, summer" />
             </div>
 

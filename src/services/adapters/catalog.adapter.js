@@ -1,21 +1,4 @@
-/**
- * Adapter: fakeapi.dev product/category shape -> the app's canonical shape.
- *
- * This is the ONLY file that knows what fakeapi.dev's JSON looks like.
- * Every component in the app (storefront + admin) works with the canonical
- * shape below, never with raw API fields. When the Laravel API is built,
- * either make it return this same shape (recommended — then this file
- * becomes a 1:1 pass-through) or write one more adapter next to this one
- * and swap it in productsService.js / categoriesService.js.
- *
- * Canonical Product:
- *   { id, name, slug, description, price, oldPrice, discountPercent,
- *     image, images[], category, categoryName, brand, sku, rating, stock,
- *     availability, tags[], colors[], createdAt }
- *
- * Canonical Category:
- *   { id, name, slug, image, description, productsCount }
- */
+/** Laravel catalog adapter, including products imported from DummyJSON. */
 
 export function normalizeProduct(p) {
   const hasDiscount = p.discount_percentage > 0 && p.discounted_price < p.price;
@@ -39,7 +22,7 @@ export function normalizeProduct(p) {
     tags: p.tags || [],
     collections: p.collections || [],
     collectionIds: (p.collections || []).map((c) => c.id),
-    colors: [], // fakeapi has no color variants; storefront hides the picker when empty
+    colors: [], // No color variants in the imported catalog.
     createdAt: p.created_at,
   };
 }

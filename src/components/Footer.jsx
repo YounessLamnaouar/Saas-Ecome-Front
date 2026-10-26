@@ -1,3 +1,4 @@
+import { apiClient } from "@/lib/apiClient";
 import { translate } from '@/lib/translations';
 import { T, usePreferences as useTranslationPreferences } from '@/context/Preferences';
 import React, { useState } from "react";
@@ -17,12 +18,19 @@ export default function Footer() {
   const [faqsOpen, setFaqsOpen] = useState(false);
   const [aboutOpen, setAboutOpen] = useState(false);
 
-  const handleNewsletter = (e) => {
+  const [subscribing, setSubscribing] = useState(false);
+  const handleNewsletter = async (e) => {
     e.preventDefault();
-    if (newsletterEmail.trim()) {
-      toast.success(translate("Thank you for subscribing to our newsletter!"));
-      setNewsletterEmail("");
-    }
+    if (!newsletterEmail.trim() || subscribing) return;
+    setSubscribing(true);
+    try {
+      await apiClient.post('/newsletter/subscribe', { email: newsletterEmail.trim() });
+      toast.success(translate('Thank you for subscribing to our newsletter!'));
+      setNewsletterEmail('');
+    } catch {
+      toast.error(translate('Unable to subscribe right now. Please try again later.'));
+    } finally { setSubscribing(false); }
+
   };
 
   const socialIcons = [
@@ -187,7 +195,7 @@ export default function Footer() {
                   placeholder={tr("Enter your email")}
                   className="px-4 py-2 rounded-l-lg w-full md:w-64 bg-gray-800 text-white border border-gray-700 focus:outline-none focus:border-gray-600"
                 />
-                <button type="submit" className="bg-white text-gray-900 px-6 py-2 rounded-r-lg font-semibold hover:bg-gray-100 transition-colors duration-300 cursor-pointer shrink-0"> <T>Subscribe</T> </button>
+                <button type="submit" disabled={subscribing} aria-busy={subscribing} className="disabled:opacity-50 bg-white text-gray-900 px-6 py-2 rounded-r-lg font-semibold hover:bg-gray-100 transition-colors duration-300 cursor-pointer shrink-0"> <T>Subscribe</T> </button>
               </form>
             </div>
           </div>

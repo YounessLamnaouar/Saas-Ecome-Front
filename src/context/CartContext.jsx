@@ -1,5 +1,5 @@
 import { translate } from '@/lib/translations';
-import React, { createContext, useContext, useState, useEffect } from "react";
+import React, { createContext, useContext, useState, useEffect, useRef } from "react";
 import { toast } from "sonner";
 import { useUserAuth } from "./UserAuthContext";
 
@@ -12,8 +12,17 @@ export function CartProvider({ children }) {
   const read = (key) => { try { const value = JSON.parse(localStorage.getItem(key) || (key === 'cart_guest' ? localStorage.getItem('cart') : null) || '[]'); return Array.isArray(value) ? value : []; } catch { return []; } };
   const [state, setState] = useState(() => ({ owner: userId, cart: read(`cart_${userId}`), liked: read(`liked_${userId}`) }));
   const { cart, liked: likedProducts } = state;
-  const setCart = (update) => setState(prev => ({ ...prev, cart: typeof update === 'function' ? update(prev.cart) : update }));
-  const setLikedProducts = (update) => setState(prev => ({ ...prev, liked: typeof update === 'function' ? update(prev.liked) : update }));
+  const stateRef = useRef(state);
+  stateRef.current = state;
+  // Resolve event updates once, outside React's replayable state updater.
+  const updateField = (field, update) => {
+    const previous = stateRef.current;
+    const next = { ...previous, [field]: typeof update === 'function' ? update(previous[field]) : update };
+    stateRef.current = next;
+    setState(next);
+  };
+  const setCart = update => updateField('cart', update);
+  const setLikedProducts = update => updateField('liked', update);
   useEffect(() => {
     if (state.owner !== userId) {
       let next = read(`cart_${userId}`);

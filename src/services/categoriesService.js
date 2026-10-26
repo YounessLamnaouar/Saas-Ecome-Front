@@ -1,5 +1,5 @@
 import { apiClient } from "@/lib/apiClient";
-import { normalizeCategory } from "@/services/adapters/fakeapi.adapter";
+import { normalizeCategory } from "@/services/adapters/catalog.adapter";
 
 export async function listCategories() {
   const { data } = await apiClient.get("/categories", { params: { per_page: 100 } });

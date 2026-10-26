@@ -1,5 +1,5 @@
 import { apiClient } from "@/lib/apiClient";
-import { normalizeProduct, denormalizeProduct } from "@/services/adapters/fakeapi.adapter";
+import { normalizeProduct, denormalizeProduct } from "@/services/adapters/catalog.adapter";
 
 /**
  * Product data-access layer connected directly to the Laravel REST API.

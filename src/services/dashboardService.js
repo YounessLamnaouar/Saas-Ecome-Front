@@ -1,5 +1,5 @@
 import { apiClient } from "@/lib/apiClient";
-import { normalizeProduct, normalizeCategory } from "@/services/adapters/fakeapi.adapter";
+import { normalizeProduct, normalizeCategory } from "@/services/adapters/catalog.adapter";
 
 const LOW_STOCK_THRESHOLD = 20;
 // The fake API has no /stats endpoint, so KPIs are computed client-side from

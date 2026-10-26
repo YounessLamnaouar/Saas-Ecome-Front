@@ -51,7 +51,7 @@ export default function App() {
 
   return (
     <div>
-      <Toaster position="top-right" richColors />
+      <Toaster position="top-center" richColors />
       <Routes>
         <Route path="/reset-password" element={<PageLayout><PasswordReset /></PageLayout>} />
         <Route

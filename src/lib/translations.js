@@ -1,4 +1,5 @@
 export const translations = {
+"Unable to subscribe right now. Please try again later.":"Inscription impossible pour le moment. Veuillez réessayer plus tard.",
 "Order received":"Commande reçue","Preparing your package":"Préparation du colis","Package on its way":"Colis en route","Package delivered":"Colis remis au client","All Statuses":"Tous les statuts",
 "No order selected.": "Aucune commande sélectionnée.",
 "Collection: {0}": "Collection : {0}",

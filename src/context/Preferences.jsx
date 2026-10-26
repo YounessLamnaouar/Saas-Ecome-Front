@@ -1,3 +1,4 @@
+import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select";
 import { useTranslation } from "react-i18next";
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { translate } from '../lib/translations';
@@ -17,7 +18,14 @@ export function T({ children }) { const { t } = usePreferences(); return t(child
 export function PreferenceControls() {
   const { language, setLanguage, theme, setTheme, t } = usePreferences();
   return <div className="flex items-center gap-2 text-xs">
-    <select aria-label={t('Language')} value={language} onChange={e => setLanguage(e.target.value)} className="bg-transparent border border-current rounded-full px-2 py-1 cursor-pointer"><option className="bg-background text-foreground" value="en">EN</option><option className="bg-background text-foreground" value="fr">FR</option><option className="bg-background text-foreground" value="ar">عر</option></select>
+    <Select value={language} onValueChange={setLanguage} dir={language === 'ar' ? 'rtl' : 'ltr'}>
+      <SelectTrigger aria-label={t('Language')} className="h-8 w-auto text-xs"><SelectValue /></SelectTrigger>
+      <SelectContent>
+        <SelectItem value="en">EN</SelectItem>
+        <SelectItem value="fr">FR</SelectItem>
+        <SelectItem value="ar">عر</SelectItem>
+      </SelectContent>
+    </Select>
     <button type="button" aria-label={t(theme === 'dark' ? 'Light mode' : 'Dark mode')} onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')} className="rounded-full border border-current px-2 py-1 cursor-pointer">{theme === 'dark' ? '☀' : '☾'}</button>
   </div>;
 }

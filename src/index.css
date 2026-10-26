@@ -98,3 +98,48 @@ body {
 .dark .bg-white\/95 { background-color: rgb(31 41 55 / .95); }
 .dark .hover\:text-gray-900:hover { color: #f3f4f6; }
 .dark .recharts-tooltip-cursor { fill: #374151; }
+
+/* Frosted lens surfaces share the existing light/dark palette. */
+.glass-select-trigger, .glass-menu {
+  border: 1px solid color-mix(in srgb, var(--foreground) 14%, transparent);
+  background: var(--popover);
+  color: var(--popover-foreground);
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / .55), 0 4px 16px rgb(0 0 0 / .06);
+}
+.glass-select-trigger {
+  border-radius: 999px;
+  cursor: pointer;
+  transition: box-shadow .18s ease, background .18s ease;
+}
+.glass-select-trigger:hover, .glass-select-trigger[data-state="open"] {
+  background: color-mix(in srgb, var(--accent) 85%, transparent);
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / .6), 0 6px 20px rgb(0 0 0 / .1);
+}
+.glass-select-trigger:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 3px;
+}
+.glass-select-trigger:disabled { cursor: not-allowed; }
+.glass-menu {
+  border-radius: 1.25rem;
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / .65), 0 16px 40px rgb(0 0 0 / .16);
+}
+.glass-menu-item[data-highlighted], .glass-menu-item[data-state="checked"] {
+  background: color-mix(in srgb, var(--foreground) 9%, transparent);
+}
+.dark .glass-select-trigger, .dark .glass-menu {
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / .12), 0 12px 32px rgb(0 0 0 / .25);
+}
+@supports (backdrop-filter: blur(20px)) {
+  .glass-select-trigger, .glass-menu {
+    background: color-mix(in srgb, var(--popover) 82%, transparent);
+    backdrop-filter: blur(20px) saturate(140%);
+    -webkit-backdrop-filter: blur(20px) saturate(140%);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .glass-select-trigger { transition: none; }
+}
+@media (prefers-reduced-transparency: reduce) {
+  .glass-select-trigger, .glass-menu { background: var(--popover); backdrop-filter: none; }
+}

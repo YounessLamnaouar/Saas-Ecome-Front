@@ -1,4 +1,5 @@
-import { T } from '@/context/Preferences';
+import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select";
+import { T, usePreferences } from '@/context/Preferences';
 import React, { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import ProductCard from "../components/ProductCard";
@@ -14,6 +15,7 @@ const SORT_OPTIONS = {
 };
 
 export default function Shop() {
+  const { t, language } = usePreferences();
   const [searchParams] = useSearchParams();
   const search = searchParams.get("search") || "";
   const collectionParam = searchParams.get("collection") || "";
@@ -69,16 +71,15 @@ export default function Shop() {
             ))}
           </div>
 
-          <select
-            value={sort}
-            onChange={(e) => setSort(e.target.value)}
-            className="bg-white border border-gray-200 rounded-lg px-4 py-2 text-sm text-gray-700 shadow-sm focus:outline-none cursor-pointer"
-          >
-            <option value="default"> <T>Sort by</T> </option>
-            <option value="price-asc"> <T>Price: Low to High</T> </option>
-            <option value="price-desc"> <T>Price: High to Low</T> </option>
-            <option value="name"> <T>Name: A-Z</T> </option>
-          </select>
+          <Select value={sort} onValueChange={setSort} dir={language === 'ar' ? 'rtl' : 'ltr'}>
+            <SelectTrigger aria-label={t('Sort by')} className="w-full md:w-52 shrink-0"><SelectValue /></SelectTrigger>
+            <SelectContent>
+              <SelectItem value="default">{t('Sort by')}</SelectItem>
+              <SelectItem value="price-asc">{t('Price: Low to High')}</SelectItem>
+              <SelectItem value="price-desc">{t('Price: High to Low')}</SelectItem>
+              <SelectItem value="name">{t('Name: A-Z')}</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
 
         {isLoading ? (

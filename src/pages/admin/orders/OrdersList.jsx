@@ -245,7 +245,7 @@ export default function OrdersList() {
                       onValueChange={(val) => handleStatusChange(selectedOrder.id, val)}
                       disabled={updateStatus.isPending}
                     >
-                      <SelectTrigger className="w-48 h-8 text-xs bg-white cursor-pointer">
+                      <SelectTrigger className="w-48 h-8 text-xs cursor-pointer">
                         <SelectValue placeholder={tr("Advance status to...")} />
                       </SelectTrigger>
                       <SelectContent>

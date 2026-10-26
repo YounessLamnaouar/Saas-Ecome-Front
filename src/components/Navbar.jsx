@@ -1,19 +1,20 @@
 import { T, usePreferences as useTranslationPreferences } from '@/context/Preferences';
 import { PreferenceControls } from "../context/Preferences";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useCart } from "../context/CartContext";
 import { useUserAuth } from "../context/UserAuthContext";
-import { Heart, Menu, Search, ShoppingBag, X, User, LogOut, Package, Truck } from "lucide-react";
+import { Heart, Menu, Search, ArrowRight, ShoppingBag, X, User, LogOut, Package, Truck } from "lucide-react";
 import UserAuthModal from "./UserAuthModal";
 
 
 export default function Navbar({ transparent = true, bg = "bg-gray-900" }) {
  const { t: tr } = useTranslationPreferences();
 
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const searchButtonRef = useRef(null);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [activeLink, setActiveLink] = useState("/");
@@ -82,25 +83,13 @@ export default function Navbar({ transparent = true, bg = "bg-gray-900" }) {
               <PreferenceControls />
 
               <div className="relative flex items-center">
-                {isSearchOpen && (
-                  <form
-                    onSubmit={handleSearchSubmit}
-                    className="absolute end-8 top-1/2 -translate-y-1/2 z-20"
-                  >
-                    <input
-                      autoFocus
-                      type="text"
-                      value={searchQuery}
-                      onChange={(e) => setSearchQuery(e.target.value)}
-                      placeholder={t("nav.searchPlaceholder")}
-                      className="bg-white/10 border border-white/30 rounded-full px-4 py-1.5 text-sm text-white placeholder-white/60 focus:outline-none focus:border-white w-40 sm:w-56"
-                    />
-                  </form>
-                )}
                 <button
                   type="button"
+                  ref={searchButtonRef}
                   onClick={() => setIsSearchOpen(!isSearchOpen)}
-                  className="hover:opacity-70 transition-opacity cursor-pointer p-1"
+                  aria-expanded={isSearchOpen}
+                  aria-controls="navbar-search"
+                  className="glass-select-trigger flex h-8 w-8 items-center justify-center"
                   aria-label={tr("Search")}
                 >
                   {isSearchOpen ? <X size={20} /> : <Search size={20} />}
@@ -192,6 +181,35 @@ export default function Navbar({ transparent = true, bg = "bg-gray-900" }) {
               </button>
             </div>
           </div>
+
+          {isSearchOpen && (
+            <form
+              id="navbar-search"
+              role="search"
+              onSubmit={handleSearchSubmit}
+              onKeyDown={(event) => {
+                if (event.key === "Escape") {
+                  setIsSearchOpen(false);
+                  searchButtonRef.current?.focus();
+                }
+              }}
+              className="glass-search mx-auto mt-5 flex w-full max-w-xl items-center gap-3 rounded-full px-4 py-2"
+            >
+              <Search size={18} className="shrink-0 opacity-60" aria-hidden="true" />
+              <input
+                autoFocus
+                type="search"
+                aria-label={tr("Search")}
+                value={searchQuery}
+                onChange={(event) => setSearchQuery(event.target.value)}
+                placeholder={t("nav.searchPlaceholder")}
+                className="min-w-0 flex-1 bg-transparent py-1 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none"
+              />
+              <button type="submit" aria-label={tr("Search")} className="glass-select-trigger flex h-8 w-8 shrink-0 items-center justify-center">
+                <ArrowRight size={16} className="rtl:rotate-180" aria-hidden="true" />
+              </button>
+            </form>
+          )}
 
           {/* Mobile Menu */}
           {isMenuOpen && (

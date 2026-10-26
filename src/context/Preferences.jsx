@@ -1,3 +1,4 @@
+import { Sun, Moon } from "lucide-react";
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select";
 import { useTranslation } from "react-i18next";
 import React, { createContext, useContext, useEffect, useState } from 'react';
@@ -26,6 +27,6 @@ export function PreferenceControls() {
         <SelectItem value="ar">عر</SelectItem>
       </SelectContent>
     </Select>
-    <button type="button" aria-label={t(theme === 'dark' ? 'Light mode' : 'Dark mode')} onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')} className="rounded-full border border-current px-2 py-1 cursor-pointer">{theme === 'dark' ? '☀' : '☾'}</button>
+    <button type="button" aria-label={t(theme === 'dark' ? 'Light mode' : 'Dark mode')} onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')} className="glass-select-trigger flex h-8 w-8 shrink-0 items-center justify-center" title={t(theme === 'dark' ? 'Light mode' : 'Dark mode')}>{theme === 'dark' ? <Sun size={16} aria-hidden="true" /> : <Moon size={16} aria-hidden="true" />}</button>
   </div>;
 }

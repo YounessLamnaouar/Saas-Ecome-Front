@@ -1,9 +1,9 @@
 import { T } from '@/context/Preferences';
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useCollections } from "@/hooks/useCollections";
 import { Skeleton } from "@/components/ui/skeleton";
-import { ChevronLeft, ChevronRight, Sparkles, ArrowRight, Package } from "lucide-react";
+import { ChevronLeft, ChevronRight, Sparkles, ArrowRight } from "lucide-react";
 import set from "../assets/set.png";
 import dress from "../assets/dress.png";
 import women_Handbags from "../assets/Women_Handbags.png";
@@ -12,20 +12,10 @@ import red_shoes from "../assets/red_shoes.png";
 
 const FALLBACK_IMAGES = [set, dress, women_Handbags, hat, red_shoes];
 
-const COLOR_TINTS = [
-  "bg-amber-50/70 border-amber-100 hover:border-amber-300 text-amber-950",
-  "bg-blue-50/70 border-blue-100 hover:border-blue-300 text-blue-950",
-  "bg-pink-50/70 border-pink-100 hover:border-pink-300 text-pink-950",
-  "bg-purple-50/70 border-purple-100 hover:border-purple-300 text-purple-950",
-  "bg-emerald-50/70 border-emerald-100 hover:border-emerald-300 text-emerald-950",
-  "bg-rose-50/70 border-rose-100 hover:border-rose-300 text-rose-950",
-];
-
 const ITEMS_PER_PAGE = 6;
 
 export default function Collection() {
   const { data: collections, isLoading } = useCollections();
-  const navigate = useNavigate();
   const [page, setPage] = useState(1);
 
   if (isLoading) {
@@ -36,7 +26,7 @@ export default function Collection() {
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {Array.from({ length: 6 }).map((_, i) => (
-              <Skeleton key={i} className="h-52 rounded-2xl" />
+              <Skeleton key={i} className="h-80 rounded-2xl" />
             ))}
           </div>
         </div>
@@ -69,45 +59,47 @@ export default function Collection() {
           <>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {paginatedItems.map((col, index) => {
-                const colorScheme = COLOR_TINTS[index % COLOR_TINTS.length];
                 const imageSrc = col.image || FALLBACK_IMAGES[index % FALLBACK_IMAGES.length];
                 const count = col.products_count ?? col.products?.length ?? 0;
 
                 return (
-                  <div
+                  <Link
                     key={col.id || col.slug}
-                    data-aos="fade-up"
-                    data-aos-delay={index * 100}
-                    onClick={() => navigate(`/shop?collection=${col.slug}`)}
-                    className={`${colorScheme} rounded-2xl p-6 shadow-md hover:shadow-2xl border transition-all duration-300 relative flex flex-col justify-between group hover:scale-[1.02] transform cursor-pointer overflow-hidden min-h-[220px]`}
+                    to={`/shop?collection=${encodeURIComponent(col.slug)}`}
+                    className="group flex flex-col overflow-hidden rounded-2xl border border-border bg-card text-card-foreground shadow-sm transition-shadow hover:shadow-lg focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ring"
                   >
-                    {col.is_featured && (
-                      <span className="absolute top-4 right-4 z-10 bg-amber-600 text-white font-bold text-[10px] uppercase px-2.5 py-1 rounded-full flex items-center gap-1 shadow-sm">
-                        <Sparkles size={10} /> <T>Featured</T> </span>
-                    )}
-
-                    <div className="z-10 relative">
-                      <h3 className="text-2xl font-bold capitalize text-gray-900 group-hover:text-amber-700 transition-colors">
-                        {col.name}
-                      </h3>
-                      <p className="text-sm text-gray-600 mt-1 line-clamp-2 max-w-50">
-                        {col.description || "Curated product collection"}
+                    <div className="relative flex h-48 items-center justify-center bg-muted p-6 overflow-hidden">
+                      <img
+                        src={imageSrc}
+                        alt=""
+                        loading="lazy"
+                        onError={(event) => {
+                          event.currentTarget.onerror = null;
+                          event.currentTarget.src = FALLBACK_IMAGES[index % FALLBACK_IMAGES.length];
+                        }}
+                        className="h-full w-full object-contain motion-safe:transition-transform motion-safe:duration-300 motion-safe:group-hover:scale-105"
+                      />
+                      {col.is_featured && (
+                        <span className="absolute top-3 end-3 flex items-center gap-1.5 rounded-full border border-border bg-card/95 px-3 py-1 text-xs font-medium text-card-foreground">
+                          <Sparkles size={12} aria-hidden="true" /> <T>Featured</T>
+                        </span>
+                      )}
+                    </div>
+                    <div className="flex flex-1 flex-col p-5 text-start">
+                      <h3 className="text-xl font-bold capitalize break-words">{col.name}</h3>
+                      <p className="mt-2 text-sm leading-relaxed text-muted-foreground line-clamp-2">
+                        {col.description || <T>Curated product collection</T>}
                       </p>
-                      <div className="mt-6 flex items-center gap-2 text-xs font-bold text-gray-900">
-                        <span>{count} <T>Products</T> </span>
-                        <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform text-amber-600" />
+                      <div className="mt-auto pt-5">
+                        <div className="flex items-center justify-between gap-3 border-t border-border pt-4">
+                          <span className="text-xs text-muted-foreground">{count} <T>Products</T></span>
+                          <span className="flex items-center gap-2 text-sm font-semibold">
+                            <T>Shop now</T><ArrowRight size={16} className="rtl:rotate-180" aria-hidden="true" />
+                          </span>
+                        </div>
                       </div>
                     </div>
-
-                    <div className="absolute pointer-events-none bottom-0 right-0 w-36 h-25 flex justify-center items-center p-4">
-                    <img
-                      src={imageSrc}
-                      alt={col.name}
-                      className="object-contain rounded-2xl opacity-90 transition-all duration-500 group-hover:scale-110"
-                    />
-                    </div>
-
-                  </div>
+                  </Link>
                 );
               })}
             </div>

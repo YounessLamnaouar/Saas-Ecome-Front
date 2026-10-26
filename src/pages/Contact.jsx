@@ -43,7 +43,7 @@ export default function Contact() {
       <div className="container mx-auto px-4 md:px-8 lg:px-16">
         {/* Page Header */}
         <div className="text-center max-w-2xl mx-auto mb-12">
-          <h1 className="text-3xl md:text-5xl font-extrabold text-gray-900 tracking-tight mb-4"> <T>Contact</T> <span className="text-amber-600"> <T>Us</T> </span>
+          <h1 className="text-3xl md:text-5xl font-extrabold text-gray-900 tracking-tight mb-4"> <T>Contact Us</T>
           </h1>
           <p className="text-gray-600 text-base md:text-lg"> <T>Have questions, feedback, or need help with your order? Reach out to us anytime — we are here to assist you!</T> </p>
         </div>

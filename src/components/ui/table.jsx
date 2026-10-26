@@ -24,7 +24,7 @@ const TableRow = React.forwardRef(({ className, ...props }, ref) => (
 TableRow.displayName = "TableRow";
 
 const TableHead = React.forwardRef(({ className, ...props }, ref) => (
-  <th ref={ref} className={cn("h-11 px-4 text-left align-middle text-xs font-semibold uppercase tracking-wide text-gray-500", className)} {...props} />
+  <th ref={ref} className={cn("h-11 px-4 text-start align-middle text-xs font-semibold uppercase tracking-wide text-gray-500", className)} {...props} />
 ));
 TableHead.displayName = "TableHead";
 

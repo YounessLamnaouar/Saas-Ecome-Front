@@ -160,13 +160,13 @@ export default function Collections() {
                     onClick={() => setImageMode("url")}
                     className={`px-2 py-0.5 rounded transition-all cursor-pointer ${imageMode === "url" ? "bg-white font-bold text-gray-900 shadow-sm" : "text-gray-600"}`}
                   >
-                    <LinkIcon size={10} className="inline mr-1" /> <T>URL</T> </button>
+                    <LinkIcon size={10} className="inline me-1" /> <T>URL</T> </button>
                   <button
                     type="button"
                     onClick={() => setImageMode("file")}
                     className={`px-2 py-0.5 rounded transition-all cursor-pointer ${imageMode === "file" ? "bg-white font-bold text-gray-900 shadow-sm" : "text-gray-600"}`}
                   >
-                    <Upload size={10} className="inline mr-1" /> <T>File</T> </button>
+                    <Upload size={10} className="inline me-1" /> <T>File</T> </button>
                 </div>
               </div>
 
@@ -229,7 +229,7 @@ export default function Collections() {
               <TableHead> <T>Description</T> </TableHead>
               <TableHead> <T>Products</T> </TableHead>
               <TableHead> <T>Status</T> </TableHead>
-              <TableHead className="text-right"> <T>Actions</T> </TableHead>
+              <TableHead className="text-end"> <T>Actions</T> </TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -277,12 +277,12 @@ export default function Collections() {
                       <Badge variant="secondary"> <T>Standard</T> </Badge>
                     )}
                   </TableCell>
-                  <TableCell className="text-right">
+                  <TableCell className="text-end">
                     <div className="flex justify-end gap-2">
                       <Button variant="ghost" size="sm" onClick={() => openEdit(col)} className="cursor-pointer">
-                        <Pencil size={14} className="mr-1" /> <T>Edit</T> </Button>
+                        <Pencil size={14} className="me-1" /> <T>Edit</T> </Button>
                       <Button variant="ghost" size="sm" onClick={() => setDeleteTarget(col)} className="text-red-600 hover:text-red-700 hover:bg-red-50 cursor-pointer">
-                        <Trash2 size={14} className="mr-1" /> <T>Delete</T> </Button>
+                        <Trash2 size={14} className="me-1" /> <T>Delete</T> </Button>
                     </div>
                   </TableCell>
                 </TableRow>
@@ -296,8 +296,8 @@ export default function Collections() {
           <p> <T>Page</T> {page} <T>of</T> {totalPages} · {list.length} <T>collections</T> </p>
           <div className="flex gap-2">
             <Button variant="outline" size="sm" disabled={page <= 1} onClick={() => setPage((p) => p - 1)} className="cursor-pointer">
-              <ChevronLeft size={14} /> <T>Prev</T> </Button>
-            <Button variant="outline" size="sm" disabled={page >= totalPages} onClick={() => setPage((p) => p + 1)} className="cursor-pointer"> <T>Next</T> <ChevronRight size={14} />
+              <ChevronLeft size={14} className="rtl:rotate-180" /> <T>Prev</T> </Button>
+            <Button variant="outline" size="sm" disabled={page >= totalPages} onClick={() => setPage((p) => p + 1)} className="cursor-pointer"> <T>Next</T> <ChevronRight size={14} className="rtl:rotate-180" />
             </Button>
           </div>
         </div>

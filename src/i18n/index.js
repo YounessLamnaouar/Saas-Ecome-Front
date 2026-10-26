@@ -13,7 +13,8 @@ export const SUPPORTED_LANGUAGES = [
 ];
 
 export function applyLanguageSettings(lang) {
-  const currentLang = lang || i18n.language || "fr";
+  const requested = (lang || i18n.resolvedLanguage || "fr").split("-")[0];
+  const currentLang = ["en", "fr", "ar"].includes(requested) ? requested : "fr";
   const isRtl = currentLang === "ar";
   document.documentElement.lang = currentLang;
   document.documentElement.dir = isRtl ? "rtl" : "ltr";

@@ -1,3 +1,4 @@
+import i18n from "@/i18n";
 import { T, usePreferences as useTranslationPreferences } from '@/context/Preferences';
 import React, { useState } from "react";
 import { useParams, useSearchParams, Link } from "react-router-dom";
@@ -50,12 +51,12 @@ export default function OrderDetail() {
             to={isLoggedIn ? "/my-orders" : "/"}
             className="inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-gray-900 transition-colors mb-4"
           >
-            <ArrowLeft size={16} /> <T>{isLoggedIn ? "Back to My Orders" : "Back to Store"}</T>
+            <ArrowLeft size={16} className="rtl:rotate-180" /> <T>{isLoggedIn ? "Back to My Orders" : "Back to Store"}</T>
           </Link>
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div>
               <div className="flex items-center gap-3">
-                <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 font-mono">{code}</h1>
+                <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 font-mono"><bdi dir="ltr">{code}</bdi></h1>
                 {order && <OrderStatusBadge status={order.status} showIcon />}
               </div>
               <p className="text-gray-500 text-xs sm:text-sm mt-1"> <T>Order tracking and status timeline.</T> </p>
@@ -76,7 +77,7 @@ export default function OrderDetail() {
           <Card className="mb-8 shadow-sm border-gray-200">
             <CardContent className="p-6">
               <h2 className="text-base font-bold text-gray-900 mb-2"> <T>Security Verification</T> </h2>
-              <p className="text-xs text-gray-600 mb-4"> <T>Please enter the phone number associated with order</T> <span className="font-mono font-semibold">{code}</span> <T>to view its progress.</T> </p>
+              <p className="text-xs text-gray-600 mb-4"> <T>Please enter the phone number associated with order</T> <span className="font-mono font-semibold"><bdi dir="ltr">{code}</bdi></span> <T>to view its progress.</T> </p>
               <form onSubmit={handlePhoneSubmit} className="flex gap-2 max-w-md">
                 <Input
                   value={phone}
@@ -85,7 +86,7 @@ export default function OrderDetail() {
                   required
                 />
                 <Button type="submit" className="bg-gray-900 text-white hover:bg-gray-800 cursor-pointer">
-                  <Search size={14} className="mr-1" /> <T>Verify</T> </Button>
+                  <Search size={14} className="me-1" /> <T>Verify</T> </Button>
               </form>
             </CardContent>
           </Card>
@@ -115,16 +116,16 @@ export default function OrderDetail() {
                     <p className="text-xs text-gray-500 flex items-center gap-1.5">
                       <Calendar size={13} /> <T>Placed on</T> <T>{" "}</T>
                       {order.created_at
-                        ? new Date(order.created_at).toLocaleDateString(undefined, {
+                        ? new Date(order.created_at).toLocaleDateString(i18n.resolvedLanguage, {
                             year: "numeric",
                             month: "long",
                             day: "numeric",
                           })
-                        : "Recently"}
+                        : <T>Recently</T>}
                     </p>
                     <p className="text-xs text-gray-400 mt-0.5"> <T>Payment Method: Cash on Delivery</T> </p>
                   </div>
-                  <div className="text-left sm:text-right">
+                  <div className="text-start sm:text-end">
                     <p className="text-xs text-gray-500"> <T>Order Total</T> </p>
                     <p className="text-2xl font-bold text-gray-900">${Number(order.total).toFixed(2)}</p>
                   </div>
@@ -140,7 +141,7 @@ export default function OrderDetail() {
                       <MapPin size={16} className="text-gray-500" /> <T>Customer Information</T> </h3>
                     <div className="bg-gray-50 p-4 rounded-xl text-xs space-y-1.5 text-gray-600 border border-gray-100">
                       <p className="font-semibold text-gray-900 text-sm">{order.customer?.name}</p>
-                      <p>{order.customer?.phone}</p>
+                      <p><bdi dir="ltr">{order.customer?.phone}</bdi></p>
                       <p>{order.customer?.address}</p>
                       <p>{order.customer?.city}</p>
                       {order.customer?.notes && (

@@ -35,7 +35,7 @@ export default function Cards() {
             <div key={product.id} className="group bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-2xl transition-all duration-500 cursor-pointer border border-gray-100 flex flex-col justify-between" data-aos="zoom-in" data-aos-delay={i * 100}>
               <Link to={`/product/${product.id}`} className="relative h-56 overflow-hidden bg-gray-50 block cursor-pointer">
                 <img src={product.image} alt={product.name} className="w-full h-full object-contain transition-transform duration-700 group-hover:scale-110 p-4" />
-                <div className="absolute top-2 right-2 flex flex-col gap-2 opacity-0 group-hover:opacity-100 pointer-coarse:opacity-100 transition-all duration-300 transform translate-x-2 group-hover:translate-x-0 pointer-coarse:translate-x-0">
+                <div className="absolute top-2 end-2 flex flex-col gap-2 opacity-0 group-hover:opacity-100 pointer-coarse:opacity-100 transition-all duration-300 transform translate-x-2 group-hover:translate-x-0 pointer-coarse:translate-x-0">
                   <LikeButton product={product} className="bg-white rounded-full p-2 shadow-md hover:scale-110 transition-transform duration-200 cursor-pointer" />
                   <button
                     onClick={(e) => { e.preventDefault(); addToCart(product, 1); }}

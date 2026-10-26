@@ -1,3 +1,4 @@
+import i18n from "@/i18n";
 import { translate } from '@/lib/translations';
 import { T, usePreferences as useTranslationPreferences } from '@/context/Preferences';
 import React, { useState } from "react";
@@ -57,7 +58,7 @@ export default function OrdersList() {
   const handleStatusChange = async (orderId, newStatus) => {
     try {
       const updated = await updateStatus.mutateAsync({ id: orderId, status: newStatus });
-      toast.success(translate(`Order status updated to "${newStatus}".`));
+      toast.success(translate(`Order status updated to "${tr(STATUS_OPTIONS.find(option => option.value === newStatus)?.label || newStatus)}".`));
       if (selectedOrder && selectedOrder.id === orderId) {
         setSelectedOrder(updated);
       }
@@ -88,7 +89,7 @@ export default function OrdersList() {
       <Card className="border-gray-200 shadow-sm">
         <CardContent className="p-4 flex flex-col sm:flex-row gap-3">
           <div className="relative flex-1">
-            <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+            <Search size={16} className="absolute start-3 top-1/2 -translate-y-1/2 text-gray-400" />
             <Input
               value={search}
               onChange={(e) => {
@@ -96,7 +97,7 @@ export default function OrdersList() {
                 setPage(1);
               }}
               placeholder={tr("Search by code, customer name, phone...")}
-              className="pl-9"
+              className="ps-9"
             />
           </div>
 
@@ -135,7 +136,7 @@ export default function OrdersList() {
                 <TableHead className="font-semibold text-gray-700"> <T>City</T> </TableHead>
                 <TableHead className="font-semibold text-gray-700"> <T>Total</T> </TableHead>
                 <TableHead className="font-semibold text-gray-700"> <T>Status</T> </TableHead>
-                <TableHead className="font-semibold text-gray-700 text-right"> <T>Actions</T> </TableHead>
+                <TableHead className="font-semibold text-gray-700 text-end"> <T>Actions</T> </TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -155,12 +156,12 @@ export default function OrdersList() {
                       {order.code}
                     </TableCell>
                     <TableCell className="text-xs text-gray-500 whitespace-nowrap">
-                      {order.created_at ? new Date(order.created_at).toLocaleDateString() : "—"}
+                      {order.created_at ? new Date(order.created_at).toLocaleDateString(i18n.resolvedLanguage) : "—"}
                     </TableCell>
                     <TableCell>
                       <div className="text-xs">
                         <p className="font-semibold text-gray-900">{order.customer?.name}</p>
-                        <p className="text-gray-400 font-mono text-[11px]">{order.customer?.phone}</p>
+                        <p className="text-gray-400 font-mono text-[11px]"><bdi dir="ltr">{order.customer?.phone}</bdi></p>
                       </div>
                     </TableCell>
                     <TableCell className="text-xs text-gray-600">
@@ -172,7 +173,7 @@ export default function OrdersList() {
                     <TableCell>
                       <OrderStatusBadge status={order.status} showIcon />
                     </TableCell>
-                    <TableCell className="text-right">
+                    <TableCell className="text-end">
                       <Button
                         variant="outline"
                         size="sm"
@@ -200,14 +201,14 @@ export default function OrdersList() {
                 onClick={() => setPage((p) => p - 1)}
                 className="h-8 cursor-pointer"
               >
-                <ChevronLeft size={14} className="mr-1" /> <T>Previous</T> </Button>
+                <ChevronLeft size={14} className="rtl:rotate-180 me-1" /> <T>Previous</T> </Button>
               <Button
                 variant="outline"
                 size="sm"
                 disabled={page >= meta.last_page}
                 onClick={() => setPage((p) => p + 1)}
                 className="h-8 cursor-pointer"
-              > <T>Next</T> <ChevronRight size={14} className="ml-1" />
+              > <T>Next</T> <ChevronRight size={14} className="rtl:rotate-180 ms-1" />
               </Button>
             </div>
           </div>
@@ -220,12 +221,12 @@ export default function OrdersList() {
           {selectedOrder && (
             <div className="space-y-5">
               <DialogHeader>
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pr-6">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pe-6">
                   <div>
-                    <DialogTitle className="font-mono text-xl">{selectedOrder.code}</DialogTitle>
+                    <DialogTitle className="font-mono text-xl"><bdi dir="ltr">{selectedOrder.code}</bdi></DialogTitle>
                     <DialogDescription> <T>Placed on</T> <T>{" "}</T>
                       {selectedOrder.created_at
-                        ? new Date(selectedOrder.created_at).toLocaleString()
+                        ? new Date(selectedOrder.created_at).toLocaleString(i18n.resolvedLanguage)
                         : "—"}
                     </DialogDescription>
                   </div>
@@ -257,7 +258,7 @@ export default function OrdersList() {
                       </SelectContent>
                     </Select>
                   ) : (
-                    <span className="text-xs font-semibold text-green-700 bg-green-50 border border-green-200 px-3 py-1 rounded-lg"> <T>Order fully completed (Livrée)</T> </span>
+                    <span className="text-xs font-semibold text-green-700 bg-green-50 border border-green-200 px-3 py-1 rounded-lg"> <T>Order fully completed (Delivered)</T> </span>
                   )}
                 </div>
               </div>
@@ -292,7 +293,7 @@ export default function OrdersList() {
                   <div className="flex justify-between">
                     <span className="text-gray-500"> <T>Registered Customer:</T> </span>
                     <span className="font-semibold text-gray-900">
-                      {selectedOrder.user ? selectedOrder.user.name : "Guest Order"}
+                      {selectedOrder.user ? selectedOrder.user.name : <T>Guest Order</T>}
                     </span>
                   </div>
                   <div className="flex justify-between border-t border-gray-200 pt-2 text-sm">
@@ -313,9 +314,9 @@ export default function OrdersList() {
                     <TableHeader className="bg-gray-50">
                       <TableRow>
                         <TableHead className="text-xs"> <T>Product</T> </TableHead>
-                        <TableHead className="text-xs text-right"> <T>Unit Price</T> </TableHead>
-                        <TableHead className="text-xs text-right"> <T>Qty</T> </TableHead>
-                        <TableHead className="text-xs text-right"> <T>Subtotal</T> </TableHead>
+                        <TableHead className="text-xs text-end"> <T>Unit Price</T> </TableHead>
+                        <TableHead className="text-xs text-end"> <T>Qty</T> </TableHead>
+                        <TableHead className="text-xs text-end"> <T>Subtotal</T> </TableHead>
                       </TableRow>
                     </TableHeader>
                     <TableBody>
@@ -323,15 +324,15 @@ export default function OrdersList() {
                         <TableRow key={item.id}>
                           <TableCell className="text-xs font-medium text-gray-900">
                             {item.name}
-                            {item.color && <span className="text-gray-400 ml-1">({item.color})</span>}
+                            {item.color && <span className="text-gray-400 ms-1">({item.color})</span>}
                           </TableCell>
-                          <TableCell className="text-xs text-right text-gray-600">
+                          <TableCell className="text-xs text-end text-gray-600">
                             ${Number(item.price).toFixed(2)}
                           </TableCell>
-                          <TableCell className="text-xs text-right font-semibold text-gray-900">
+                          <TableCell className="text-xs text-end font-semibold text-gray-900">
                             {item.qty}
                           </TableCell>
-                          <TableCell className="text-xs text-right font-bold text-gray-900">
+                          <TableCell className="text-xs text-end font-bold text-gray-900">
                             ${(Number(item.price) * Number(item.qty)).toFixed(2)}
                           </TableCell>
                         </TableRow>
@@ -358,7 +359,7 @@ export default function OrdersList() {
                           )}
                         </div>
                         <span className="text-gray-400 font-mono text-[11px]">
-                          {h.created_at ? new Date(h.created_at).toLocaleString() : "—"}
+                          {h.created_at ? new Date(h.created_at).toLocaleString(i18n.resolvedLanguage) : "—"}
                         </span>
                       </div>
                     ))}

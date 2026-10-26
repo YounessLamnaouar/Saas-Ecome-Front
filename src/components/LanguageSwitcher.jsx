@@ -44,7 +44,7 @@ export default function LanguageSwitcher({ variant = "storefront", className = "
   // Storefront variant (works over colored navbars)
   return (
     <div className={`flex items-center gap-0.5 bg-white/10 p-1 rounded-full text-xs text-white ${className}`}>
-      <Globe size={13} className="opacity-70 ml-1.5 mr-0.5 shrink-0" />
+      <Globe size={13} className="opacity-70 ms-1.5 me-0.5 shrink-0" />
       {LANGUAGES.map((l) => (
         <button
           key={l.code}

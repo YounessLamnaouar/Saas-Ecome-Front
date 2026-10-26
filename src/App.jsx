@@ -1,4 +1,4 @@
-import { T } from '@/context/Preferences';
+import { T, usePreferences } from '@/context/Preferences';
 import PasswordReset from "./pages/PasswordReset";
 import React, { useEffect, lazy, Suspense } from "react";
 import { Routes, Route, useLocation } from "react-router-dom";
@@ -38,6 +38,7 @@ const Admin = ({ children }) => (
 );
 
 export default function App() {
+  const { language } = usePreferences();
   const { pathname } = useLocation();
   useEffect(() => { window.scrollTo({ top: 0, left: 0, behavior: "instant" }); }, [pathname]);
   useEffect(() => {
@@ -51,7 +52,7 @@ export default function App() {
 
   return (
     <div>
-      <Toaster position="top-center" richColors />
+      <Toaster dir={language === "ar" ? "rtl" : "ltr"} position="top-center" richColors />
       <Routes>
         <Route path="/reset-password" element={<PageLayout><PasswordReset /></PageLayout>} />
         <Route

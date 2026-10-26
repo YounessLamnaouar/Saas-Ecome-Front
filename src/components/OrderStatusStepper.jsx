@@ -1,3 +1,4 @@
+import i18n from "@/i18n";
 import { T } from '@/context/Preferences';
 import React from "react";
 import { Check, Clock, PackageCheck, Truck, ShieldCheck } from "lucide-react";
@@ -41,7 +42,7 @@ export default function OrderStatusStepper({ currentStatus, histories = [] }) {
               {/* Connector line for desktop */}
               {idx < STEPS.length - 1 && (
                 <div
-                  className={`hidden sm:block absolute top-5 left-1/2 w-full h-1 -z-0 transition-colors ${
+                  className={`hidden sm:block absolute top-5 start-1/2 w-full h-1 -z-0 transition-colors ${
                     stepRank < currentRank ? "bg-green-500" : "bg-gray-200"
                   }`}
                 />
@@ -61,7 +62,7 @@ export default function OrderStatusStepper({ currentStatus, histories = [] }) {
               </div>
 
               {/* Text info */}
-              <div className="ml-4 sm:ml-0 sm:mt-3 flex-1">
+              <div className="ms-4 sm:ms-0 sm:mt-3 flex-1">
                 <p
                   className={`text-sm font-semibold ${
                     isCurrent ? "text-amber-700" : isCompleted ? "text-gray-900" : "text-gray-400"
@@ -72,7 +73,7 @@ export default function OrderStatusStepper({ currentStatus, histories = [] }) {
                 <p className="text-xs text-gray-500 hidden sm:block"><T>{step.desc}</T></p>
                 {timestamp && (
                   <p className="text-[11px] text-gray-400 mt-1">
-                    {new Date(timestamp).toLocaleDateString(undefined, {
+                    {new Date(timestamp).toLocaleDateString(i18n.resolvedLanguage, {
                       month: "short",
                       day: "numeric",
                       hour: "2-digit",

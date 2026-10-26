@@ -143,8 +143,8 @@ export default function AdminLayout({ children }) {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Desktop sidebar */}
-      <aside className="hidden lg:flex fixed inset-y-0 left-0 w-64 flex-col bg-gray-900 py-6">
-        <Link to="/" className="px-6 text-white text-2xl font-bold tracking-tight mb-8"> <T>FASHION</T> <span className="text-xs align-top ml-0.5">@</span>
+      <aside className="hidden lg:flex fixed inset-y-0 start-0 w-64 flex-col bg-gray-900 py-6">
+        <Link to="/" className="px-6 text-white text-2xl font-bold tracking-tight mb-8"> <T>FASHION</T> <span className="text-xs align-top ms-0.5">@</span>
           <span className="block text-xs font-medium tracking-wide text-gray-400 mt-1"> <T>Admin panel</T> </span>
         </Link>
         <SidebarLinks />
@@ -156,7 +156,7 @@ export default function AdminLayout({ children }) {
             <Store size={18} /> <T>Back to store</T> </Link>
           <button
             onClick={handleLogout}
-            className="w-full flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-red-400 hover:bg-gray-800 hover:text-red-300 transition-colors text-left"
+            className="w-full flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-red-400 hover:bg-gray-800 hover:text-red-300 transition-colors text-start"
           >
             <LogOut size={18} /> <T>Sign out</T> </button>
         </div>
@@ -165,7 +165,7 @@ export default function AdminLayout({ children }) {
       {/* Mobile sidebar */}
       <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
         <SheetContent side="left" className="bg-gray-900 border-none">
-          <Link to="/" className="text-white text-xl font-bold tracking-tight mb-8 block"> <T>FASHION</T> <span className="text-xs align-top ml-0.5">@</span>
+          <Link to="/" className="text-white text-xl font-bold tracking-tight mb-8 block"> <T>FASHION</T> <span className="text-xs align-top ms-0.5">@</span>
           </Link>
           <SidebarLinks onNavigate={() => setMobileOpen(false)} />
           <div className="mt-6 space-y-1">
@@ -177,14 +177,14 @@ export default function AdminLayout({ children }) {
               <Store size={18} /> <T>Back to store</T> </Link>
             <button
               onClick={() => { setMobileOpen(false); handleLogout(); }}
-              className="w-full flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-red-400 hover:bg-gray-800 hover:text-red-300 text-left"
+              className="w-full flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-red-400 hover:bg-gray-800 hover:text-red-300 text-start"
             >
               <LogOut size={18} /> <T>Sign out</T> </button>
           </div>
         </SheetContent>
       </Sheet>
 
-      <div className="lg:pl-64">
+      <div className="lg:ps-64">
         <div className="flex justify-end px-4 py-2"><PreferenceControls /></div>
         <header className="sticky top-0 z-30 flex items-center justify-between border-b border-gray-200 bg-white px-4 py-4 lg:px-8">
           <div className="flex items-center gap-4">

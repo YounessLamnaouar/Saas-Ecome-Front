@@ -1,3 +1,4 @@
+import i18n from "@/i18n";
 import { T } from '@/context/Preferences';
 import React from "react";
 import { Link } from "react-router-dom";
@@ -76,32 +77,32 @@ export default function MyOrders() {
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                     <div className="space-y-1">
                       <div className="flex items-center gap-3">
-                        <span className="font-mono font-bold text-gray-900 text-base">{order.code}</span>
+                        <span className="font-mono font-bold text-gray-900 text-base"><bdi dir="ltr">{order.code}</bdi></span>
                         <OrderStatusBadge status={order.status} showIcon />
                       </div>
                       <p className="text-xs text-gray-500 flex items-center gap-1.5">
                         <Calendar size={13} />
                         {order.created_at
-                          ? new Date(order.created_at).toLocaleDateString(undefined, {
+                          ? new Date(order.created_at).toLocaleDateString(i18n.resolvedLanguage, {
                               year: "numeric",
                               month: "short",
                               day: "numeric",
                             })
-                          : "Recently"}
+                          : <T>Recently</T>}
                         <span>•</span>
                         <span>{(order.items || []).length} <T>item(s)</T> </span>
                       </p>
                     </div>
 
                     <div className="flex items-center justify-between sm:justify-end gap-4 border-t sm:border-t-0 pt-3 sm:pt-0">
-                      <div className="sm:text-right">
+                      <div className="sm:text-end">
                         <p className="text-xs text-gray-400"> <T>Total</T> </p>
                         <p className="text-lg font-bold text-gray-900">${Number(order.total).toFixed(2)}</p>
                       </div>
                       <Link
                         to={`/orders/${order.code}`}
                         className="inline-flex items-center gap-1 text-xs font-semibold bg-gray-900 text-white px-3.5 py-2 rounded-lg hover:bg-gray-800 transition-colors"
-                      > <T>Details</T> <ChevronRight size={14} />
+                      > <T>Details</T> <ChevronRight size={14} className="rtl:rotate-180" />
                       </Link>
                     </div>
                   </div>

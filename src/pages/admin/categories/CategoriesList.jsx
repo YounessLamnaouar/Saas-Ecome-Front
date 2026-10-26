@@ -79,13 +79,13 @@ function CategoryFormDialog({ open, onOpenChange, initial, onSubmit, saving }) {
                   onClick={() => setImageMode("url")}
                   className={`px-2 py-0.5 rounded transition-all cursor-pointer ${imageMode === "url" ? "bg-white font-bold text-gray-900 shadow-sm" : "text-gray-600"}`}
                 >
-                  <LinkIcon size={10} className="inline mr-1" /> <T>URL</T> </button>
+                  <LinkIcon size={10} className="inline me-1" /> <T>URL</T> </button>
                 <button
                   type="button"
                   onClick={() => setImageMode("file")}
                   className={`px-2 py-0.5 rounded transition-all cursor-pointer ${imageMode === "file" ? "bg-white font-bold text-gray-900 shadow-sm" : "text-gray-600"}`}
                 >
-                  <Upload size={10} className="inline mr-1" /> <T>File</T> </button>
+                  <Upload size={10} className="inline me-1" /> <T>File</T> </button>
               </div>
             </div>
 
@@ -226,8 +226,8 @@ export default function CategoriesList() {
               <p> <T>Page</T> {page} <T>of</T> {totalPages} · {list.length} <T>categories</T> </p>
               <div className="flex gap-2">
                 <Button variant="outline" size="sm" disabled={page <= 1} onClick={() => setPage((p) => p - 1)} className="cursor-pointer">
-                  <ChevronLeft size={14} /> <T>Prev</T> </Button>
-                <Button variant="outline" size="sm" disabled={page >= totalPages} onClick={() => setPage((p) => p + 1)} className="cursor-pointer"> <T>Next</T> <ChevronRight size={14} />
+                  <ChevronLeft size={14} className="rtl:rotate-180" /> <T>Prev</T> </Button>
+                <Button variant="outline" size="sm" disabled={page >= totalPages} onClick={() => setPage((p) => p + 1)} className="cursor-pointer"> <T>Next</T> <ChevronRight size={14} className="rtl:rotate-180" />
                 </Button>
               </div>
             </div>

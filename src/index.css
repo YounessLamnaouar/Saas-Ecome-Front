@@ -148,3 +148,9 @@ body {
   outline: 2px solid var(--ring);
   outline-offset: 3px;
 }
+
+/* Keep addresses and phone numbers readable inside RTL forms. */
+input[type="email"], input[type="tel"], input[type="url"] {
+  direction: ltr;
+  text-align: start;
+}

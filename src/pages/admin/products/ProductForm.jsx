@@ -146,7 +146,7 @@ export default function ProductForm() {
   return (
     <div className="max-w-2xl space-y-5">
       <Link to="/admin/products" className="inline-flex items-center gap-1 text-sm text-gray-500 hover:text-gray-900 cursor-pointer">
-        <ArrowLeft size={14} /> <T>Back to products</T> </Link>
+        <ArrowLeft size={14} className="rtl:rotate-180" /> <T>Back to products</T> </Link>
 
       <Card>
         <CardContent className="p-6">
@@ -208,13 +208,13 @@ export default function ProductForm() {
                     onClick={() => setImageMode("url")}
                     className={`px-3 py-1 rounded-md transition-all cursor-pointer ${imageMode === "url" ? "bg-white font-bold text-gray-900 shadow-sm" : "text-gray-600"}`}
                   >
-                    <LinkIcon size={12} className="inline mr-1" /> <T>Image URL</T> </button>
+                    <LinkIcon size={12} className="inline me-1" /> <T>Image URL</T> </button>
                   <button
                     type="button"
                     onClick={() => setImageMode("file")}
                     className={`px-3 py-1 rounded-md transition-all cursor-pointer ${imageMode === "file" ? "bg-white font-bold text-gray-900 shadow-sm" : "text-gray-600"}`}
                   >
-                    <Upload size={12} className="inline mr-1" /> <T>Upload File</T> </button>
+                    <Upload size={12} className="inline me-1" /> <T>Upload File</T> </button>
                 </div>
               </div>
 
@@ -270,7 +270,7 @@ export default function ProductForm() {
 
             <div className="flex gap-3 pt-2">
               <Button type="submit" disabled={saving || uploading} className="cursor-pointer">
-                {saving && <Loader2 size={14} className="animate-spin mr-1" />}
+                {saving && <Loader2 size={14} className="animate-spin me-1" />}
                 <T>{isEdit ? "Save Changes" : "Create Product"}</T>
               </Button>
               <Button type="button" variant="outline" onClick={() => navigate("/admin/products")} className="cursor-pointer"> <T>Cancel</T> </Button>

@@ -28,7 +28,7 @@ const AlertDialogContent = React.forwardRef(({ className, ...props }, ref) => (
 AlertDialogContent.displayName = AlertDialogPrimitive.Content.displayName;
 
 const AlertDialogHeader = ({ className, ...props }) => (
-  <div className={cn("flex flex-col gap-1.5 text-left", className)} {...props} />
+  <div className={cn("flex flex-col gap-1.5 text-start", className)} {...props} />
 );
 const AlertDialogFooter = ({ className, ...props }) => (
   <div className={cn("flex flex-col-reverse gap-2 sm:flex-row sm:justify-end", className)} {...props} />

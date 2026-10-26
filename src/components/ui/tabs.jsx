@@ -1,8 +1,12 @@
+import { useTranslation } from "react-i18next";
 import React from "react";
 import * as TabsPrimitive from "@radix-ui/react-tabs";
 import { cn } from "@/lib/utils";
 
-const Tabs = TabsPrimitive.Root;
+function Tabs({ dir, ...props }) {
+  const { i18n } = useTranslation();
+  return <TabsPrimitive.Root dir={dir || i18n.dir()} {...props} />;
+}
 
 const TabsList = React.forwardRef(({ className, ...props }, ref) => (
   <TabsPrimitive.List

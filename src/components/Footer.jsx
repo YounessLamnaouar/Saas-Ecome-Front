@@ -54,17 +54,17 @@ export default function Footer() {
             <table className="w-full border-collapse text-center text-xs">
               <thead>
                 <tr className="bg-gray-100 border-b">
-                  <th className="p-2 text-left"> <T>Size</T> </th>
+                  <th className="p-2 text-start"> <T>Size</T> </th>
                   <th className="p-2"> <T>Chest</T> </th>
                   <th className="p-2"> <T>Waist</T> </th>
                   <th className="p-2"> <T>Hips</T> </th>
                 </tr>
               </thead>
               <tbody>
-                <tr className="border-b"><td className="p-2 text-left font-bold"> <T>S</T> </td><td className="p-2">34-36"</td><td className="p-2">28-30"</td><td className="p-2">35-37"</td></tr>
-                <tr className="border-b"><td className="p-2 text-left font-bold"> <T>M</T> </td><td className="p-2">38-40"</td><td className="p-2">32-34"</td><td className="p-2">39-41"</td></tr>
-                <tr className="border-b"><td className="p-2 text-left font-bold"> <T>L</T> </td><td className="p-2">42-44"</td><td className="p-2">36-38"</td><td className="p-2">43-45"</td></tr>
-                <tr><td className="p-2 text-left font-bold"> <T>XL</T> </td><td className="p-2">46-48"</td><td className="p-2">40-42"</td><td className="p-2">47-49"</td></tr>
+                <tr className="border-b"><td className="p-2 text-start font-bold"> <T>S</T> </td><td className="p-2">34-36"</td><td className="p-2">28-30"</td><td className="p-2">35-37"</td></tr>
+                <tr className="border-b"><td className="p-2 text-start font-bold"> <T>M</T> </td><td className="p-2">38-40"</td><td className="p-2">32-34"</td><td className="p-2">39-41"</td></tr>
+                <tr className="border-b"><td className="p-2 text-start font-bold"> <T>L</T> </td><td className="p-2">42-44"</td><td className="p-2">36-38"</td><td className="p-2">43-45"</td></tr>
+                <tr><td className="p-2 text-start font-bold"> <T>XL</T> </td><td className="p-2">46-48"</td><td className="p-2">40-42"</td><td className="p-2">47-49"</td></tr>
               </tbody>
             </table>
           </div>
@@ -78,7 +78,7 @@ export default function Footer() {
             <DialogTitle className="flex items-center gap-2 text-xl font-bold">
               <HelpCircle size={20} /> <T>Frequently Asked Questions</T> </DialogTitle>
           </DialogHeader>
-          <div className="space-y-4 pt-2 text-sm text-gray-600 max-h-96 overflow-y-auto pr-1">
+          <div className="space-y-4 pt-2 text-sm text-gray-600 max-h-96 overflow-y-auto pe-1">
             <div>
               <p className="font-bold text-gray-900 mb-1"> <T>What shipping options are available?</T> </p>
               <p> <T>We offer standard express delivery (2-4 business days) with Cash on Delivery options nationwide.</T> </p>
@@ -113,7 +113,7 @@ export default function Footer() {
         <div className="container mx-auto px-4 md:px-8 lg:px-16">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
             <div>
-              <h2 className="text-2xl font-bold mb-4"> <T>FASHION</T> <span className="text-xs align-top ml-0.5">@</span>
+              <h2 className="text-2xl font-bold mb-4"> <T>FASHION</T> <span className="text-xs align-top ms-0.5">@</span>
               </h2>
               <p className="text-gray-400 text-sm leading-relaxed mb-4"> <T>Discover the latest fashion trends for men, women, and kids. We bring you carefully selected styles that combine quality, comfort, and modern design — all in one place.</T> </p>
               <div className="flex gap-3">
@@ -129,7 +129,7 @@ export default function Footer() {
               <h3 className="text-lg font-semibold mb-4"> <T>Quick Links</T> </h3>
               <ul className="space-y-2 text-sm text-gray-400">
                 <li>
-                  <button onClick={() => setAboutOpen(true)} className="hover:text-white transition-colors cursor-pointer text-left"> <T>About Us</T> </button>
+                  <button onClick={() => setAboutOpen(true)} className="hover:text-white transition-colors cursor-pointer text-start"> <T>About Us</T> </button>
                 </li>
                 <li>
                   <Link to="/contact" className="hover:text-white transition-colors cursor-pointer"> <T>Contact Us</T> </Link>
@@ -138,10 +138,10 @@ export default function Footer() {
                   <Link to="/track-order" className="hover:text-white transition-colors cursor-pointer"> <T>Track Order</T> </Link>
                 </li>
                 <li>
-                  <button onClick={() => setSizeGuideOpen(true)} className="hover:text-white transition-colors cursor-pointer text-left"> <T>Size Guide</T> </button>
+                  <button onClick={() => setSizeGuideOpen(true)} className="hover:text-white transition-colors cursor-pointer text-start"> <T>Size Guide</T> </button>
                 </li>
                 <li>
-                  <button onClick={() => setFaqsOpen(true)} className="hover:text-white transition-colors cursor-pointer text-left"> <T>FAQs</T> </button>
+                  <button onClick={() => setFaqsOpen(true)} className="hover:text-white transition-colors cursor-pointer text-start"> <T>FAQs</T> </button>
                 </li>
               </ul>
             </div>
@@ -150,13 +150,13 @@ export default function Footer() {
               <h3 className="text-lg font-semibold mb-4"> <T>Categories</T> </h3>
               <ul className="space-y-2 text-sm text-gray-400">
                 <li>
-                  <button onClick={() => navigate("/shop?category=men")} className="hover:text-white transition-colors cursor-pointer text-left"> <T>Men's Fashion</T> </button>
+                  <button onClick={() => navigate("/shop?category=men")} className="hover:text-white transition-colors cursor-pointer text-start"> <T>Men's Fashion</T> </button>
                 </li>
                 <li>
-                  <button onClick={() => navigate("/shop?category=women")} className="hover:text-white transition-colors cursor-pointer text-left"> <T>Women's Wear</T> </button>
+                  <button onClick={() => navigate("/shop?category=women")} className="hover:text-white transition-colors cursor-pointer text-start"> <T>Women's Wear</T> </button>
                 </li>
                 <li>
-                  <button onClick={() => navigate("/shop?category=kids")} className="hover:text-white transition-colors cursor-pointer text-left"> <T>Kid's Collection</T> </button>
+                  <button onClick={() => navigate("/shop?category=kids")} className="hover:text-white transition-colors cursor-pointer text-start"> <T>Kid's Collection</T> </button>
                 </li>
               </ul>
             </div>

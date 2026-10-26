@@ -112,14 +112,14 @@ export default function Collection() {
                   onClick={() => setPage((p) => p - 1)}
                   className="px-4 py-2 rounded-lg bg-white border border-gray-200 shadow-sm text-sm font-medium disabled:opacity-40 cursor-pointer flex items-center gap-1 hover:bg-gray-100 transition-colors"
                 >
-                  <ChevronLeft size={16} /> <T>Previous</T> </button>
+                  <ChevronLeft size={16} className="rtl:rotate-180" /> <T>Previous</T> </button>
                 <span className="text-sm text-gray-600 font-semibold"> <T>Page</T> {page} <T>of</T> {totalPages}
                 </span>
                 <button
                   disabled={page >= totalPages}
                   onClick={() => setPage((p) => p + 1)}
                   className="px-4 py-2 rounded-lg bg-white border border-gray-200 shadow-sm text-sm font-medium disabled:opacity-40 cursor-pointer flex items-center gap-1 hover:bg-gray-100 transition-colors"
-                > <T>Next</T> <ChevronRight size={16} />
+                > <T>Next</T> <ChevronRight size={16} className="rtl:rotate-180" />
                 </button>
               </div>
             )}

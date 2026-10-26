@@ -1,3 +1,4 @@
+import { T } from "@/context/Preferences";
 import React from "react";
 import * as DialogPrimitive from "@radix-ui/react-dialog";
 import { X } from "lucide-react";
@@ -20,14 +21,14 @@ const SheetContent = React.forwardRef(({ className, children, side = "left", ...
       ref={ref}
       className={cn(
         "fixed inset-y-0 z-50 h-full w-72 bg-white p-4 shadow-lg",
-        side === "left" ? "left-0" : "right-0",
+        side === "left" ? "start-0" : "end-0",
         className
       )}
       {...props}
     >
       {children}
-      <DialogPrimitive.Close className="absolute right-3 top-3 rounded-md p-1 text-gray-400 hover:text-gray-700 hover:bg-gray-100">
-        <X className="h-4 w-4" />
+      <DialogPrimitive.Close className="absolute end-3 top-3 rounded-md p-1 text-gray-400 hover:text-gray-700 hover:bg-gray-100">
+        <X className="h-4 w-4" /><span className="sr-only"><T>Close</T></span>
       </DialogPrimitive.Close>
     </DialogPrimitive.Content>
   </SheetPortal>

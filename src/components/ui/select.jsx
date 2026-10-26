@@ -1,9 +1,13 @@
+import { useTranslation } from "react-i18next";
 import React from "react";
 import * as SelectPrimitive from "@radix-ui/react-select";
 import { Check, ChevronDown, ChevronUp } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-const Select = SelectPrimitive.Root;
+function Select({ dir, ...props }) {
+  const { i18n } = useTranslation();
+  return <SelectPrimitive.Root dir={dir || i18n.dir()} {...props} />;
+}
 const SelectValue = SelectPrimitive.Value;
 
 const SelectTrigger = React.forwardRef(({ className, children, ...props }, ref) => (

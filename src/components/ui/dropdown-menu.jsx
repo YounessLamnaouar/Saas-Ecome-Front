@@ -1,8 +1,12 @@
+import { useTranslation } from "react-i18next";
 import React from "react";
 import * as DropdownMenuPrimitive from "@radix-ui/react-dropdown-menu";
 import { cn } from "@/lib/utils";
 
-const DropdownMenu = DropdownMenuPrimitive.Root;
+function DropdownMenu({ dir, ...props }) {
+  const { i18n } = useTranslation();
+  return <DropdownMenuPrimitive.Root dir={dir || i18n.dir()} {...props} />;
+}
 const DropdownMenuTrigger = DropdownMenuPrimitive.Trigger;
 
 const DropdownMenuContent = React.forwardRef(({ className, sideOffset = 4, ...props }, ref) => (

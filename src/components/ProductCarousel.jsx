@@ -1,3 +1,4 @@
+import { translate } from "@/lib/translations";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { motion, useMotionValue, useTransform } from "motion/react";
@@ -9,7 +10,7 @@ const GAP = 16;
 const SPRING_OPTIONS = { type: "spring", stiffness: 300, damping: 30 };
 
 function ProductSlide({ product, index, itemWidth, itemHeight, trackItemOffset, x, transition, wasDragged }) {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const range = [-(index + 1) * trackItemOffset, -index * trackItemOffset, -(index - 1) * trackItemOffset];
   const rotateY = useTransform(x, range, [90, 0, -90], { clamp: false });
   const outOfStock = typeof product.stock === "number" && product.stock <= 0;
@@ -24,6 +25,7 @@ function ProductSlide({ product, index, itemWidth, itemHeight, trackItemOffset, 
         to={`/product/${product.id}`}
         draggable={false}
         onClick={(e) => wasDragged.current && e.preventDefault()}
+        dir={i18n.dir()}
         className="group absolute inset-0 block text-start"
       >
         <img
@@ -180,12 +182,12 @@ export default function ProductCarousel({
       </motion.div>
 
       {/* dots overlay the bottom-right of the slide */}
-      <div className="absolute right-8 bottom-8 flex items-center gap-2 z-10">
+      <div className="absolute end-8 bottom-8 flex items-center gap-2 z-10">
         {items.map((_, index) => (
           <button
             key={index}
             type="button"
-            aria-label={`Go to slide ${index + 1}`}
+            aria-label={translate(`Go to slide ${index + 1}`)}
             onClick={() => setPosition(loop ? index + 1 : index)}
             className={`h-2 rounded-full transition-all cursor-pointer ${
               activeIndex === index ? "w-6 bg-white" : "w-2 bg-white/50"

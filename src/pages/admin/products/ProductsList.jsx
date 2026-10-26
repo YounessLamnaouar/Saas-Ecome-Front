@@ -50,12 +50,12 @@ export default function ProductsList() {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div className="flex flex-1 flex-col sm:flex-row gap-3">
           <div className="relative sm:max-w-xs w-full">
-            <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+            <Search size={16} className="absolute start-3 top-1/2 -translate-y-1/2 text-gray-400" />
             <Input
               value={search}
               onChange={(e) => { setSearch(e.target.value); setPage(1); }}
               placeholder={tr("Search products...")}
-              className="pl-9"
+              className="ps-9"
             />
           </div>
           <Select value={category} onValueChange={(v) => { setCategory(v); setPage(1); }}>
@@ -113,12 +113,12 @@ export default function ProductsList() {
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
                       <DropdownMenuItem asChild className="cursor-pointer">
-                        <Link to={`/admin/products/${p.id}/edit`}><Pencil size={14} className="mr-2" /> <T>Edit</T> </Link>
+                        <Link to={`/admin/products/${p.id}/edit`}><Pencil size={14} className="me-2" /> <T>Edit</T> </Link>
                       </DropdownMenuItem>
                       <AlertDialog>
                         <AlertDialogTrigger asChild>
                           <DropdownMenuItem onSelect={(e) => e.preventDefault()} className="text-red-600 cursor-pointer">
-                            <Trash2 size={14} className="mr-2" /> <T>Delete</T> </DropdownMenuItem>
+                            <Trash2 size={14} className="me-2" /> <T>Delete</T> </DropdownMenuItem>
                         </AlertDialogTrigger>
                         <AlertDialogContent>
                           <AlertDialogHeader>
@@ -145,8 +145,8 @@ export default function ProductsList() {
           <p> <T>Page</T> {meta.page || meta.current_page} <T>of</T> {meta.total_pages || meta.last_page} · {meta.total} <T>products</T> </p>
           <div className="flex gap-2">
             <Button variant="outline" size="sm" disabled={page <= 1 || isFetching} onClick={() => setPage((p) => p - 1)} className="cursor-pointer">
-              <ChevronLeft size={14} /> <T>Prev</T> </Button>
-            <Button variant="outline" size="sm" disabled={page >= (meta.total_pages || meta.last_page) || isFetching} onClick={() => setPage((p) => p + 1)} className="cursor-pointer"> <T>Next</T> <ChevronRight size={14} />
+              <ChevronLeft size={14} className="rtl:rotate-180" /> <T>Prev</T> </Button>
+            <Button variant="outline" size="sm" disabled={page >= (meta.total_pages || meta.last_page) || isFetching} onClick={() => setPage((p) => p + 1)} className="cursor-pointer"> <T>Next</T> <ChevronRight size={14} className="rtl:rotate-180" />
             </Button>
           </div>
         </div>

@@ -1,3 +1,4 @@
+import i18n from "@/i18n";
 import { T } from '@/context/Preferences';
 import React from "react";
 import { Package, Tags, Sparkles, AlertTriangle, Star, Wallet, ShoppingBag } from "lucide-react";
@@ -46,7 +47,7 @@ export default function Dashboard() {
     <div className="space-y-6">
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         <KpiCard icon={ShoppingBag} label="Pending orders" value={pendingCount} hint="awaiting processing" />
-        <KpiCard icon={Package} label="Total products" value={data.totalProducts.toLocaleString()} />
+        <KpiCard icon={Package} label="Total products" value={data.totalProducts.toLocaleString(i18n.resolvedLanguage)} />
         <KpiCard icon={Tags} label="Categories" value={data.totalCategories} />
         <KpiCard icon={Sparkles} label="Collections (tags)" value={data.totalCollections} hint={`from last ${data.sampleSize} products`} />
         <KpiCard icon={AlertTriangle} label="Low stock (≤20 units)" value={data.lowStock} hint={`of last ${data.sampleSize} products`} />
@@ -54,7 +55,7 @@ export default function Dashboard() {
         <KpiCard
           icon={Wallet}
           label="Inventory value"
-          value={`$${data.inventoryValueSample.toLocaleString(undefined, { maximumFractionDigits: 0 })}`}
+          value={`$${data.inventoryValueSample.toLocaleString(i18n.resolvedLanguage, { maximumFractionDigits: 0 })}`}
           hint={`sample of ${data.sampleSize} products`}
         />
       </div>

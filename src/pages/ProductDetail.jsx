@@ -67,7 +67,7 @@ export default function ProductDetail() {
           <div className="bg-gray-50 rounded-2xl flex items-center justify-center h-96 md:h-[500px] relative">
             <img src={product.image} alt={product.name} className="max-h-full max-w-full object-contain p-8" />
             {isOutOfStock && (
-              <span className="absolute top-4 left-4 bg-red-600 text-white font-bold text-xs px-3 py-1.5 rounded-md"> <T>Out of Stock</T> </span>
+              <span className="absolute top-4 start-4 bg-red-600 text-white font-bold text-xs px-3 py-1.5 rounded-md"> <T>Out of Stock</T> </span>
             )}
           </div>
           <div>
@@ -122,7 +122,7 @@ export default function ProductDetail() {
                 >
                   +
                 </button>
-                <span className={`text-sm ml-2 font-medium ${isOutOfStock ? "text-red-600" : "text-gray-500"}`}>
+                <span className={`text-sm ms-2 font-medium ${isOutOfStock ? "text-red-600" : "text-gray-500"}`}>
                   <T>{isOutOfStock ? "Out of stock" : `${maxStock} available in stock`}</T>
                 </span>
               </div>

@@ -1,3 +1,4 @@
+import { T } from "@/context/Preferences";
 import React from "react";
 import * as DialogPrimitive from "@radix-ui/react-dialog";
 import { X } from "lucide-react";
@@ -28,9 +29,9 @@ const DialogContent = React.forwardRef(({ className, children, ...props }, ref) 
       {...props}
     >
       {children}
-      <DialogPrimitive.Close className="absolute right-4 top-4 rounded-md p-1 text-gray-400 hover:text-gray-700 hover:bg-gray-100">
+      <DialogPrimitive.Close className="absolute end-4 top-4 rounded-md p-1 text-gray-400 hover:text-gray-700 hover:bg-gray-100">
         <X className="h-4 w-4" />
-        <span className="sr-only">Close</span>
+        <span className="sr-only"><T>Close</T></span>
       </DialogPrimitive.Close>
     </DialogPrimitive.Content>
   </DialogPortal>
@@ -38,7 +39,7 @@ const DialogContent = React.forwardRef(({ className, children, ...props }, ref) 
 DialogContent.displayName = DialogPrimitive.Content.displayName;
 
 const DialogHeader = ({ className, ...props }) => (
-  <div className={cn("flex flex-col gap-1.5 text-left", className)} {...props} />
+  <div className={cn("flex flex-col gap-1.5 text-start", className)} {...props} />
 );
 const DialogFooter = ({ className, ...props }) => (
   <div className={cn("flex flex-col-reverse gap-2 sm:flex-row sm:justify-end", className)} {...props} />

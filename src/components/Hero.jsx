@@ -1,59 +1,29 @@
-import { T } from '@/context/Preferences';
-
-import React, { useEffect, useState } from "react";
-import ProductCarousel from "./ProductCarousel";
-import { Skeleton } from "@/components/ui/skeleton";
-import { useProducts } from "@/hooks/useProducts";
-
-// Carousel takes ~80% of the screen width and ~75% of the screen height
-const WIDTH_RATIO = 0.8;
-const HEIGHT_RATIO = 0.75;
-const PADDING = 32; // 16px padding on each side of the carousel frame
-
-function useCarouselSize() {
-  const get = () => {
-    const w = window.innerWidth;
-    const h = window.innerHeight;
-    const width = w < 640 ? w - 32 : Math.min(w * WIDTH_RATIO, 1500);
-    const height = Math.max(h * HEIGHT_RATIO - PADDING, 320);
-    return { width: Math.round(width), height: Math.round(height) };
-  };
-  const [size, setSize] = useState(get);
-  useEffect(() => {
-    const onResize = () => setSize(get());
-    window.addEventListener("resize", onResize);
-    return () => window.removeEventListener("resize", onResize);
-  }, []);
-  return size;
-}
+import { Link } from "react-router-dom";
+import { ArrowUpRight, ArrowRight } from "lucide-react";
+import { useTranslation } from "react-i18next";
+import { T } from "@/context/Preferences";
+import background from "../assets/hero-background.png";
+import "./Hero.css";
 
 export default function Hero() {
-  const { data, isLoading } = useProducts({ perPage: 8, sortBy: "rating", sortDir: "desc" });
-  const products = data?.products || [];
-  const { width, height } = useCarouselSize();
-
+  const { t } = useTranslation();
   return (
-    <div className="min-h-screen transition-colors duration-1000 overflow-hidden bg-amber-600">
-      <div className="container mx-auto px-4 md:px-8 lg:px-16 h-[calc(90vh-80px)] flex items-center justify-center">
-        <div className="relative group w-full flex justify-center items-center">
-          {/* big background text (now mostly hidden behind the carousel) */}
-          <div
-            className="absolute inset-0 pointer-events-none flex justify-center items-center"
-            data-aos="fade-up"
-            data-aos-duration="1500"
-          >
-            <span className="text-[4rem] md:text-[12rem] lg:text-[17rem] font-black text-black/20 select-none whitespace-nowrap animate-pulse"> <T>FASHION</T> </span>
+    <section className="editorial-hero" aria-labelledby="editorial-hero-title">
+      <div className="editorial-hero__image">
+        <img src={background} alt="" width="1672" height="941" fetchPriority="high" />
+      </div>
+      <div className="editorial-hero__inner container mx-auto px-5 md:px-8 lg:px-16">
+        <div className="editorial-hero__content">
+          <p className="editorial-hero__eyebrow"><span aria-hidden="true" />{t("hero.tag")}</p>
+          <h1 id="editorial-hero-title" className="editorial-hero__title">{t("hero.title")}</h1>
+          <p className="editorial-hero__description"><T>Discover curated fashion trends and handpicked seasonal styles.</T></p>
+          <div className="editorial-hero__actions">
+            <Link to="/shop" className="editorial-hero__shop">{t("hero.shopNow")}<span><ArrowUpRight size={22} className="rtl:-scale-x-100" aria-hidden="true" /></span></Link>
+            <Link to="/collection" className="editorial-hero__collections">{t("hero.exploreCollections")}<ArrowRight size={17} className="rtl:rotate-180" aria-hidden="true" /></Link>
           </div>
-
-          <div className="relative z-10" data-aos="zoom-in" data-aos-duration="1200" data-aos-delay="300">
-            
-          </div>
+          <div className="editorial-hero__signature" aria-hidden="true"><span>01</span><span /><T>FASHION</T></div>
         </div>
       </div>
-    </div>
+    </section>
   );
 }
-
-
-
-

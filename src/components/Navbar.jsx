@@ -9,7 +9,7 @@ import { Heart, Menu, Search, ArrowRight, ShoppingBag, X, User, LogOut, Package,
 import UserAuthModal from "./UserAuthModal";
 
 
-export default function Navbar({ transparent = true, bg = "bg-gray-900" }) {
+export default function Navbar({ transparent = true, bg = "bg-gray-900", className = "" }) {
  const { t: tr } = useTranslationPreferences();
 
   const { t } = useTranslation();
@@ -50,7 +50,7 @@ export default function Navbar({ transparent = true, bg = "bg-gray-900" }) {
     <>
       <UserAuthModal open={authModalOpen} onOpenChange={setAuthModalOpen} />
 
-      <nav className={`relative z-50 ${transparent ? "" : bg}`}>
+      <nav className={`relative z-50 ${transparent ? "" : bg} ${className}`}>
         <div className="container mx-auto px-4 md:px-8 lg:px-16 py-6">
           <div className="flex flex-wrap items-center justify-between gap-3">
             <Link to="/" className="text-white text-2xl font-bold tracking-tight"> <T>FASHION</T> <span className="text-xs align-top ms-0.5">@</span>

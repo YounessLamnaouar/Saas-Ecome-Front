@@ -59,7 +59,7 @@ export default function App() {
           path="/"
           element={
             <>
-              <Navbar transparent={false} bg="bg-amber-600" />
+              <Navbar transparent={false} bg="bg-[#e8e8e6]" className="editorial-navbar" />
               <Home />
               <Footer />
             </>

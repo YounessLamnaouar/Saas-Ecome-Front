@@ -45,22 +45,3 @@
   .editorial-hero__image img { object-position: right center; }
 }
 @media (prefers-reduced-motion: reduce) { .editorial-hero__shop { transition: none; } }
-
-/* Match the homepage navigation to the editorial hero in either theme. */
-.editorial-navbar {
-  --foreground: #171717;
-  --popover: #e8e8e6;
-  --popover-foreground: #171717;
-  --accent: #dededb;
-  --ring: #171717;
-  color: #171717;
-  background: #e8e8e6;
-}
-.editorial-navbar .text-white { color: #171717; }
-.editorial-navbar .animate-fade-in { background: #171717; }
-.editorial-navbar .border-white\/30,
-.editorial-navbar .border-white\/20 { border-color: rgb(23 23 23 / .2); }
-.editorial-navbar .glass-select-trigger,
-.editorial-navbar .glass-search { color: #171717; background: #e8e8e6; }
-.editorial-navbar .glass-search input { color: #171717; }
-.editorial-navbar .glass-search input::placeholder { color: #606060; }

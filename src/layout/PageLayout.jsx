@@ -6,9 +6,7 @@ import Footer from "../components/Footer";
 export default function PageLayout({ children }) {
   return (
     <div>
-      <div className="bg-gray-900">
-        <Navbar transparent={false} />
-      </div>
+      <Navbar />
       {children}
       <Footer />
     </div>

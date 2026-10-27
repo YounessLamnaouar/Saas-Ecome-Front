@@ -3,6 +3,7 @@ import { T, usePreferences as useTranslationPreferences } from '@/context/Prefer
 import React, { useState } from "react";
 import { Mail, MapPin, Phone, Clock, Send, MessageSquare } from "lucide-react";
 import { toast } from "sonner";
+import { apiClient } from "@/lib/apiClient";
 
 const STORE_WHATSAPP = "212694039188";
 
@@ -22,18 +23,23 @@ export default function Contact() {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    if (isSubmitting) return;
     if (!form.name || !form.email || !form.message) {
       toast.error(translate("Please fill in all required fields."));
       return;
     }
     setIsSubmitting(true);
-    setTimeout(() => {
+    try {
+      await apiClient.post('/contact', { ...form, website: e.currentTarget.elements.website.value });
       toast.success(translate("Thank you! Your message has been sent successfully."));
       setForm({ name: "", email: "", phone: "", subject: "", message: "" });
+    } catch {
+      toast.error(tr("Unable to send your message right now. Please try again later."));
+    } finally {
       setIsSubmitting(false);
-    }, 600);
+    }
   };
 
   const whatsappLink = `https://wa.me/${STORE_WHATSAPP}?text=${encodeURIComponent("Hello! I would like to inquire about your products.")}`;
@@ -81,7 +87,7 @@ export default function Contact() {
                   </div>
                   <div>
                     <h3 className="font-semibold text-gray-900 text-sm"> <T>Email Address</T> </h3>
-                    <p className="text-gray-600 text-sm mt-0.5"> <T>info@fashionstore.com</T> </p>
+                    <a href="mailto:lamnaouaryouness231@gmail.com" className="block break-all text-gray-600 text-sm mt-0.5">lamnaouaryouness231@gmail.com</a>
                   </div>
                 </div>
 
@@ -114,13 +120,14 @@ export default function Contact() {
             <h2 className="text-xl font-bold text-gray-900 mb-6 pb-3 border-b border-gray-100"> <T>Send Us a Message</T> </h2>
 
             <form onSubmit={handleSubmit} className="space-y-5">
+              <div hidden aria-hidden="true"><input name="website" tabIndex={-1} autoComplete="off" /></div>
               <div className="grid sm:grid-cols-2 gap-5">
                 <div>
                   <label className="block text-xs font-bold text-gray-700 uppercase mb-1"> <T>Your Name</T> <span className="text-red-500">*</span>
                   </label>
                   <input
                     type="text"
-                    name="name"
+                    name="name" maxLength={100}
                     required
                     value={form.name}
                     onChange={handleChange}
@@ -134,7 +141,7 @@ export default function Contact() {
                   </label>
                   <input
                     type="email"
-                    name="email"
+                    name="email" maxLength={254}
                     required
                     value={form.email}
                     onChange={handleChange}
@@ -149,7 +156,7 @@ export default function Contact() {
                   <label className="block text-xs font-bold text-gray-700 uppercase mb-1"> <T>Phone Number</T> </label>
                   <input
                     type="tel"
-                    name="phone"
+                    name="phone" maxLength={40}
                     value={form.phone}
                     onChange={handleChange}
                     placeholder={tr("0612345678")}
@@ -161,7 +168,7 @@ export default function Contact() {
                   <label className="block text-xs font-bold text-gray-700 uppercase mb-1"> <T>Subject</T> </label>
                   <input
                     type="text"
-                    name="subject"
+                    name="subject" maxLength={150}
                     value={form.subject}
                     onChange={handleChange}
                     placeholder={tr("Order inquiry, feedback...")}
@@ -174,7 +181,7 @@ export default function Contact() {
                 <label className="block text-xs font-bold text-gray-700 uppercase mb-1"> <T>Message</T> <span className="text-red-500">*</span>
                 </label>
                 <textarea
-                  name="message"
+                  name="message" maxLength={5000}
                   required
                   rows={5}
                   value={form.message}

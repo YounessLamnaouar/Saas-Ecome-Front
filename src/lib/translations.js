@@ -1,5 +1,6 @@
 import arabicPhrases from "../i18n/locales/ar-phrases.json" with { type: "json" };
 export const translations = {
+"Unable to send your message right now. Please try again later.": "Envoi impossible pour le moment. Veuillez réessayer plus tard.",
 "Pending orders": "Commandes en attente",
 "awaiting processing": "en attente de traitement",
 "Go to slide {0}": "Aller à la diapositive {0}",

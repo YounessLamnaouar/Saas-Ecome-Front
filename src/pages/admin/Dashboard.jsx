@@ -1,97 +1,43 @@
-import i18n from "@/i18n";
-import { T } from '@/context/Preferences';
-import React from "react";
-import { Package, Tags, Sparkles, AlertTriangle, Star, Wallet, ShoppingBag } from "lucide-react";
-import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from "recharts";
+import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
+import { Package, ShoppingBag, Wallet, Star, RefreshCw, ArrowUpRight, AlertTriangle } from "lucide-react";
+import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from "recharts";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Badge } from "@/components/ui/badge";
 import { useDashboardStats } from "@/hooks/useDashboard";
-import { useAdminOrders } from "@/hooks/useOrders";
-
-function KpiCard({ icon: Icon, label, value, hint }) {
-  return (
-    <Card>
-      <CardContent className="p-5 flex items-start justify-between">
-        <div>
-          <p className="text-sm text-gray-500 mb-1"><T>{label}</T></p>
-          <p className="text-2xl font-bold text-gray-900">{value}</p>
-          {hint && <p className="text-xs text-gray-400 mt-1"><T>{hint}</T></p>}
-        </div>
-        <div className="h-10 w-10 rounded-xl bg-gray-900 text-white flex items-center justify-center shrink-0">
-          <Icon size={18} />
-        </div>
-      </CardContent>
-    </Card>
-  );
-}
 
 export default function Dashboard() {
-  const { data, isLoading, isError } = useDashboardStats();
-  const { data: pendingData } = useAdminOrders({ status: "en_attente", perPage: 1 });
-  const pendingCount = pendingData?.meta?.total ?? 0;
-
-  if (isLoading) {
-    return (
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        {Array.from({ length: 6 }).map((_, i) => <Skeleton key={i} className="h-28" />)}
-      </div>
-    );
-  }
-
-  if (isError || !data) {
-    return <p className="text-gray-500"> <T>Couldn't load dashboard stats. Check VITE_API_BASE_URL and try again.</T> </p>;
-  }
-
-  return (
-    <div className="space-y-6">
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        <KpiCard icon={ShoppingBag} label="Pending orders" value={pendingCount} hint="awaiting processing" />
-        <KpiCard icon={Package} label="Total products" value={data.totalProducts.toLocaleString(i18n.resolvedLanguage)} />
-        <KpiCard icon={Tags} label="Categories" value={data.totalCategories} />
-        <KpiCard icon={Sparkles} label="Collections (tags)" value={data.totalCollections} hint={`from last ${data.sampleSize} products`} />
-        <KpiCard icon={AlertTriangle} label="Low stock (≤20 units)" value={data.lowStock} hint={`of last ${data.sampleSize} products`} />
-        <KpiCard icon={Star} label="Average rating" value={data.avgRating.toFixed(1)} hint="out of 5" />
-        <KpiCard
-          icon={Wallet}
-          label="Inventory value"
-          value={`$${data.inventoryValueSample.toLocaleString(i18n.resolvedLanguage, { maximumFractionDigits: 0 })}`}
-          hint={`sample of ${data.sampleSize} products`}
-        />
-      </div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-        <Card className="lg:col-span-2">
-          <CardHeader>
-            <CardTitle> <T>Products per category</T> </CardTitle>
-          </CardHeader>
-          <CardContent className="h-72">
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={data.productsPerCategory} margin={{ left: -20 }}>
-                <CartesianGrid vertical={false} stroke="#f3f4f6" />
-                <XAxis dataKey="name" tick={{ fontSize: 12, fill: "#6b7280" }} interval={0} angle={-20} textAnchor="end" height={50} />
-                <YAxis tick={{ fontSize: 12, fill: "#6b7280" }} />
-                <Tooltip cursor={{ fill: "#f9fafb" }} contentStyle={{ background: "var(--card)", color: "var(--foreground)", borderRadius: 8, borderColor: "#e5e7eb", fontSize: 13 }} />
-                <Bar dataKey="count" fill="var(--foreground)" radius={[6, 6, 0, 0]} />
-              </BarChart>
-            </ResponsiveContainer>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <CardTitle> <T>Top collections</T> </CardTitle>
-          </CardHeader>
-          <CardContent className="flex flex-wrap gap-2">
-            {data.topTags.length === 0 && <p className="text-sm text-gray-400"> <T>No tags found in the sample.</T> </p>}
-            {data.topTags.map(({ tag, count }) => (
-              <Badge key={tag} variant="secondary" className="capitalize">
-                {tag} · {count}
-              </Badge>
-            ))}
-          </CardContent>
-        </Card>
-      </div>
+  const { t, i18n } = useTranslation();
+  const { data, isLoading, isError, isFetching, refetch, dataUpdatedAt } = useDashboardStats();
+  const money = (value) => new Intl.NumberFormat(i18n.resolvedLanguage, { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(value);
+  const status = (value) => t(`commerce.status.${value}`);
+  if (isLoading) return <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">{Array.from({ length: 8 }, (_, i) => <Skeleton key={i} className="h-32" />)}</div>;
+  if (!data) return <div className="space-y-4"><p role="alert">{t('commerce.loadError')}</p><Button onClick={() => refetch()}>{t('commerce.refresh')}</Button></div>;
+  const cards = [
+    [ShoppingBag, t('commerce.pendingOrders'), data.pendingOrders, t('commerce.totalOrders', { count: data.totalOrders })],
+    [Wallet, t('commerce.revenue'), money(data.deliveredRevenue), t('commerce.deliveredOnly')],
+    [Package, t('commerce.products'), data.totalProducts, t('commerce.catalogCounts', { categories: data.totalCategories, collections: data.totalCollections })],
+    [Star, t('commerce.rating'), data.reviewCount ? `${data.avgRating.toFixed(1)} / 5` : '—', t('commerce.reviewCount', { count: data.reviewCount })],
+  ];
+  return <div className="space-y-6">
+    <div className="flex flex-wrap items-center justify-between gap-4">
+      <div><h2 className="text-2xl font-bold tracking-tight">{t('commerce.overview')}</h2><p className="mt-1 text-sm text-muted-foreground">{t('commerce.updated', { time: new Date(dataUpdatedAt).toLocaleTimeString(i18n.resolvedLanguage) })}</p></div>
+      <Button variant="outline" disabled={isFetching} onClick={() => refetch()}><RefreshCw size={16} className={isFetching ? 'animate-spin' : ''} />{t('commerce.refresh')}</Button>
     </div>
-  );
+    {isError && <p role="alert" className="text-sm text-destructive">{t('commerce.staleError')}</p>}
+    {data.pendingEmails > 0 && <div className="rounded-xl border border-amber-300 bg-amber-50 p-4 text-sm text-amber-900"><AlertTriangle className="me-2 inline" size={17} />{t('commerce.pendingEmails', { count: data.pendingEmails })}{data.emailPermissionDenied && <p className="mt-2 font-medium">{t('commerce.emailPermissionDenied')}</p>}</div>}
+    <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">{cards.map(([Icon, label, value, hint]) => <Card key={label}><CardContent className="p-5"><div className="flex justify-between gap-3 text-muted-foreground"><span className="text-sm">{label}</span><Icon size={18} /></div><p className="mt-4 text-3xl font-semibold tracking-tight">{value}</p><p className="mt-2 text-xs text-muted-foreground">{hint}</p></CardContent></Card>)}</div>
+    <div className="grid gap-5 xl:grid-cols-3">
+      <Card className="xl:col-span-2"><CardHeader><CardTitle>{t('commerce.orderTrend')}</CardTitle><p className="text-sm text-muted-foreground">{t('commerce.last30')}</p></CardHeader><CardContent className="h-64">
+        <ResponsiveContainer width="100%" height="100%"><AreaChart data={data.trend} margin={{ left: -20, right: 10 }}><CartesianGrid vertical={false} stroke="var(--border)" /><XAxis dataKey="date" minTickGap={36} tickFormatter={(date) => new Date(`${date}T12:00:00`).toLocaleDateString(i18n.resolvedLanguage, { day: 'numeric', month: 'short' })} tick={{ fontSize: 11 }} /><YAxis allowDecimals={false} tick={{ fontSize: 11 }} /><Tooltip contentStyle={{ background: 'var(--card)', borderColor: 'var(--border)', borderRadius: 12, color: 'var(--foreground)' }} /><Area name={t('commerce.orders')} dataKey="orders" type="monotone" stroke="var(--foreground)" fill="var(--foreground)" fillOpacity={0.08} strokeWidth={2} /></AreaChart></ResponsiveContainer>
+      </CardContent></Card>
+      <Card><CardHeader><CardTitle>{t('commerce.fulfilment')}</CardTitle></CardHeader><CardContent className="space-y-5">{['en_attente','confirmee','en_cours_de_livraison','livre'].map((key) => { const count = Number(data.orderStatuses.find((s) => s.status === key)?.count || 0); return <div key={key}><div className="mb-2 flex justify-between text-sm"><span>{status(key)}</span><strong>{count}</strong></div><div className="h-1.5 overflow-hidden rounded-full bg-muted"><div className="h-full rounded-full bg-primary" style={{ width: `${data.totalOrders ? count / data.totalOrders * 100 : 0}%` }} /></div></div>; })}<p className="border-t pt-4 text-xs text-muted-foreground">{t('commerce.openValue')}: {money(data.openOrderValue)}</p></CardContent></Card>
+    </div>
+    <div className="grid gap-5 xl:grid-cols-3">
+      <Card className="xl:col-span-2"><CardHeader className="flex flex-row items-center justify-between"><CardTitle>{t('commerce.recentOrders')}</CardTitle><Link to="/admin/orders" className="text-xs underline">{t('commerce.viewAll')}</Link></CardHeader><CardContent><div className="overflow-x-auto"><table className="w-full text-start text-sm"><thead><tr className="border-b text-muted-foreground">{['order','customer','statusLabel','total'].map((key) => <th key={key} className="pb-3 text-start font-medium">{t(`commerce.${key}`)}</th>)}</tr></thead><tbody>{data.recentOrders.map((order) => <tr key={order.id} className="border-b last:border-0"><td className="py-4"><Link to={`/admin/orders?search=${encodeURIComponent(order.code)}`} className="font-medium underline underline-offset-4">{order.code}</Link></td><td className="px-3">{order.customer_name}</td><td className="px-3"><span className="whitespace-nowrap rounded-full bg-muted px-2.5 py-1 text-xs">{status(order.status)}</span></td><td className="whitespace-nowrap">{money(order.total)}</td></tr>)}</tbody></table></div>{!data.recentOrders.length && <p className="py-8 text-center text-muted-foreground">{t('commerce.noOrders')}</p>}</CardContent></Card>
+      <Card><CardHeader><CardTitle>{t('commerce.inventory')}</CardTitle><p className="text-sm text-muted-foreground">{t('commerce.stockCounts', { low: data.lowStock, out: data.outOfStock })}</p></CardHeader><CardContent><div className="space-y-4">{data.stockAlerts.map((p) => <Link key={p.id} to={`/admin/products/${p.id}/edit`} className="flex items-center gap-3"><img src={p.thumbnail} alt="" className="h-10 w-10 rounded-md bg-muted object-contain" /><span className="min-w-0 flex-1 truncate text-sm">{p.title}</span><span className="text-sm font-semibold">{p.stock}</span><ArrowUpRight size={14} /></Link>)}{!data.stockAlerts.length && <p className="text-sm text-muted-foreground">{t('commerce.healthyStock')}</p>}</div><div className="mt-6 border-t pt-4"><p className="text-xs text-muted-foreground">{t('commerce.inventoryValue')}</p><p className="mt-1 text-xl font-semibold">{money(data.inventoryValue)}</p></div></CardContent></Card>
+    </div>
+    <Card><CardHeader><CardTitle>{t('commerce.collections')}</CardTitle></CardHeader><CardContent className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">{data.collections.map((c) => <Link key={c.id} to={`/shop?collection=${encodeURIComponent(c.slug)}`} className="flex items-center justify-between rounded-xl border p-4 hover:bg-muted"><span className="text-sm font-medium">{c.name}</span><span className="text-xs text-muted-foreground">{c.products_count} <ArrowUpRight className="ms-2 inline" size={14} /></span></Link>)}</CardContent></Card>
+  </div>;
 }

@@ -1,3 +1,5 @@
+import { useSearchParams } from 'react-router-dom';
+import InvoiceButton from '@/components/InvoiceButton';
 import i18n from "@/i18n";
 import { translate } from '@/lib/translations';
 import { T, usePreferences as useTranslationPreferences } from '@/context/Preferences';
@@ -39,7 +41,8 @@ export default function OrdersList() {
  const { t: tr } = useTranslationPreferences();
 
   const [page, setPage] = useState(1);
-  const [search, setSearch] = useState("");
+  const [params] = useSearchParams();
+  const [search, setSearch] = useState(params.get('search') || '');
   const [status, setStatus] = useState("all");
   const [selectedOrder, setSelectedOrder] = useState(null);
 
@@ -264,6 +267,7 @@ export default function OrdersList() {
               </div>
 
               {/* Visual stepper */}
+              <InvoiceButton order={selectedOrder} admin />
               <OrderStatusStepper
                 currentStatus={selectedOrder.status}
                 histories={selectedOrder.history || []}

@@ -154,3 +154,22 @@ input[type="email"], input[type="tel"], input[type="url"] {
   direction: ltr;
   text-align: start;
 }
+
+/* Theme-aware scrollbars for the page, drawers, tables and dialogs. */
+:root { --scroll-thumb: #9ca3af; --scroll-hover: #4b5563; --scroll-track: #f3f4f6; }
+.dark { --scroll-thumb: #6b7280; --scroll-hover: #d1d5db; --scroll-track: #1f2937; }
+* { scrollbar-width: thin; scrollbar-color: var(--scroll-thumb) var(--scroll-track); }
+html { scrollbar-gutter: stable; }
+@supports selector(::-webkit-scrollbar) {
+  * { scrollbar-width: auto; scrollbar-color: auto; }
+  ::-webkit-scrollbar { width: 10px; height: 10px; }
+  ::-webkit-scrollbar-track { background: var(--scroll-track); border-radius: 999px; }
+  ::-webkit-scrollbar-thumb { background: var(--scroll-thumb); border: 2px solid var(--scroll-track); border-radius: 999px; }
+  ::-webkit-scrollbar-thumb:hover { background: var(--scroll-hover); }
+  ::-webkit-scrollbar-corner { background: var(--scroll-track); }
+}
+@media (forced-colors: active) {
+  * { scrollbar-color: auto; }
+  ::-webkit-scrollbar-thumb { background: ButtonText; }
+  ::-webkit-scrollbar-track { background: Canvas; }
+}

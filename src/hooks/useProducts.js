@@ -22,6 +22,7 @@ export function useCreateProduct() {
   return useMutation({
     mutationFn: productsService.createProduct,
     onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["dashboard-stats"] });
       qc.invalidateQueries({ queryKey: ["products"] });
       qc.invalidateQueries({ queryKey: ["collections"] });
     },
@@ -33,6 +34,7 @@ export function useUpdateProduct() {
   return useMutation({
     mutationFn: ({ id, patch }) => productsService.updateProduct(id, patch),
     onSuccess: (_data, { id }) => {
+      qc.invalidateQueries({ queryKey: ["dashboard-stats"] });
       qc.invalidateQueries({ queryKey: ["products"] });
       qc.invalidateQueries({ queryKey: ["product", String(id)] });
       qc.invalidateQueries({ queryKey: ["collections"] });
@@ -45,6 +47,7 @@ export function useDeleteProduct() {
   return useMutation({
     mutationFn: productsService.deleteProduct,
     onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["dashboard-stats"] });
       qc.invalidateQueries({ queryKey: ["products"] });
       qc.invalidateQueries({ queryKey: ["collections"] });
     },

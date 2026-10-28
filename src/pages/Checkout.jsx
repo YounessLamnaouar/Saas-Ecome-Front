@@ -59,6 +59,7 @@ export default function Checkout() {
 
       const createdOrder = await createOrder(orderPayload);
 
+      queryClient.invalidateQueries({ queryKey: ["dashboard-stats"] });
       queryClient.invalidateQueries({ queryKey: ["products"] });
       queryClient.invalidateQueries({ queryKey: ["product"] });
 

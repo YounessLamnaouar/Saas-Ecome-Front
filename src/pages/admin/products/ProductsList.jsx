@@ -1,8 +1,9 @@
+import { useTranslation } from 'react-i18next';
 import { translate } from '@/lib/translations';
 import { T, usePreferences as useTranslationPreferences } from '@/context/Preferences';
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { Plus, Search, Pencil, Trash2, ChevronLeft, ChevronRight, MoreHorizontal } from "lucide-react";
+import { Plus, Search, RefreshCw, Pencil, Trash2, ChevronLeft, ChevronRight, MoreHorizontal } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
@@ -25,13 +26,14 @@ function StockBadge({ stock }) {
 }
 
 export default function ProductsList() {
+  const { t } = useTranslation();
  const { t: tr } = useTranslationPreferences();
 
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("all");
 
-  const { data, isLoading, isFetching } = useProducts({ page, perPage: 10, search: search || undefined, category: category === "all" ? undefined : category });
+  const { data, isLoading, isFetching, refetch } = useProducts({ page, perPage: 10, search: search || undefined, category: category === "all" ? undefined : category });
   const { data: categories } = useCategories();
   const deleteProduct = useDeleteProduct();
 
@@ -66,6 +68,7 @@ export default function ProductsList() {
             </SelectContent>
           </Select>
         </div>
+        <Button variant="outline" disabled={isFetching} onClick={async () => { const result = await refetch(); if (result.isError) toast.error(t('commerce.refreshError')); else toast.success(t('commerce.stockUpdated')); }}><RefreshCw size={16} className={isFetching ? 'animate-spin' : ''} />{t('commerce.refreshStock')}</Button>
         <Button asChild className="cursor-pointer">
           <Link to="/admin/products/new"><Plus size={16} /> <T>Add product</T> </Link>
         </Button>

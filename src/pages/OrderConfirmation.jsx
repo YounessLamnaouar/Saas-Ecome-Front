@@ -1,4 +1,5 @@
 import { T } from '@/context/Preferences';
+import InvoiceButton from '@/components/InvoiceButton';
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
 import { CheckCircle, Truck, ShoppingBag, MessageSquare } from "lucide-react";
@@ -46,6 +47,7 @@ export default function OrderConfirmation() {
           </div>
 
           <div className="flex flex-col gap-3">
+            <InvoiceButton order={order} className="w-full" />
             {orderCode && (
               <Link
                 to={`/orders/${orderCode}`}

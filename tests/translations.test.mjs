@@ -1,3 +1,4 @@
+import { fileURLToPath } from 'node:url';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { translations, translate } from '../src/lib/translations.js';
@@ -52,5 +53,5 @@ test('static translated JSX labels are covered in both phrase dictionaries', asy
       }
     }
   }
-  await scan(new URL('../src', import.meta.url).pathname);
+  await scan(fileURLToPath(new URL('../src', import.meta.url)));
 });

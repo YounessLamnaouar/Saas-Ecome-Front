@@ -1,4 +1,5 @@
 import i18n from "@/i18n";
+import InvoiceButton from '@/components/InvoiceButton';
 import { T } from '@/context/Preferences';
 import React from "react";
 import { Link } from "react-router-dom";
@@ -94,7 +95,8 @@ export default function MyOrders() {
                       </p>
                     </div>
 
-                    <div className="flex items-center justify-between sm:justify-end gap-4 border-t sm:border-t-0 pt-3 sm:pt-0">
+                    <div className="flex flex-wrap items-center justify-between sm:justify-end gap-4 border-t sm:border-t-0 pt-3 sm:pt-0">
+                      <InvoiceButton order={order} />
                       <div className="sm:text-end">
                         <p className="text-xs text-gray-400"> <T>Total</T> </p>
                         <p className="text-lg font-bold text-gray-900">${Number(order.total).toFixed(2)}</p>

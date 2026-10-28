@@ -46,6 +46,7 @@ export function useUpdateOrderStatus() {
   return useMutation({
     mutationFn: ({ id, status }) => ordersService.updateOrderStatus(id, status),
     onSuccess: (data, { id }) => {
+      qc.invalidateQueries({ queryKey: ["dashboard-stats"] });
       qc.invalidateQueries({ queryKey: ["admin-orders"] });
       qc.invalidateQueries({ queryKey: ["admin-order", id] });
       qc.invalidateQueries({ queryKey: ["track-order"] });

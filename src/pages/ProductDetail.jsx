@@ -3,7 +3,9 @@ import { T } from '@/context/Preferences';
 import React, { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import { useCart } from "../context/CartContext";
-import { ShoppingCart, Star } from "lucide-react";
+import { ShoppingCart, Star, RefreshCw } from "lucide-react";
+import ProductReviews from '../components/ProductReviews';
+import { useTranslation } from 'react-i18next';
 import ProductCard from "../components/ProductCard";
 import LikeButton from "../components/LikeButton";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -13,8 +15,9 @@ import { toast } from "sonner";
 const colorClasses = { black: "bg-black", blue: "bg-blue-300", brown: "bg-orange-300" };
 
 export default function ProductDetail() {
+  const { t } = useTranslation();
   const { id } = useParams();
-  const { data: product, isLoading } = useProduct(id);
+  const { data: product, isLoading, isFetching, refetch } = useProduct(id);
   const { addToCart } = useCart();
   const [qty, setQty] = useState(1);
   const [selectedColor, setSelectedColor] = useState(undefined);
@@ -73,14 +76,14 @@ export default function ProductDetail() {
           <div>
             <p className="text-sm text-gray-500 mb-2 capitalize">{product.categoryName || product.category}</p>
             <h1 className="text-3xl font-bold text-gray-900 mb-3">{product.name}</h1>
-            <div className="flex text-yellow-400 mb-4">
+            <a href="#customer-reviews" className="flex items-center gap-1 text-yellow-400 mb-4">
               {[...Array(5)].map((_, i) => (
                 <Star
                   key={i}
-                  className={`w-4 h-4 ${i < product.rating ? "fill-yellow-400 stroke-yellow-400" : "fill-none stroke-yellow-400"}`}
+                  className={`w-4 h-4 ${i < Math.round(product.rating) ? "fill-yellow-400 stroke-yellow-400" : "fill-none stroke-yellow-400"}`}
                 />
               ))}
-            </div>
+            <span className="ms-2 text-sm text-muted-foreground">{product.reviewCount ? t("commerce.reviewCount", { count: product.reviewCount }) : t("reviews.emptyShort")}</span></a>
             <div className="flex items-center gap-3 mb-6">
               <span className="text-3xl font-bold text-gray-900">${Number(product.price).toFixed(2)}</span>
               {product.oldPrice && (
@@ -91,6 +94,7 @@ export default function ProductDetail() {
 
             {product.colors && product.colors.length > 0 && (
               <div className="mb-6">
+              <button type="button" disabled={isFetching} onClick={async () => { const result = await refetch(); if (result.isError) toast.error(t('commerce.refreshError')); else toast.success(t('commerce.stockUpdated')); }} className="mb-3 inline-flex items-center gap-2 rounded-full border px-3 py-2 text-xs disabled:opacity-50"><RefreshCw size={14} className={isFetching ? 'animate-spin' : ''} />{t('commerce.refreshStock')}</button>
                 <p className="text-sm font-semibold text-gray-900 mb-2"> <T>Color</T> </p>
                 <div className="flex gap-3">
                   {product.colors.map((color) => (
@@ -105,6 +109,7 @@ export default function ProductDetail() {
             )}
 
             <div className="mb-6">
+              <button type="button" disabled={isFetching} onClick={async () => { const result = await refetch(); if (result.isError) toast.error(t('commerce.refreshError')); else toast.success(t('commerce.stockUpdated')); }} className="mb-3 inline-flex items-center gap-2 rounded-full border px-3 py-2 text-xs disabled:opacity-50"><RefreshCw size={14} className={isFetching ? 'animate-spin' : ''} />{t('commerce.refreshStock')}</button>
               <p className="text-sm font-semibold text-gray-900 mb-2"> <T>Quantity</T> </p>
               <div className="flex items-center gap-3">
                 <button
@@ -131,7 +136,7 @@ export default function ProductDetail() {
             <div className="flex items-center gap-3">
               <button
                 onClick={() => addToCart({ ...product, color: selectedColor }, qty)}
-                disabled={isOutOfStock}
+                disabled={isOutOfStock || qty > maxStock}
                 className="flex-1 bg-gray-900 text-white px-6 py-3 rounded-lg flex items-center justify-center gap-2 font-semibold hover:bg-gray-800 transition-all cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed"
               >
                 <ShoppingCart size={18} />
@@ -142,6 +147,7 @@ export default function ProductDetail() {
           </div>
         </div>
 
+        <ProductReviews key={id} productId={id} />
         {related.length > 0 && (
           <div>
             <h2 className="text-2xl font-bold text-gray-900 mb-6"> <T>You may also like</T> </h2>

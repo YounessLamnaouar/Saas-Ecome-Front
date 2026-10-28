@@ -35,7 +35,7 @@ function authHeaders(path = "") {
   if (
     path.startsWith("/orders") ||
     path.startsWith("/my-orders") ||
-    path === "/auth/me"
+    path === "/auth/me" || /^\/products\/[^/]+\/(reviews|my-review)$/.test(path)
   ) {
     const token = localStorage.getItem("customer_token");
     return token ? { Authorization: `Bearer ${token}` } : {};
@@ -89,6 +89,16 @@ async function mutate(method, path, body) {
 }
 
 export const apiClient = {
+  getBlob: async (path) => {
+    const response = await fetch(buildUrl(path), {
+      headers: { Accept: 'application/pdf', ...authHeaders(path) },
+    });
+    if (!response.ok) {
+      const json = await response.json().catch(() => null);
+      throw new ApiError(json?.message || 'Unable to download invoice.', { status: response.status, payload: json });
+    }
+    return response.blob();
+  },
   get: (path, opts) => request(path, opts),
   post: (path, body) => mutate("POST", path, body),
   put: (path, body) => mutate("PUT", path, body),

@@ -1,4 +1,5 @@
 import i18n from "@/i18n";
+import InvoiceButton from '@/components/InvoiceButton';
 import { T, usePreferences as useTranslationPreferences } from '@/context/Preferences';
 import React, { useState } from "react";
 import { useParams, useSearchParams, Link } from "react-router-dom";
@@ -61,6 +62,7 @@ export default function OrderDetail() {
               </div>
               <p className="text-gray-500 text-xs sm:text-sm mt-1"> <T>Order tracking and status timeline.</T> </p>
             </div>
+            {order && isLoggedIn && <InvoiceButton order={order} />}
           </div>
         </div>
 

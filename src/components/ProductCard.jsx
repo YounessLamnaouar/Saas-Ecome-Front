@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { ShoppingCart } from "lucide-react";
+import { ShoppingCart, Star } from "lucide-react";
 import { useCart } from "../context/CartContext";
 import LikeButton from "./LikeButton";
 import { useTranslation } from "react-i18next";
@@ -36,6 +36,7 @@ export default function ProductCard({ product, i }) {
               {product.name}
             </h3>
           </Link>
+          <Link to={`/product/${product.id}#customer-reviews`} className="mb-2 inline-flex items-center gap-1.5 text-xs text-muted-foreground"><Star size={13} className={product.reviewCount ? 'fill-amber-400 text-amber-400' : ''} aria-hidden="true" />{product.reviewCount ? `${product.rating.toFixed(1)} · ${t('commerce.reviewCount', { count: product.reviewCount })}` : t('reviews.emptyShort')}</Link>
           <div className="flex items-center gap-2 mb-3">
             <span className="text-gray-900 font-bold">${Number(product.price).toFixed(2)}</span>
             {product.oldPrice && (

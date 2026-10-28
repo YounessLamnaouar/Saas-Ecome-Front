@@ -20,14 +20,14 @@ function ReviewEditor({ existing, save, remove, pending }) {
   </form>;
 }
 
-export default function ProductReviews({ productId }) {
+export default function ProductReviews({ productId, compact = false }) {
   const { t, i18n } = useTranslation();
   const { user, isLoggedIn } = useUserAuth();
   const qc = useQueryClient();
   const [page, setPage] = useState(1);
   const [sort, setSort] = useState('newest');
   const [authOpen, setAuthOpen] = useState(false);
-  const reviews = useQuery({ queryKey: ['reviews', productId, page, sort], queryFn: async () => (await apiClient.get(`/products/${productId}/reviews`, { params: { page, sort } })).data });
+  const reviews = useQuery({ enabled: !compact, queryKey: ['reviews', productId, page, sort], queryFn: async () => (await apiClient.get(`/products/${productId}/reviews`, { params: { page, sort } })).data });
   const mine = useQuery({ queryKey: ['my-review', productId, user?.id], enabled: Boolean(isLoggedIn), queryFn: async () => (await apiClient.get(`/products/${productId}/my-review`)).data });
   const mutation = useMutation({
     mutationFn: (payload) => payload ? apiClient.put(`/products/${productId}/reviews`, payload) : apiClient.delete(`/products/${productId}/reviews`),
@@ -38,6 +38,8 @@ export default function ProductReviews({ productId }) {
     },
     onError: () => toast.error(t('reviews.error')),
   });
+  const editor = !isLoggedIn ? <Button variant="outline" onClick={() => setAuthOpen(true)}>{t('reviews.signIn')}</Button> : mine.isError ? <Button variant="outline" onClick={() => mine.refetch()}>{t('reviews.loadError')}</Button> : mine.isLoading ? <p role="status">{t('common.loading')}</p> : mine.data?.eligible ? <ReviewEditor key={`${user.id}-${mine.data.review?.rating}-${mine.data.review?.comment}`} existing={mine.data.review} pending={mutation.isPending} save={mutation.mutate} remove={() => mutation.mutate(null)} /> : <p className="rounded-xl bg-muted p-4 text-sm text-muted-foreground">{t('reviews.eligible')}</p>;
+  if (compact) return <div><UserAuthModal open={authOpen} onOpenChange={setAuthOpen} />{mine.data?.review && <p className="mb-3 flex items-center gap-2 text-sm text-muted-foreground"><ShieldCheck size={16} />{t('orderReviews.reviewed')}</p>}{editor}</div>;
   const data = reviews.data;
   return <section id="customer-reviews" className="mb-16 border-t pt-10">
     <UserAuthModal open={authOpen} onOpenChange={setAuthOpen} />
@@ -46,7 +48,7 @@ export default function ProductReviews({ productId }) {
     {reviews.isError && <div role="alert"><p>{t('reviews.loadError')}</p><Button variant="outline" onClick={() => reviews.refetch()}>{t('commerce.refresh')}</Button></div>}
     {data && <div className="grid gap-8 lg:grid-cols-[320px_1fr]">
       <div className="space-y-6"><div className="rounded-2xl border p-6"><div className="flex items-baseline gap-3"><strong className="text-5xl">{data.count ? data.average.toFixed(1) : '—'}</strong><span className="text-muted-foreground">/ 5</span></div><p className="mt-2 text-sm text-muted-foreground">{t('commerce.reviewCount', { count: data.count })}</p><div className="mt-6 space-y-3">{data.distribution.map((row) => <div key={row.rating} className="flex items-center gap-3 text-xs"><span className="flex items-center gap-1">{row.rating}<Star size={12} aria-hidden="true" /></span><div className="h-2 flex-1 overflow-hidden rounded-full bg-muted"><div className="h-full bg-amber-400" style={{ width: `${data.count ? row.count / data.count * 100 : 0}%` }} /></div><span className="w-6 text-end">{row.count}</span></div>)}</div></div>
-      {!isLoggedIn ? <Button variant="outline" onClick={() => setAuthOpen(true)}>{t('reviews.signIn')}</Button> : mine.isError ? <Button variant="outline" onClick={() => mine.refetch()}>{t('reviews.loadError')}</Button> : mine.isLoading ? <p>{t('common.loading')}</p> : mine.data?.eligible ? <ReviewEditor key={`${user.id}-${mine.data.review?.rating}-${mine.data.review?.comment}`} existing={mine.data.review} pending={mutation.isPending} save={mutation.mutate} remove={() => mutation.mutate(null)} /> : <p className="rounded-xl bg-muted p-4 text-sm text-muted-foreground">{t('reviews.eligible')}</p>}
+      {editor}
       </div>
       <div><div className="mb-5 flex justify-between items-center gap-3"><span className="text-sm text-muted-foreground">{t('reviews.verifiedOnly')}</span><label className="text-sm"><span className="sr-only">{t('reviews.sort')}</span><select value={sort} onChange={(e) => { setSort(e.target.value); setPage(1); }} className="rounded-full border bg-background px-3 py-2"><option value="newest">{t('reviews.newest')}</option><option value="highest">{t('reviews.highest')}</option><option value="lowest">{t('reviews.lowest')}</option></select></label></div>
       {!data.count && <p className="rounded-2xl border border-dashed p-10 text-center text-muted-foreground">{t('reviews.empty')}</p>}

@@ -384,5 +384,13 @@
     "download": "Download invoice",
     "generating": "Preparing PDF…",
     "error": "Unable to download the invoice. Please sign in and try again."
+  },
+  "orderReviews": {
+    "title": "Your order has arrived!",
+    "description": "We hope you love it. Rate each product below to help other shoppers.",
+    "action": "Rate your products",
+    "reviewed": "Thank you — your review is published.",
+    "unavailable": "This product is no longer available for review.",
+    "signIn": "Sign in with the account that placed this order to review your products."
   }
 }

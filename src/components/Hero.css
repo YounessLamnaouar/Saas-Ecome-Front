@@ -45,3 +45,6 @@
   .editorial-hero__image img { object-position: right center; }
 }
 @media (prefers-reduced-motion: reduce) { .editorial-hero__shop { transition: none; } }
+@media (prefers-reduced-motion: reduce) {
+  .editorial-hero [data-aos] { opacity: 1 !important; transform: none !important; transition: none !important; }
+}

@@ -384,5 +384,13 @@
     "download": "Télécharger la facture",
     "generating": "Préparation du PDF…",
     "error": "Impossible de télécharger la facture. Connectez-vous et réessayez."
+  },
+  "orderReviews": {
+    "title": "Votre commande est livrée !",
+    "description": "Nous espérons qu’elle vous plaît. Évaluez chaque produit pour aider les autres clients.",
+    "action": "Évaluer mes produits",
+    "reviewed": "Merci — votre avis est publié.",
+    "unavailable": "Ce produit ne peut plus être évalué.",
+    "signIn": "Connectez-vous au compte utilisé pour cette commande afin de laisser un avis."
   }
 }

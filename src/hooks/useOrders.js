@@ -14,6 +14,8 @@ export function useMyOrders() {
   return useQuery({
     queryKey: ["my-orders"],
     queryFn: ordersService.getMyOrders,
+    refetchInterval: 5000,
+    refetchOnWindowFocus: 'always',
   });
 }
 
@@ -22,6 +24,8 @@ export function useMyOrder(code) {
     queryKey: ["my-order", code],
     queryFn: () => ordersService.getMyOrder(code),
     enabled: Boolean(code),
+    refetchInterval: 5000,
+    refetchOnWindowFocus: 'always',
   });
 }
 
@@ -51,6 +55,8 @@ export function useUpdateOrderStatus() {
       qc.invalidateQueries({ queryKey: ["admin-order", id] });
       qc.invalidateQueries({ queryKey: ["track-order"] });
       qc.invalidateQueries({ queryKey: ["my-orders"] });
+      qc.invalidateQueries({ queryKey: ["my-order"] });
+      qc.invalidateQueries({ queryKey: ["my-review"] });
     },
   });
 }

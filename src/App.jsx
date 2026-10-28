@@ -47,6 +47,7 @@ export default function App() {
       once: false,
       easing: "ease-in-cubic",
       offset: 100,
+      disable: () => window.matchMedia('(prefers-reduced-motion: reduce)').matches,
     });
   }, []);
 

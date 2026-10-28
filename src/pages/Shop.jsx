@@ -6,6 +6,10 @@ import ProductCard from "../components/ProductCard";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useProducts } from "@/hooks/useProducts";
 import { useCategories } from "@/hooks/useCategories";
+import { useTranslation } from 'react-i18next';
+import { RefreshCw } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { toast } from 'sonner';
 
 const SORT_OPTIONS = {
   default: {},
@@ -16,6 +20,7 @@ const SORT_OPTIONS = {
 
 export default function Shop() {
   const { t, language } = usePreferences();
+  const { t: translateKey } = useTranslation();
   const [searchParams] = useSearchParams();
   const search = searchParams.get("search") || "";
   const collectionParam = searchParams.get("collection") || "";
@@ -26,7 +31,7 @@ export default function Shop() {
   useEffect(() => setPage(1), [search, collectionParam, activeCategory, sort]);
 
   const { data: categories } = useCategories();
-  const { data, isLoading, isFetching } = useProducts({
+  const { data, isLoading, isFetching, refetch } = useProducts({
     page,
     perPage: 12,
     search: search || undefined,
@@ -47,11 +52,18 @@ export default function Shop() {
   return (
     <section className="py-16 bg-gray-50 min-h-screen">
       <div className="container mx-auto px-4 md:px-8 lg:px-16">
-        <div className="mb-10">
+        <div className="mb-10 flex flex-wrap items-center justify-between gap-4">
+          <div>
           <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-2 capitalize">
             <T>{pageTitle}</T>
           </h1>
           <p className="text-gray-600"><T>{meta ? `${meta.total} products found` : "Loading…"}</T></p>
+          </div>
+          <Button variant="outline" disabled={isFetching} aria-busy={isFetching} onClick={async () => {
+            const result = await refetch();
+            if (result.isError) toast.error(translateKey('commerce.refreshError'));
+            else toast.success(translateKey('commerce.stockUpdated'));
+          }}><RefreshCw size={16} className={isFetching ? 'animate-spin' : ''} />{translateKey('commerce.refreshStock')}</Button>
         </div>
 
         <div className="flex flex-col md:flex-row justify-between gap-4 mb-10">

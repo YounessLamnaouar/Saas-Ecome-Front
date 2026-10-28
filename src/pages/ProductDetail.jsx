@@ -94,7 +94,6 @@ export default function ProductDetail() {
 
             {product.colors && product.colors.length > 0 && (
               <div className="mb-6">
-              <button type="button" disabled={isFetching} onClick={async () => { const result = await refetch(); if (result.isError) toast.error(t('commerce.refreshError')); else toast.success(t('commerce.stockUpdated')); }} className="mb-3 inline-flex items-center gap-2 rounded-full border px-3 py-2 text-xs disabled:opacity-50"><RefreshCw size={14} className={isFetching ? 'animate-spin' : ''} />{t('commerce.refreshStock')}</button>
                 <p className="text-sm font-semibold text-gray-900 mb-2"> <T>Color</T> </p>
                 <div className="flex gap-3">
                   {product.colors.map((color) => (
@@ -109,8 +108,10 @@ export default function ProductDetail() {
             )}
 
             <div className="mb-6">
-              <button type="button" disabled={isFetching} onClick={async () => { const result = await refetch(); if (result.isError) toast.error(t('commerce.refreshError')); else toast.success(t('commerce.stockUpdated')); }} className="mb-3 inline-flex items-center gap-2 rounded-full border px-3 py-2 text-xs disabled:opacity-50"><RefreshCw size={14} className={isFetching ? 'animate-spin' : ''} />{t('commerce.refreshStock')}</button>
-              <p className="text-sm font-semibold text-gray-900 mb-2"> <T>Quantity</T> </p>
+              <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
+                <p className="text-sm font-semibold text-gray-900"><T>Quantity</T></p>
+                <button type="button" disabled={isFetching} onClick={async () => { const result = await refetch(); if (result.isError) toast.error(t('commerce.refreshError')); else toast.success(t('commerce.stockUpdated')); }} className="inline-flex items-center gap-2 rounded-full border px-3 py-2 text-sm font-medium cursor-pointer hover:bg-muted disabled:opacity-50"><RefreshCw size={14} className={isFetching ? 'animate-spin' : ''} />{t('commerce.refreshStock')}</button>
+              </div>
               <div className="flex items-center gap-3">
                 <button
                   disabled={qty <= 1}

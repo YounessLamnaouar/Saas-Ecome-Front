@@ -1,5 +1,6 @@
 import i18n from "@/i18n";
 import InvoiceButton from '@/components/InvoiceButton';
+import { useTranslation } from 'react-i18next';
 import { T } from '@/context/Preferences';
 import React from "react";
 import { Link } from "react-router-dom";
@@ -11,6 +12,7 @@ import { Button } from "@/components/ui/button";
 import { Package, Calendar, ChevronRight, ShoppingBag, Loader2 } from "lucide-react";
 
 export default function MyOrders() {
+  const { t } = useTranslation();
   const { isLoggedIn, user } = useUserAuth();
   const { data: orders, isLoading, isError } = useMyOrders();
 
@@ -75,6 +77,7 @@ export default function MyOrders() {
             {orders.map((order) => (
               <Card key={order.id} className="shadow-sm border-gray-200 hover:border-gray-300 transition-all">
                 <CardContent className="p-5">
+                  {order.status === 'livre' && <div className="mb-4 flex flex-wrap items-center justify-between gap-3 rounded-xl bg-emerald-50 p-3 text-sm text-emerald-950 dark:bg-emerald-950 dark:text-emerald-100"><span>{t('orderReviews.title')}</span><Link to={`/orders/${order.code}`} className="font-semibold underline underline-offset-4">{t('orderReviews.action')}</Link></div>}
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                     <div className="space-y-1">
                       <div className="flex items-center gap-3">

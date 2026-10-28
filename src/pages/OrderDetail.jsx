@@ -1,5 +1,6 @@
 import i18n from "@/i18n";
 import InvoiceButton from '@/components/InvoiceButton';
+import OrderReviews from '@/components/OrderReviews';
 import { T, usePreferences as useTranslationPreferences } from '@/context/Preferences';
 import React, { useState } from "react";
 import { useParams, useSearchParams, Link } from "react-router-dom";
@@ -111,6 +112,7 @@ export default function OrderDetail() {
         {/* Order Display */}
         {order && (
           <div className="space-y-6">
+            <OrderReviews order={order} />
             <Card className="shadow-sm border-gray-200">
               <CardContent className="p-6">
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-gray-100">

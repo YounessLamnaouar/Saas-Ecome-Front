@@ -6,6 +6,7 @@ import { Toaster } from "sonner";
 import AOS from "aos";
 import "aos/dist/aos.css";
 import Footer from "./components/Footer";
+import ScrollToTop from './components/ScrollToTop';
 import PageLayout from "./layout/PageLayout";
 import Home from "./pages/Home";
 import Shop from "./pages/Shop";
@@ -88,6 +89,7 @@ export default function App() {
         <Route path="/admin/categories" element={<Admin><CategoriesList /></Admin>} />
         <Route path="/admin/collections" element={<Admin><Collections /></Admin>} />
       </Routes>
+      <ScrollToTop />
     </div>
   );
 }

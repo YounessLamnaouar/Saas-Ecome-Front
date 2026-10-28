@@ -21,7 +21,8 @@
     "date": "Date",
     "quantity": "Quantity",
     "price": "Price",
-    "cod": "Cash on Delivery (COD)"
+    "cod": "Cash on Delivery (COD)",
+    "scrollToTop": "Scroll to top"
   },
   "nav": {
     "home": "Home",

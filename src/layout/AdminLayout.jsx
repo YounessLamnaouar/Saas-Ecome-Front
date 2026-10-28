@@ -43,7 +43,7 @@ function AdminLoginForm({ onLoginSuccess }) {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-background flex items-center justify-center p-4">
       <Card className="w-full max-w-md shadow-lg border-none">
         <CardHeader className="text-center space-y-2">
           <div className="mx-auto w-12 h-12 rounded-full bg-gray-900 text-white flex items-center justify-center mb-2">
@@ -109,7 +109,7 @@ function SidebarLinks({ onNavigate }) {
           className={({ isActive }) =>
             cn(
               "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors",
-              isActive ? "bg-white text-gray-900" : "text-gray-300 hover:bg-gray-800 hover:text-white"
+              isActive ? "bg-accent text-foreground" : "text-muted-foreground hover:bg-accent hover:text-foreground"
             )
           }
         >
@@ -141,22 +141,22 @@ export default function AdminLayout({ children }) {
     NAV_ITEMS.find((i) => (i.end ? location.pathname === i.to : location.pathname.startsWith(i.to)))?.label || "Admin";
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-background">
       {/* Desktop sidebar */}
-      <aside className="hidden lg:flex fixed inset-y-0 inset-s-0 w-64 flex-col bg-gray-900 py-6">
-        <Link to="/" className="px-6 text-white text-2xl font-bold tracking-tight mb-8"> <T>FASHION</T> <span className="text-xs align-top ms-0.5">@</span>
+      <aside className="hidden lg:flex fixed inset-y-0 inset-s-0 w-64 flex-col border-e border-border bg-background py-6">
+        <Link to="/" className="px-6 text-foreground text-2xl font-bold tracking-tight mb-8"> <T>FASHION</T> <span className="text-xs align-top ms-0.5">@</span>
           <span className="block text-xs font-medium tracking-wide text-gray-400 mt-1"> <T>Admin panel</T> </span>
         </Link>
         <SidebarLinks />
         <div className="mt-auto px-3 space-y-1">
           <Link
             to="/"
-            className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-gray-300 hover:bg-gray-800 hover:text-white transition-colors"
+            className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-muted-foreground hover:bg-accent hover:text-foreground transition-colors"
           >
             <Store size={18} /> <T>Back to store</T> </Link>
           <button
             onClick={handleLogout}
-            className="w-full flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-red-400 hover:bg-gray-800 hover:text-red-300 transition-colors text-start"
+            className="w-full flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-destructive hover:bg-accent transition-colors text-start"
           >
             <LogOut size={18} /> <T>Sign out</T> </button>
         </div>
@@ -164,20 +164,20 @@ export default function AdminLayout({ children }) {
 
       {/* Mobile sidebar */}
       <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
-        <SheetContent side="left" className="bg-gray-900 border-none">
-          <Link to="/" className="text-white text-xl font-bold tracking-tight mb-8 block"> <T>FASHION</T> <span className="text-xs align-top ms-0.5">@</span>
+        <SheetContent side="left" className="bg-background text-foreground border-border">
+          <Link to="/" className="text-foreground text-xl font-bold tracking-tight mb-8 block"> <T>FASHION</T> <span className="text-xs align-top ms-0.5">@</span>
           </Link>
           <SidebarLinks onNavigate={() => setMobileOpen(false)} />
           <div className="mt-6 space-y-1">
             <Link
               to="/"
               onClick={() => setMobileOpen(false)}
-              className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-gray-300 hover:bg-gray-800 hover:text-white"
+              className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-muted-foreground hover:bg-accent hover:text-foreground"
             >
               <Store size={18} /> <T>Back to store</T> </Link>
             <button
               onClick={() => { setMobileOpen(false); handleLogout(); }}
-              className="w-full flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-red-400 hover:bg-gray-800 hover:text-red-300 text-start"
+              className="w-full flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-destructive hover:bg-accent text-start"
             >
               <LogOut size={18} /> <T>Sign out</T> </button>
           </div>

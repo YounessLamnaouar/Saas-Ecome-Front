@@ -21,7 +21,8 @@
     "date": "Date",
     "quantity": "Quantité",
     "price": "Prix",
-    "cod": "Paiement à la livraison (Cash on Delivery)"
+    "cod": "Paiement à la livraison (Cash on Delivery)",
+    "scrollToTop": "Retour en haut"
   },
   "nav": {
     "home": "Accueil",

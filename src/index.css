@@ -75,29 +75,29 @@ body {
 
 @custom-variant dark (&:where(.dark, .dark *));
 .dark {
-  --bg: #111827; --fg: #f3f4f6;
-  --background: #111827; --foreground: #f3f4f6;
-  --card: #1f2937; --card-foreground: #f3f4f6;
-  --popover: #1f2937; --popover-foreground: #f3f4f6;
-  --primary: #f3f4f6; --primary-foreground: #111827;
-  --secondary: #374151; --secondary-foreground: #f3f4f6;
-  --muted: #1f2937; --muted-foreground: #9ca3af;
-  --accent: #374151; --accent-foreground: #f3f4f6;
-  --border: #374151; --input: #4b5563; --ring: #d1d5db;
+  --bg: #070707; --fg: #f5f5f5;
+  --background: #070707; --foreground: #f5f5f5;
+  --card: #171717; --card-foreground: #f5f5f5;
+  --popover: #171717; --popover-foreground: #f5f5f5;
+  --primary: #f5f5f5; --primary-foreground: #070707;
+  --secondary: #292929; --secondary-foreground: #f5f5f5;
+  --muted: #171717; --muted-foreground: #a3a3a3;
+  --accent: #292929; --accent-foreground: #f5f5f5;
+  --border: #292929; --input: #454545; --ring: #d4d4d4;
 }
 .dark .bg-white { background-color: var(--card); }
 .dark .bg-gray-50, .dark .bg-gray-100 { background-color: var(--background); }
-.dark .bg-gray-200 { background-color: #374151; }
-.dark .text-gray-900, .dark .text-gray-800, .dark .text-black { color: #f3f4f6; }
-.dark .text-gray-700, .dark .text-gray-600, .dark .text-gray-500 { color: #d1d5db; }
+.dark .bg-gray-200 { background-color: #292929; }
+.dark .text-gray-900, .dark .text-gray-800, .dark .text-black { color: #f5f5f5; }
+.dark .text-gray-700, .dark .text-gray-600, .dark .text-gray-500 { color: #d4d4d4; }
 .dark .border-gray-100, .dark .border-gray-200, .dark .border-gray-300 { border-color: var(--border); }
-.dark .hover\:bg-gray-50:hover, .dark .hover\:bg-gray-100:hover { background-color: #374151; }
+.dark .hover\:bg-gray-50:hover, .dark .hover\:bg-gray-100:hover { background-color: #292929; }
 .dark input, .dark textarea, .dark select { color-scheme: dark; }
-.dark input::placeholder, .dark textarea::placeholder { color: #9ca3af; }
+.dark input::placeholder, .dark textarea::placeholder { color: #a3a3a3; }
 
-.dark .bg-white\/95 { background-color: rgb(31 41 55 / .95); }
-.dark .hover\:text-gray-900:hover { color: #f3f4f6; }
-.dark .recharts-tooltip-cursor { fill: #374151; }
+.dark .bg-white\/95 { background-color: rgb(23 23 23 / .95); }
+.dark .hover\:text-gray-900:hover { color: #f5f5f5; }
+.dark .recharts-tooltip-cursor { fill: #292929; }
 
 /* Frosted lens surfaces share the existing light/dark palette. */
 .glass-select-trigger, .glass-menu, .glass-search {
@@ -157,7 +157,7 @@ input[type="email"], input[type="tel"], input[type="url"] {
 
 /* Theme-aware scrollbars for the page, drawers, tables and dialogs. */
 :root { --scroll-thumb: #9ca3af; --scroll-hover: #4b5563; --scroll-track: #f3f4f6; }
-.dark { --scroll-thumb: #6b7280; --scroll-hover: #d1d5db; --scroll-track: #1f2937; }
+.dark { --scroll-thumb: #737373; --scroll-hover: #d4d4d4; --scroll-track: #171717; }
 * { scrollbar-width: thin; scrollbar-color: var(--scroll-thumb) var(--scroll-track); }
 html { scrollbar-gutter: stable; }
 @supports selector(::-webkit-scrollbar) {
@@ -173,3 +173,9 @@ html { scrollbar-gutter: stable; }
   ::-webkit-scrollbar-thumb { background: ButtonText; }
   ::-webkit-scrollbar-track { background: Canvas; }
 }
+
+/* Neutralize legacy utility backgrounds in dark mode, including footer and CTAs. */
+.dark .bg-gray-900, .dark .bg-gray-950 { background-color: #070707; }
+.dark .bg-gray-800 { background-color: #171717; }
+.dark .bg-gray-700 { background-color: #292929; }
+.dark .hover\:bg-gray-800:hover, .dark .hover\:bg-gray-900:hover { background-color: #292929; }

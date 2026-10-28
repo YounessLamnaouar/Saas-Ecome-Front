@@ -1,16 +1,18 @@
 import { Link } from "react-router-dom";
 import { ArrowUpRight, ArrowRight } from "lucide-react";
 import { useTranslation } from "react-i18next";
-import { T } from "@/context/Preferences";
+import { T, usePreferences } from "@/context/Preferences";
 import background from "../assets/hero-background.png";
+import darkBackground from "../assets/hero-background-dark.png";
 import "./Hero.css";
 
 export default function Hero() {
   const { t } = useTranslation();
+  const { theme } = usePreferences();
   return (
     <section className="editorial-hero" aria-labelledby="editorial-hero-title">
       <div className="editorial-hero__image" data-aos="fade-in" data-aos-duration="1000" data-aos-once="true" data-aos-offset="0">
-        <img src={background} alt="" width="1672" height="941" fetchPriority="high" />
+        <img src={theme === 'dark' ? darkBackground : background} alt="" width="1672" height="941" fetchPriority="high" />
       </div>
       <div className="editorial-hero__inner container mx-auto px-5 md:px-8 lg:px-16">
         <div className="editorial-hero__content">

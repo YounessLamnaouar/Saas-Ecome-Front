@@ -1,4 +1,4 @@
-/* An editorial canvas with a fixed palette in both storefront themes. */
+/* Matching editorial canvases for the two storefront themes. */
 .editorial-hero {
   position: relative;
   isolation: isolate;
@@ -24,6 +24,11 @@
 .editorial-hero__signature { display: flex; align-items: center; gap: 14px; max-width: 240px; margin-top: 40px; font-size: 10px; font-weight: 600; letter-spacing: .18em; }
 .editorial-hero__signature > span:first-child { font-size: 19px; font-weight: 400; letter-spacing: -.04em; }
 .editorial-hero__signature > span:nth-child(2) { flex: 1; height: 1px; background: #171717; opacity: .3; }
+.dark .editorial-hero { color: #e8e8e6; background: #070707; }
+.dark .editorial-hero__description { color: #c4c4c2; }
+.dark .editorial-hero__eyebrow > span,
+.dark .editorial-hero__signature > span:nth-child(2) { background: #e8e8e6; }
+.dark .editorial-hero a:focus-visible { outline-color: #e8e8e6; }
 [dir="rtl"] .editorial-hero__content { margin-inline-start: auto; }
 [dir="rtl"] .editorial-hero__title { letter-spacing: normal; line-height: 1.3; }
 [dir="rtl"] .editorial-hero__shop { padding: 7px 26px 7px 8px; }

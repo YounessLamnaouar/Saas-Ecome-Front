@@ -143,7 +143,7 @@ export default function AdminLayout({ children }) {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Desktop sidebar */}
-      <aside className="hidden lg:flex fixed inset-y-0 start-0 w-64 flex-col bg-gray-900 py-6">
+      <aside className="hidden lg:flex fixed inset-y-0 inset-s-0 w-64 flex-col bg-gray-900 py-6">
         <Link to="/" className="px-6 text-white text-2xl font-bold tracking-tight mb-8"> <T>FASHION</T> <span className="text-xs align-top ms-0.5">@</span>
           <span className="block text-xs font-medium tracking-wide text-gray-400 mt-1"> <T>Admin panel</T> </span>
         </Link>

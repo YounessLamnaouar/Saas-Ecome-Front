@@ -1,18 +1,37 @@
-/* Shared storefront navigation, consistent in light and dark mode. */
+/* Shared storefront navigation with inverse light/dark palettes. */
 .editorial-navbar {
+  --nav-background: #e8e8e6;
+  --nav-text: #171717;
+  --nav-muted: #606060;
+  --nav-border: rgb(23 23 23 / .2);
   --foreground: #171717;
   --popover: #e8e8e6;
   --popover-foreground: #171717;
   --accent: #dededb;
   --ring: #171717;
-  color: #171717;
-  background: #e8e8e6;
+  color: var(--nav-text);
+  background: var(--nav-background);
 }
-.editorial-navbar .text-white { color: #171717; }
-.editorial-navbar .animate-fade-in { background: #171717; }
+.dark .editorial-navbar {
+  --nav-background: #070707;
+  --nav-text: #e8e8e6;
+  --nav-muted: #b4b4b2;
+  --nav-border: rgb(232 232 230 / .2);
+  --foreground: #e8e8e6;
+  --popover: #171717;
+  --popover-foreground: #e8e8e6;
+  --accent: #292929;
+  --ring: #e8e8e6;
+}
+.editorial-navbar .text-white { color: var(--nav-text); }
+.editorial-navbar .animate-fade-in { background: var(--nav-text); }
 .editorial-navbar .border-white\/30,
-.editorial-navbar .border-white\/20 { border-color: rgb(23 23 23 / .2); }
+.editorial-navbar .border-white\/20 { border-color: var(--nav-border); }
 .editorial-navbar .glass-select-trigger,
-.editorial-navbar .glass-search { color: #171717; background: #e8e8e6; }
-.editorial-navbar .glass-search input { color: #171717; }
-.editorial-navbar .glass-search input::placeholder { color: #606060; }
+.editorial-navbar .glass-search { color: var(--nav-text); background: var(--nav-background); }
+.editorial-navbar .glass-search input { color: var(--nav-text); }
+.editorial-navbar .glass-search input::placeholder { color: var(--nav-muted); }
+.dark .editorial-navbar .bg-white { background: #171717; }
+.dark .editorial-navbar .text-gray-900 { color: var(--nav-text); }
+.dark .editorial-navbar .border-gray-100 { border-color: var(--nav-border); }
+.dark .editorial-navbar .hover\:bg-gray-50:hover { background: #292929; }

@@ -1,7 +1,8 @@
+import { useTranslation } from 'react-i18next';
 import { translate } from '@/lib/translations';
 import { T, usePreferences as useTranslationPreferences } from '@/context/Preferences';
 import React, { useState } from "react";
-import { Plus, Pencil, Trash2, Package, Link as LinkIcon, Upload, ChevronLeft, ChevronRight } from "lucide-react";
+import { Search, Plus, Pencil, Trash2, Package, Link as LinkIcon, Upload, ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -20,7 +21,7 @@ import { compressImage } from "@/lib/imageCompressor";
 import { toast } from "sonner";
 
 const EMPTY = { name: "", slug: "", description: "", image: "" };
-const ITEMS_PER_PAGE = 6;
+const ITEMS_PER_PAGE = 24;
 
 function CategoryFormDialog({ open, onOpenChange, initial, onSubmit, saving }) {
  const { t: tr } = useTranslationPreferences();
@@ -115,6 +116,8 @@ function CategoryFormDialog({ open, onOpenChange, initial, onSubmit, saving }) {
 }
 
 export default function CategoriesList() {
+  const { t: searchText } = useTranslation();
+  const [search, setSearch] = useState('');
   const { data: categories, isLoading } = useCategories();
   const createCategory = useCreateCategory();
   const updateCategory = useUpdateCategory();
@@ -124,7 +127,8 @@ export default function CategoriesList() {
   const [editing, setEditing] = useState(null);
   const [page, setPage] = useState(1);
 
-  const list = categories || [];
+  const query = search.trim().toLocaleLowerCase();
+  const list = (categories || []).filter((item) => [item.name, item.slug, item.description].some((value) => String(value || '').toLocaleLowerCase().includes(query)));
   const totalPages = Math.ceil(list.length / ITEMS_PER_PAGE) || 1;
   const paginatedCategories = list.slice((page - 1) * ITEMS_PER_PAGE, page * ITEMS_PER_PAGE);
 
@@ -166,13 +170,19 @@ export default function CategoriesList() {
           <Plus size={16} /> <T>Add category</T> </Button>
       </div>
 
+      <div className="relative w-full sm:max-w-xs">
+        <Search size={16} className="absolute start-3 top-1/2 -translate-y-1/2 text-muted-foreground" aria-hidden="true" />
+        <Input type="search" value={search} onChange={(e) => { setSearch(e.target.value); setPage(1); }} placeholder={searchText('adminSearch.categories')} aria-label={searchText('adminSearch.categories')} className="ps-9" />
+      </div>
+      {!isLoading && query && list.length === 0 && <p role="status" className="py-6 text-center text-muted-foreground">{searchText('adminSearch.empty')}</p>}
+
       {isLoading ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4">
           {Array.from({ length: 6 }).map((_, i) => <Skeleton key={i} className="h-36" />)}
         </div>
       ) : (
         <>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4">
             {paginatedCategories.map((c) => (
               <Card key={c.slug} className="hover:shadow-md transition-all">
                 <CardContent className="p-5">

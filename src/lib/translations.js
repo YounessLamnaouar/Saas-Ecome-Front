@@ -1,5 +1,10 @@
 import arabicPhrases from "../i18n/locales/ar-phrases.json" with { type: "json" };
 export const translations = {
+"Cancel this order?": "Annuler cette commande ?",
+"This cannot be undone. The ordered quantities will be returned to stock.": "Cette action est irréversible. Les quantités commandées seront remises en stock.",
+"Keep order": "Conserver la commande",
+"Confirm cancellation": "Confirmer l’annulation",
+"Cancelled": "Annulée",
 "Unable to send your message right now. Please try again later.": "Envoi impossible pour le moment. Veuillez réessayer plus tard.",
 "Pending orders": "Commandes en attente",
 "awaiting processing": "en attente de traitement",

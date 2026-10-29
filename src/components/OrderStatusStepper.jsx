@@ -18,6 +18,7 @@ const STATUS_RANKS = {
 };
 
 export default function OrderStatusStepper({ currentStatus, histories = [] }) {
+  if (currentStatus === "cancelled") return <p className="py-6 text-red-600 font-semibold"><T>Cancelled</T></p>;
   const currentRank = STATUS_RANKS[currentStatus] || 1;
 
   // Create lookup for histories timestamps

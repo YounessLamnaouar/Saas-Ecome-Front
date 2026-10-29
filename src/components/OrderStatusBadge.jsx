@@ -4,6 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { Clock, CheckCircle2, Truck, PackageCheck } from "lucide-react";
 
 export const ORDER_STATUS_MAP = {
+ cancelled: { label: "Cancelled", icon: Clock, colorClass: "bg-red-100 text-red-800 border-red-200", dotClass: "bg-red-500" },
   en_attente: {
     label: "Pending",
     labelEn: "Pending",

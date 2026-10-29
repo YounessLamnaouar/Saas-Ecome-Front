@@ -22,7 +22,8 @@
     "quantity": "Quantity",
     "price": "Price",
     "cod": "Cash on Delivery (COD)",
-    "scrollToTop": "Scroll to top"
+    "scrollToTop": "Scroll to top",
+    "dismiss": "Dismiss"
   },
   "nav": {
     "home": "Home",
@@ -353,7 +354,8 @@
       "en_attente": "Pending",
       "confirmee": "Confirmed",
       "en_cours_de_livraison": "Out for delivery",
-      "livre": "Delivered"
+      "livre": "Delivered",
+      "cancelled": "Cancelled"
     },
     "emailPermissionDenied": "Brevo is blocking order emails. Enable Transactional email → All on the API key used by this store."
   },
@@ -393,5 +395,10 @@
     "reviewed": "Thank you — your review is published.",
     "unavailable": "This product is no longer available for review.",
     "signIn": "Sign in with the account that placed this order to review your products."
+  },
+  "adminSearch": {
+    "categories": "Search categories...",
+    "collections": "Search collections...",
+    "empty": "No results match your search."
   }
 }

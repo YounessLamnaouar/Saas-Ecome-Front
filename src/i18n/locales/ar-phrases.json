@@ -1,4 +1,8 @@
 {
+  "Cancel this order?": "إلغاء هذا الطلب؟",
+  "This cannot be undone. The ordered quantities will be returned to stock.": "لا يمكن التراجع عن هذا الإجراء. ستتم إعادة الكميات المطلوبة إلى المخزون.",
+  "Keep order": "الاحتفاظ بالطلب",
+  "Confirm cancellation": "تأكيد الإلغاء",
   "Unable to send your message right now. Please try again later.": "تعذر إرسال رسالتك الآن. يرجى المحاولة مرة أخرى لاحقًا.",
   "Shop now": "تسوق الآن",
   "Unable to subscribe right now. Please try again later.": "تعذر الاشتراك الآن. يرجى المحاولة لاحقاً.",
@@ -396,5 +400,6 @@
   "e.g. ZRA-1204": "مثال: ZRA-1204",
   "e.g. sportswear": "مثال: sportswear",
   "Pending orders": "طلبات معلقة",
-  "awaiting processing": "بانتظار المعالجة"
+  "awaiting processing": "بانتظار المعالجة",
+  "Cancelled": "ملغى"
 }

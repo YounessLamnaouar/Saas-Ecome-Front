@@ -1,7 +1,8 @@
+import { useTranslation } from 'react-i18next';
 import { translate } from '@/lib/translations';
 import { T, usePreferences as useTranslationPreferences } from '@/context/Preferences';
 import React, { useState } from "react";
-import { Plus, Pencil, Trash2, Sparkles, Package, Loader2, Link as LinkIcon, Upload, ChevronLeft, ChevronRight } from "lucide-react";
+import { Search, Plus, Pencil, Trash2, Sparkles, Package, Loader2, Link as LinkIcon, Upload, ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -22,6 +23,8 @@ const DEFAULT_FORM = { name: "", slug: "", description: "", image: "", is_featur
 const ITEMS_PER_PAGE = 6;
 
 export default function Collections() {
+  const { t: searchText } = useTranslation();
+  const [search, setSearch] = useState('');
  const { t: tr } = useTranslationPreferences();
 
   const { data: collections, isLoading } = useCollections();
@@ -98,7 +101,8 @@ export default function Collections() {
 
   const isSubmitting = createCollection.isPending || updateCollection.isPending;
 
-  const list = collections || [];
+  const query = search.trim().toLocaleLowerCase();
+  const list = (collections || []).filter((item) => [item.name, item.slug, item.description].some((value) => String(value || '').toLocaleLowerCase().includes(query)));
   const totalPages = Math.ceil(list.length / ITEMS_PER_PAGE) || 1;
   const paginatedCollections = list.slice((page - 1) * ITEMS_PER_PAGE, page * ITEMS_PER_PAGE);
 
@@ -112,6 +116,12 @@ export default function Collections() {
         <Button onClick={openCreate} className="gap-2 cursor-pointer">
           <Plus size={16} /> <T>Add Collection</T> </Button>
       </div>
+
+      <div className="relative w-full sm:max-w-xs">
+        <Search size={16} className="absolute start-3 top-1/2 -translate-y-1/2 text-muted-foreground" aria-hidden="true" />
+        <Input type="search" value={search} onChange={(e) => { setSearch(e.target.value); setPage(1); }} placeholder={searchText('adminSearch.collections')} aria-label={searchText('adminSearch.collections')} className="ps-9" />
+      </div>
+      {!isLoading && query && list.length === 0 && <p role="status" className="py-6 text-center text-muted-foreground">{searchText('adminSearch.empty')}</p>}
 
       {/* Dialog for Create / Edit */}
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
@@ -240,7 +250,7 @@ export default function Collections() {
                 </TableRow>
               ))}
 
-            {!isLoading && list.length === 0 && (
+            {!isLoading && !query && list.length === 0 && (
               <TableRow>
                 <TableCell colSpan={5} className="text-center py-10 text-gray-400"> <T>No collections created yet. Click "Add Collection" to get started.</T> </TableCell>
               </TableRow>

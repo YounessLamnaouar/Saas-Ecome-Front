@@ -22,7 +22,8 @@
     "quantity": "الكمية",
     "price": "السعر",
     "cod": "الدفع عند الاستلام (COD)",
-    "scrollToTop": "العودة إلى الأعلى"
+    "scrollToTop": "العودة إلى الأعلى",
+    "dismiss": "إخفاء"
   },
   "nav": {
     "home": "الرئيسية",
@@ -361,7 +362,8 @@
       "en_attente": "قيد الانتظار",
       "confirmee": "مؤكد",
       "en_cours_de_livraison": "قيد التوصيل",
-      "livre": "تم التسليم"
+      "livre": "تم التسليم",
+      "cancelled": "ملغى"
     },
     "emailPermissionDenied": "تمنع Brevo إرسال رسائل الطلبات. فعّل Transactional email → All في مفتاح API المستخدم لهذا المتجر."
   },
@@ -401,5 +403,10 @@
     "reviewed": "شكرًا لك — تم نشر تقييمك.",
     "unavailable": "هذا المنتج لم يعد متاحًا للتقييم.",
     "signIn": "سجّل الدخول بالحساب الذي أجرى الطلب لتقييم المنتجات."
+  },
+  "adminSearch": {
+    "categories": "البحث في الفئات...",
+    "collections": "البحث في المجموعات...",
+    "empty": "لا توجد نتائج مطابقة لبحثك."
   }
 }

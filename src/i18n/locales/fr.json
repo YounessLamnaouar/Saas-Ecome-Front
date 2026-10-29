@@ -22,7 +22,8 @@
     "quantity": "Quantité",
     "price": "Prix",
     "cod": "Paiement à la livraison (Cash on Delivery)",
-    "scrollToTop": "Retour en haut"
+    "scrollToTop": "Retour en haut",
+    "dismiss": "Masquer"
   },
   "nav": {
     "home": "Accueil",
@@ -353,7 +354,8 @@
       "en_attente": "En attente",
       "confirmee": "Confirmée",
       "en_cours_de_livraison": "En livraison",
-      "livre": "Livrée"
+      "livre": "Livrée",
+      "cancelled": "Annulée"
     },
     "emailPermissionDenied": "Brevo bloque les emails de commande. Activez Transactional email → All sur la clé API utilisée par cette boutique."
   },
@@ -393,5 +395,10 @@
     "reviewed": "Merci — votre avis est publié.",
     "unavailable": "Ce produit ne peut plus être évalué.",
     "signIn": "Connectez-vous au compte utilisé pour cette commande afin de laisser un avis."
+  },
+  "adminSearch": {
+    "categories": "Rechercher des catégories...",
+    "collections": "Rechercher des collections...",
+    "empty": "Aucun résultat ne correspond à votre recherche."
   }
 }

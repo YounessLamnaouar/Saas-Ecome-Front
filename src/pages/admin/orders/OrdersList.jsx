@@ -21,8 +21,10 @@ import { useAdminOrders, useUpdateOrderStatus } from "@/hooks/useOrders";
 import OrderStatusBadge from "@/components/OrderStatusBadge";
 import OrderStatusStepper from "@/components/OrderStatusStepper";
 import { toast } from "sonner";
+import { AlertDialog, AlertDialogContent, AlertDialogHeader, AlertDialogTitle, AlertDialogDescription, AlertDialogFooter, AlertDialogCancel, AlertDialogAction } from '@/components/ui/alert-dialog';
 
 const STATUS_OPTIONS = [
+  { value: "cancelled", label: "Cancelled" },
   { value: "all", label: "All Statuses" },
   { value: "en_attente", label: "Pending" },
   { value: "confirmee", label: "Confirmed" },
@@ -45,6 +47,7 @@ export default function OrdersList() {
   const [search, setSearch] = useState(params.get('search') || '');
   const [status, setStatus] = useState("all");
   const [selectedOrder, setSelectedOrder] = useState(null);
+  const [cancelOrderId, setCancelOrderId] = useState(null);
 
   const { data, isLoading, isFetching } = useAdminOrders({
     page,
@@ -65,18 +68,24 @@ export default function OrdersList() {
       if (selectedOrder && selectedOrder.id === orderId) {
         setSelectedOrder(updated);
       }
+      setCancelOrderId(null);
     } catch (err) {
       toast.error(translate(err.payload?.message || err.message || "Failed to update order status."));
     }
   };
 
   const getAvailableNextStatuses = (currentStatus) => {
+    if (currentStatus === "cancelled") return [];
     const currentRank = ORDER_RANKS[currentStatus] || 1;
-    return [
+    const nextStatuses = [
       { value: "confirmee", label: "Confirmed", rank: 2 },
       { value: "en_cours_de_livraison", label: "Out for delivery", rank: 3 },
       { value: "livre", label: "Delivered", rank: 4 },
     ].filter((s) => s.rank > currentRank);
+    if (currentStatus === "en_attente") {
+      nextStatuses.push({ value: "cancelled", label: "Cancelled" });
+    }
+    return nextStatuses;
   };
 
   return (
@@ -246,7 +255,8 @@ export default function OrdersList() {
                   </div>
                   {getAvailableNextStatuses(selectedOrder.status).length > 0 ? (
                     <Select
-                      onValueChange={(val) => handleStatusChange(selectedOrder.id, val)}
+                      value=""
+                      onValueChange={(val) => val === 'cancelled' ? setCancelOrderId(selectedOrder.id) : handleStatusChange(selectedOrder.id, val)}
                       disabled={updateStatus.isPending}
                     >
                       <SelectTrigger className="w-48 h-8 text-xs cursor-pointer">
@@ -261,7 +271,7 @@ export default function OrdersList() {
                       </SelectContent>
                     </Select>
                   ) : (
-                    <span className="text-xs font-semibold text-green-700 bg-green-50 border border-green-200 px-3 py-1 rounded-lg"> <T>Order fully completed (Delivered)</T> </span>
+                    <span className="text-xs font-semibold text-green-700 bg-green-50 border border-green-200 px-3 py-1 rounded-lg"> <T>{selectedOrder.status === "cancelled" ? "Cancelled" : "Order fully completed (Delivered)"}</T> </span>
                   )}
                 </div>
               </div>
@@ -374,6 +384,20 @@ export default function OrdersList() {
           )}
         </DialogContent>
       </Dialog>
+      <AlertDialog open={cancelOrderId !== null} onOpenChange={(open) => { if (!open && !updateStatus.isPending) setCancelOrderId(null); }}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle><T>Cancel this order?</T></AlertDialogTitle>
+            <AlertDialogDescription><T>This cannot be undone. The ordered quantities will be returned to stock.</T></AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={updateStatus.isPending}><T>Keep order</T></AlertDialogCancel>
+            <AlertDialogAction disabled={updateStatus.isPending} onClick={(event) => { event.preventDefault(); handleStatusChange(cancelOrderId, 'cancelled'); }}>
+              {updateStatus.isPending && <Loader2 className="me-2 animate-spin" size={16} />}<T>Confirm cancellation</T>
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }

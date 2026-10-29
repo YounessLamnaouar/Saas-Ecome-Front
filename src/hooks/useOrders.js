@@ -50,6 +50,11 @@ export function useUpdateOrderStatus() {
   return useMutation({
     mutationFn: ({ id, status }) => ordersService.updateOrderStatus(id, status),
     onSuccess: (data, { id }) => {
+      if (data.status === 'cancelled') {
+        qc.invalidateQueries({ queryKey: ['products'] });
+        qc.invalidateQueries({ queryKey: ['product'] });
+        qc.invalidateQueries({ queryKey: ['collections'] });
+      }
       qc.invalidateQueries({ queryKey: ["dashboard-stats"] });
       qc.invalidateQueries({ queryKey: ["admin-orders"] });
       qc.invalidateQueries({ queryKey: ["admin-order", id] });
